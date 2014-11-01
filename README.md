@@ -1,4 +1,4 @@
-[PixelGirls_DangeonWitches]
+[PixelGirls_DungeonWitches]
 ===========================
 
 PixelGirls_DungeonWitches is a action game that featured pixel art.
