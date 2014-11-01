@@ -1,0 +1,219 @@
+﻿2014/11/01 21:58:49 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "E:\Works\Project\PixelGirls_DangeonWitches\src\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\openFrameworks /I..\..\..\openFrameworks\graphics /I..\..\..\openFrameworks\app /I..\..\..\openFrameworks\sound /I..\..\..\openFrameworks\utils /I..\..\..\openFrameworks\communication /I..\..\..\openFrameworks\video /I..\..\..\openFrameworks\types /I..\..\..\openFrameworks\math /I..\..\..\openFrameworks\3d /I..\..\..\openFrameworks\gl /I..\..\..\openFrameworks\events /I..\..\..\glut\include /I..\..\..\rtAudio\include /I..\..\..\quicktime\include /I..\..\..\freetype\include /I..\..\..\freetype\include\freetype2 /I..\..\..\freeImage\include /I..\..\..\fmodex\include /I..\..\..\videoInput\include /I..\..\..\glew\include\ /I..\..\..\glu\include /I..\..\..\tess2\include /I..\..\..\cairo\include\cairo /I..\..\..\poco\include /I..\..\..\glfw\include /I..\..\..\gl\include /I..\..\..\openssl\include /I..\..\..\addons /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D POCO_STATIC /D CAIRO_WIN32_STATIC_BUILD /D DISABLE_SOME_FLOATING_POINT /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"obj\Debug\\" /Fd"obj\Debug\vc110.pdb" /FR"obj\Debug\\" /Gd /TP /analyze- /errorReport:prompt ..\..\..\openFrameworks\3d\of3dPrimitives.cpp ..\..\..\openFrameworks\3d\of3dUtils.cpp ..\..\..\openFrameworks\3d\ofCamera.cpp ..\..\..\openFrameworks\3d\ofEasyCam.cpp ..\..\..\openFrameworks\3d\ofMesh.cpp ..\..\..\openFrameworks\3d\ofNode.cpp ..\..\..\openFrameworks\app\ofAppGLFWWindow.cpp ..\..\..\openFrameworks\app\ofAppGlutWindow.cpp ..\..\..\openFrameworks\app\ofAppNoWindow.cpp ..\..\..\openFrameworks\app\ofAppRunner.cpp ..\..\..\openFrameworks\events\ofEvents.cpp ..\..\..\openFrameworks\gl\ofFbo.cpp ..\..\..\openFrameworks\gl\ofGLRenderer.cpp ..\..\..\openFrameworks\gl\ofGLUtils.cpp ..\..\..\openFrameworks\gl\ofLight.cpp ..\..\..\openFrameworks\gl\ofMaterial.cpp ..\..\..\openFrameworks\gl\ofGLProgrammableRenderer.cpp ..\..\..\openFrameworks\gl\ofShader.cpp ..\..\..\openFrameworks\gl\ofTexture.cpp ..\..\..\openFrameworks\gl\ofVbo.cpp ..\..\..\openFrameworks\gl\ofVboMesh.cpp ..\..\..\openFrameworks\graphics\of3dGraphics.cpp ..\..\..\openFrameworks\graphics\ofBitmapFont.cpp ..\..\..\openFrameworks\graphics\ofCairoRenderer.cpp ..\..\..\openFrameworks\graphics\ofGraphics.cpp ..\..\..\openFrameworks\graphics\ofImage.cpp ..\..\..\openFrameworks\graphics\ofPath.cpp ..\..\..\openFrameworks\graphics\ofPixels.cpp ..\..\..\openFrameworks\graphics\ofPolyline.cpp ..\..\..\openFrameworks\graphics\ofRendererCollection.cpp ..\..\..\openFrameworks\graphics\ofTessellator.cpp ..\..\..\openFrameworks\graphics\ofTrueTypeFont.cpp ..\..\..\openFrameworks\math\ofMath.cpp ..\..\..\openFrameworks\math\ofMatrix3x3.cpp ..\..\..\openFrameworks\math\ofMatrix4x4.cpp ..\..\..\openFrameworks\math\ofQuaternion.cpp ..\..\..\openFrameworks\math\ofVec2f.cpp ..\..\..\openFrameworks\math\ofVec4f.cpp ..\..\..\openFrameworks\sound\ofFmodSoundPlayer.cpp ..\..\..\openFrameworks\sound\ofRtAudioSoundStream.cpp ..\..\..\openFrameworks\sound\ofSoundPlayer.cpp ..\..\..\openFrameworks\sound\ofSoundStream.cpp ..\..\..\openFrameworks\types\ofBaseTypes.cpp ..\..\..\openFrameworks\types\ofColor.cpp ..\..\..\openFrameworks\types\ofParameter.cpp ..\..\..\openFrameworks\types\ofParameterGroup.cpp ..\..\..\openFrameworks\types\ofRectangle.cpp ..\..\..\openFrameworks\utils\ofFileUtils.cpp ..\..\..\openFrameworks\utils\ofLog.cpp ..\..\..\openFrameworks\utils\ofMatrixStack.cpp ..\..\..\openFrameworks\utils\ofSystemUtils.cpp ..\..\..\openFrameworks\utils\ofThread.cpp ..\..\..\openFrameworks\utils\ofURLFileLoader.cpp ..\..\..\openFrameworks\utils\ofUtils.cpp ..\..\..\openFrameworks\utils\ofXml.cpp ..\..\..\openFrameworks\video\ofDirectShowGrabber.cpp ..\..\..\openFrameworks\video\ofQtUtils.cpp ..\..\..\openFrameworks\video\ofQuickTimeGrabber.cpp ..\..\..\openFrameworks\video\ofQuickTimePlayer.cpp ..\..\..\openFrameworks\video\ofVideoGrabber.cpp ..\..\..\openFrameworks\video\ofVideoPlayer.cpp ..\..\..\openFrameworks\communication\ofArduino.cpp ..\..\..\openFrameworks\communication\ofSerial.cpp
+         ofSerial.cpp
+         ofArduino.cpp
+         ofVideoPlayer.cpp
+         ofVideoGrabber.cpp
+         ofQuickTimePlayer.cpp
+         ofQuickTimeGrabber.cpp
+         ofQtUtils.cpp
+         ofDirectShowGrabber.cpp
+         ofXml.cpp
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/StreamConverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+         ofUtils.cpp
+         ofURLFileLoader.cpp
+         ofThread.cpp
+         ofSystemUtils.cpp
+         ofMatrixStack.cpp
+         ofLog.cpp
+         ofFileUtils.cpp
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/FileStream.h(130): warning C4250: 'Poco::FileInputStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/FileStream.h(162): warning C4250: 'Poco::FileOutputStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/FileStream.h(192): warning C4250: 'Poco::FileStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\poco\include\Poco/FileStream.h(192): warning C4250: 'Poco::FileStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>
+                 ]
+         ofRectangle.cpp
+         ofParameterGroup.cpp
+         ofParameter.cpp
+         ofColor.cpp
+         コードを生成中...
+         コンパイル中...
+         ofBaseTypes.cpp
+         ofSoundStream.cpp
+         ofSoundPlayer.cpp
+         ofRtAudioSoundStream.cpp
+         ofFmodSoundPlayer.cpp
+         ofVec4f.cpp
+         ofVec2f.cpp
+         ofQuaternion.cpp
+         ofMatrix4x4.cpp
+         ofMatrix3x3.cpp
+         ofMath.cpp
+         ofTrueTypeFont.cpp
+         ofTessellator.cpp
+         ofRendererCollection.cpp
+         ofPolyline.cpp
+         ofPixels.cpp
+         ofPath.cpp
+         ofImage.cpp
+     1>E:\Works\Project\PixelGirls_DangeonWitches\src\libs\freeImage\include\FreeImage.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+         ofGraphics.cpp
+         ofCairoRenderer.cpp
+         コードを生成中...
+         コンパイル中...
+         ofBitmapFont.cpp
+         of3dGraphics.cpp
+         ofVboMesh.cpp
+         ofVbo.cpp
+         ofTexture.cpp
+         ofShader.cpp
+         ofGLProgrammableRenderer.cpp
+         ofMaterial.cpp
+         ofLight.cpp
+         ofGLUtils.cpp
+         ofGLRenderer.cpp
+         ofFbo.cpp
+         ofEvents.cpp
+         ofAppRunner.cpp
+         ofAppNoWindow.cpp
+         ofAppGlutWindow.cpp
+         ofAppGLFWWindow.cpp
+         ofNode.cpp
+         ofMesh.cpp
+         ofEasyCam.cpp
+         コードを生成中...
+         コンパイル中...
+         ofCamera.cpp
+         of3dUtils.cpp
+         of3dPrimitives.cpp
+         コードを生成中...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"..\..\lib\vs\openframeworksLib_debug.lib" /NOLOGO obj\Debug\of3dPrimitives.obj
+         obj\Debug\of3dUtils.obj
+         obj\Debug\ofCamera.obj
+         obj\Debug\ofEasyCam.obj
+         obj\Debug\ofMesh.obj
+         obj\Debug\ofNode.obj
+         obj\Debug\ofAppGLFWWindow.obj
+         obj\Debug\ofAppGlutWindow.obj
+         obj\Debug\ofAppNoWindow.obj
+         obj\Debug\ofAppRunner.obj
+         obj\Debug\ofEvents.obj
+         obj\Debug\ofFbo.obj
+         obj\Debug\ofGLRenderer.obj
+         obj\Debug\ofGLUtils.obj
+         obj\Debug\ofLight.obj
+         obj\Debug\ofMaterial.obj
+         obj\Debug\ofGLProgrammableRenderer.obj
+         obj\Debug\ofShader.obj
+         obj\Debug\ofTexture.obj
+         obj\Debug\ofVbo.obj
+         obj\Debug\ofVboMesh.obj
+         obj\Debug\of3dGraphics.obj
+         obj\Debug\ofBitmapFont.obj
+         obj\Debug\ofCairoRenderer.obj
+         obj\Debug\ofGraphics.obj
+         obj\Debug\ofImage.obj
+         obj\Debug\ofPath.obj
+         obj\Debug\ofPixels.obj
+         obj\Debug\ofPolyline.obj
+         obj\Debug\ofRendererCollection.obj
+         obj\Debug\ofTessellator.obj
+         obj\Debug\ofTrueTypeFont.obj
+         obj\Debug\ofMath.obj
+         obj\Debug\ofMatrix3x3.obj
+         obj\Debug\ofMatrix4x4.obj
+         obj\Debug\ofQuaternion.obj
+         obj\Debug\ofVec2f.obj
+         obj\Debug\ofVec4f.obj
+         obj\Debug\ofFmodSoundPlayer.obj
+         obj\Debug\ofRtAudioSoundStream.obj
+         obj\Debug\ofSoundPlayer.obj
+         obj\Debug\ofSoundStream.obj
+         obj\Debug\ofBaseTypes.obj
+         obj\Debug\ofColor.obj
+         obj\Debug\ofParameter.obj
+         obj\Debug\ofParameterGroup.obj
+         obj\Debug\ofRectangle.obj
+         obj\Debug\ofFileUtils.obj
+         obj\Debug\ofLog.obj
+         obj\Debug\ofMatrixStack.obj
+         obj\Debug\ofSystemUtils.obj
+         obj\Debug\ofThread.obj
+         obj\Debug\ofURLFileLoader.obj
+         obj\Debug\ofUtils.obj
+         obj\Debug\ofXml.obj
+         obj\Debug\ofDirectShowGrabber.obj
+         obj\Debug\ofQtUtils.obj
+         obj\Debug\ofQuickTimeGrabber.obj
+         obj\Debug\ofQuickTimePlayer.obj
+         obj\Debug\ofVideoGrabber.obj
+         obj\Debug\ofVideoPlayer.obj
+         obj\Debug\ofArduino.obj
+         obj\Debug\ofSerial.obj
+         openframeworksLib.vcxproj -> E:\Works\Project\PixelGirls_DangeonWitches\src\libs\openFrameworksCompiled\project\vs\..\..\lib\vs\openframeworksLib_debug.lib
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\bscmake.exe /nologo /o"..\..\lib\vs\openframeworksLib_debug.bsc" /n obj\Debug\of3dPrimitives.sbr obj\Debug\of3dUtils.sbr obj\Debug\ofCamera.sbr obj\Debug\ofEasyCam.sbr obj\Debug\ofMesh.sbr obj\Debug\ofNode.sbr obj\Debug\ofAppGLFWWindow.sbr obj\Debug\ofAppGlutWindow.sbr obj\Debug\ofAppNoWindow.sbr obj\Debug\ofAppRunner.sbr obj\Debug\ofEvents.sbr obj\Debug\ofFbo.sbr obj\Debug\ofGLRenderer.sbr obj\Debug\ofGLUtils.sbr obj\Debug\ofLight.sbr obj\Debug\ofMaterial.sbr obj\Debug\ofGLProgrammableRenderer.sbr obj\Debug\ofShader.sbr obj\Debug\ofTexture.sbr obj\Debug\ofVbo.sbr obj\Debug\ofVboMesh.sbr obj\Debug\of3dGraphics.sbr obj\Debug\ofBitmapFont.sbr obj\Debug\ofCairoRenderer.sbr obj\Debug\ofGraphics.sbr obj\Debug\ofImage.sbr obj\Debug\ofPath.sbr obj\Debug\ofPixels.sbr obj\Debug\ofPolyline.sbr obj\Debug\ofRendererCollection.sbr obj\Debug\ofTessellator.sbr obj\Debug\ofTrueTypeFont.sbr obj\Debug\ofMath.sbr obj\Debug\ofMatrix3x3.sbr obj\Debug\ofMatrix4x4.sbr obj\Debug\ofQuaternion.sbr obj\Debug\ofVec2f.sbr obj\Debug\ofVec4f.sbr obj\Debug\ofFmodSoundPlayer.sbr obj\Debug\ofRtAudioSoundStream.sbr obj\Debug\ofSoundPlayer.sbr obj\Debug\ofSoundStream.sbr obj\Debug\ofBaseTypes.sbr obj\Debug\ofColor.sbr obj\Debug\ofParameter.sbr obj\Debug\ofParameterGroup.sbr obj\Debug\ofRectangle.sbr obj\Debug\ofFileUtils.sbr obj\Debug\ofLog.sbr obj\Debug\ofMatrixStack.sbr obj\Debug\ofSystemUtils.sbr obj\Debug\ofThread.sbr obj\Debug\ofURLFileLoader.sbr obj\Debug\ofUtils.sbr obj\Debug\ofXml.sbr obj\Debug\ofDirectShowGrabber.sbr obj\Debug\ofQtUtils.sbr obj\Debug\ofQuickTimeGrabber.sbr obj\Debug\ofQuickTimePlayer.sbr obj\Debug\ofVideoGrabber.sbr obj\Debug\ofVideoPlayer.sbr obj\Debug\ofArduino.sbr obj\Debug\ofSerial.sbr
+     1>プロジェクト "E:\Works\Project\PixelGirls_DangeonWitches\src\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj" (Build ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:02:06.08
