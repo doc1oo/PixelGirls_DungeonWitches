@@ -1,11 +1,11 @@
 [PixelGirls_DangeonWitches]
 ===========================
 
-PixelGirls_DangeonWitches is a action game that featured pixel art.
+PixelGirls_DungeonWitches is a action game that featured pixel art.
 
-PixelGirls_DangeonWitches is open source under an MIT License. see LICENSE.txt.
+PixelGirls_DungeonWitches is open source under an MIT License. see LICENSE.txt.
 
-PixelGirls_DangeonWitches use following libralies. ( libralies/ )
+PixelGirls_DungeonWitches use following libralies. ( libralies/ )
 
 [openFrameworks] ( http://www.openframeworks.cc/ )
 --------------
