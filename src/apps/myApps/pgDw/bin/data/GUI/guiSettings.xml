@@ -1,22 +1,22 @@
 <Widget>
     <Kind>4</Kind>
     <Name>SIZE</Name>
-    <Value>5.000000000</Value>
+    <Value>9.166666985</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>DOT_SIZE</Name>
-    <Value>1.000000000</Value>
+    <Value>3.083333492</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>POS_X</Name>
-    <Value>0.000000000</Value>
+    <Value>-8.333312988</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>POS_Y</Name>
-    <Value>0.000000000</Value>
+    <Value>-16.666687012</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -26,12 +26,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>ROTATE_X</Name>
-    <Value>3.000000000</Value>
+    <Value>6.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>ROTATE_Y</Name>
-    <Value>-1.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -135,38 +135,8 @@
 </Widget>
 <Widget>
     <Kind>17</Kind>
-    <Name>homura.png</Name>
-    <Value>0</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
     <Name>hukidashi.png</Name>
     <Value>1</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
-    <Name>kyoko.png</Name>
-    <Value>0</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
-    <Name>madoka.png</Name>
-    <Value>0</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
-    <Name>mami.png</Name>
-    <Value>0</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
-    <Name>sayaka.png</Name>
-    <Value>0</Value>
-</Widget>
-<Widget>
-    <Kind>17</Kind>
-    <Name>_default.png</Name>
-    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>17</Kind>
@@ -221,12 +191,12 @@
 <Widget>
     <Kind>17</Kind>
     <Name>posca2.tif</Name>
-    <Value>0</Value>
+    <Value>1</Value>
 </Widget>
 <Widget>
     <Kind>17</Kind>
     <Name>poscaDirty.tif</Name>
-    <Value>1</Value>
+    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>17</Kind>
@@ -276,10 +246,10 @@
 <Widget>
     <Kind>17</Kind>
     <Name>SCREEN</Name>
-    <Value>1</Value>
+    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>17</Kind>
     <Name>ALPHA</Name>
-    <Value>0</Value>
+    <Value>1</Value>
 </Widget>
