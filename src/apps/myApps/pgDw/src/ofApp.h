@@ -12,8 +12,8 @@
 
 #include "ofxUI.h"
 #include "ofxOsc.h"
-#define PORT 7778           // OSCメッセージの受信に使うポート番号（送信側と揃える）
 
+#define PORT 7778                       // OSCメッセージの受信に使うポート番号（送信側と揃える）
 #define NUM_BILLBOARDS 40000
 
 
@@ -31,7 +31,8 @@ public:
 class AppParameter:public Parameter {
 
 public:
-    int posX, posY, w, h, fontSize;
+    int x, y, w, h;
+    int fontSize;
     string dir, uiType;
     const type_info* type;
 
@@ -62,27 +63,26 @@ public:
 class testApp : public ofBaseApp{
 
 public:
+    int imgPixels;
     int screenShotCounter;
     int blendMode;
     int addR, addG, addB;
     int compH, compS, compB, compA;
     int pImgPattern;
     int prevClickButton;
-    int imgPixels;
     float size, pitch;
     float posX, posY, posZ;
+    float rotateX, rotateY, rotateZ;
+    float prevPosX, prevPosY, prevPosZ;
+    float prevRotateX, prevRotateY, prevRotateZ;
+    float bgH, bgS, bgB;
     float posRandomize;
     float posRandomSeed;
-    float rotateX, rotateY, rotateZ;
-    float bgH, bgS, bgB;
-    float prevRotateX, prevRotateY, prevRotateZ;
-    float prevPosX, prevPosY, prevPosZ;
     float billboardSizeTarget[NUM_BILLBOARDS];	// billboard particles
     bool showBgImg;
     bool rightClick;
-
-    string prevScreenShotDateTime;
     string bgImgPath;
+    string prevScreenShotDateTime;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg;

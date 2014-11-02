@@ -3,12 +3,56 @@
 
 void testApp::setup(){
     
+    // 変数の初期値設定 -----------------------------------------------
+
     bgImgPath = "";
     showBgImg = false;
     rightClick = false;
     pImgPattern = 0;
     prevClickPoint = ofPoint(0,0);
 
+    // GUI関係の情報設定 -----------------------------------------------
+    {
+        int w = 120;
+        int h = 12;
+        prmLst.push_back( AppParameter("SIZE", &typeid(float), "slider", 0, 50, 5, w, h, "bottom") );
+        prmLst.push_back( AppParameter("DOT_SIZE", &typeid(float), "slider", 0, 5, 1, w, h, "right") );
+        prmLst.push_back( AppParameter("POS_X", &typeid(float), "slider", -500, 500, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("POS_Y", &typeid(float), "slider", -500, 500, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("POS_Z", &typeid(float), "slider", -500, 0, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("ROTATE_X", &typeid(float), "slider", -360, 360, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("ROTATE_Y", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("ROTATE_Z", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("ADD_R", &typeid(float), "slider", -255, 255, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("ADD_G", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("ADD_B", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("ADD_A", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("COLOR_H", &typeid(float), "slider", -0, 255, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("COLOR_S", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("COLOR_B", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("COLOR_A", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("BG_H", &typeid(float), "slider", 0, 255, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("BG_S", &typeid(float), "slider", 0, 255, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("BG_B", &typeid(float), "slider", 0, 255, 128, w, h, "right") );
+        prmLst.push_back( AppParameter("BG_A", &typeid(float), "slider", 0, 255, 255, w, h, "right") );
+        prmLst.push_back( AppParameter("POS_RANDOMIZE", &typeid(float), "slider", 0, 5, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("RANDOMSEED", &typeid(int), "slider", 0, 100, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("PARTICLE_IMAGE", &typeid(int), "dropdownList", 0, 100, 0, w, h, "bottom") );
+    }
+    
+    // 素材ファイルの読み込み ------------------------------------------------
+
+	img.loadImage("pixelArt/default.png");
+	particleImg.loadImage("particleImg/default.tif");
+	tileImg.loadImage("tileImg/default.png");
+    sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
+
+    // 初期化 -----------------------------------------------------------------
+    
+    screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	maskFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+
+    gui = new ofxUICanvas(0,0,600,400);
     ofSetBackgroundAuto(false);
     ofDisableArbTex();
 
@@ -32,58 +76,17 @@ void testApp::setup(){
     //cam.setNearClip(0.8505);
     //cam.setFarClip(1578.5);
     
-    
-    screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-	maskFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
-    // GUI関係のセットアップ
-    gui = new ofxUICanvas(0,0,600,400);
+    // UI部品を追加 ----------------------------------------------------------
+
     //gui->setFont("GUI/NewMedia Fett.ttf");
     gui->setFontSize(OFX_UI_FONT_MEDIUM, 7);
     gui->setColorBack(ofxUIColor(0,0,0,40));
-
-    int w = 120;
-    int h = 12;
     gui->addWidgetRight(new ofxUIButton(32, 24, false, "LOAD_PIXEL_ART"));
     gui->addWidgetRight(new ofxUIButton(32, 24, false, "SAVE_SCREENSHOT"));
     //gui->addWidgetRight(new ofxUIButton(32, 24, false, "BG FILE OPEN"));
     //gui->addWidgetRight(new ofxUIToggle(32, 24, false, "FULLSCREEN"));
     gui->addSpacer(600, 15);
-    
-    prmLst.push_back( AppParameter("SIZE", &typeid(float), "slider", 0, 50, 5, w, h, "bottom") );
-    prmLst.push_back( AppParameter("DOT_SIZE", &typeid(float), "slider", 0, 5, 1, w, h, "right") );
-    prmLst.push_back( AppParameter("POS_X", &typeid(float), "slider", -500, 500, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("POS_Y", &typeid(float), "slider", -500, 500, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("POS_Z", &typeid(float), "slider", -500, 0, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("ROTATE_X", &typeid(float), "slider", -360, 360, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("ROTATE_Y", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("ROTATE_Z", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("ADD_R", &typeid(float), "slider", -255, 255, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("ADD_G", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("ADD_B", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("ADD_A", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("COLOR_H", &typeid(float), "slider", -0, 255, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("COLOR_S", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("COLOR_B", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("COLOR_A", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("BG_H", &typeid(float), "slider", 0, 255, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("BG_S", &typeid(float), "slider", 0, 255, 0, w, h, "right") );
-    prmLst.push_back( AppParameter("BG_B", &typeid(float), "slider", 0, 255, 128, w, h, "right") );
-    prmLst.push_back( AppParameter("BG_A", &typeid(float), "slider", 0, 255, 255, w, h, "right") );
-    prmLst.push_back( AppParameter("POS_RANDOMIZE", &typeid(float), "slider", 0, 5, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("RANDOMSEED", &typeid(int), "slider", 0, 100, 0, w, h, "bottom") );
-    prmLst.push_back( AppParameter("PARTICLE_IMAGE", &typeid(int), "dropdownList", 0, 100, 0, w, h, "bottom") );
-    
-    // 素材の読み込み
-	img.loadImage("pixelArt/default.png");
-	//img.loadImage("face4_48x48.png");
-	//img.loadImage("pixelArt/magica_madoka_henshin.png");
-	//img.loadImage("dot.png");
-	particleImg.loadImage("particleImg/default.tif");
-	tileImg.loadImage("tileImg/default.png");
-    
-    sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
-    
     for(int i=0; i<prmLst.size(); i++) {
         AppParameter* prm = &prmLst[i];
         ofxUIWidget* widget;
@@ -212,6 +215,8 @@ void testApp::setup(){
         gui->addWidgetRight(new ofxUIDropDownList("BLEND_MODE", items, 120));
     }
     
+    // --------------------------------------------------------------------------
+
     _imgLoad();
     
     ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
@@ -532,25 +537,27 @@ void testApp::draw(){
 	}
      */
     
-    ofPushMatrix();
+    {
+        ofPushMatrix();
     
-    ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 500);
+        ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 500);
     
- //   ofScale(prmMap["SIZE"]->floatVal,　prmMap["SIZE"]->floatVal);
-    ofTranslate(prmMap["POS_X"]->floatVal, prmMap["POS_Y"]->floatVal, prmMap["POS_Z"]->floatVal);
+     //   ofScale(prmMap["SIZE"]->floatVal,　prmMap["SIZE"]->floatVal);
+        ofTranslate(prmMap["POS_X"]->floatVal, prmMap["POS_Y"]->floatVal, prmMap["POS_Z"]->floatVal);
 
-    ofScale(prmMap["SIZE"]->floatVal, prmMap["SIZE"]->floatVal);
+        ofScale(prmMap["SIZE"]->floatVal, prmMap["SIZE"]->floatVal);
 
-    ofRotateX(prmMap["ROTATE_X"]->floatVal);
-    ofRotateY(prmMap["ROTATE_Y"]->floatVal);
-    ofRotateZ(prmMap["ROTATE_Z"]->floatVal);
+        ofRotateX(prmMap["ROTATE_X"]->floatVal);
+        ofRotateY(prmMap["ROTATE_Y"]->floatVal);
+        ofRotateZ(prmMap["ROTATE_Z"]->floatVal);
 
-	particleImg.getTextureReference().bind();
-	//billboards.draw(OF_MESH_WIREFRAME);
-	billboards.draw();
-	particleImg.getTextureReference().unbind();
+	    particleImg.getTextureReference().bind();
+	    //billboards.draw(OF_MESH_WIREFRAME);
+	    billboards.draw();
+	    particleImg.getTextureReference().unbind();
     
-    ofPopMatrix();
+        ofPopMatrix();
+    }
     
     cam.end();
     //screenFbo.end();
@@ -739,6 +746,7 @@ void testApp::receiveOscMessage() {
                     //w->update();
                     w->triggerSelf();       // 変数に反映
                     //cout << "OSC / " << prmLst[i] << ":" << n << endl;
+
                 } else if (prmLst[i].uiType == "dropdownList") {
                     
                     ofxUIDropDownList *w = (ofxUIDropDownList *)gui->getWidget(prmLst[i].name);
@@ -769,21 +777,7 @@ void testApp::receiveOscMessage() {
             }
         }
         
-        
-        /*
-        //stringstream address;
-        //address << appId << objId << ;
-
-        //cout << header + "af";
-
-        if ( m.getAddress() == header+"POS_X" ){
-            
-            float vol = m.getArgAsFloat( 0 );       // 値を取得
-        }
-         */
-        
-        //OSCメッセージをそのままコンソールに出力
-        //dumpOsc(m);   // 本番では重いのでコメントアウト
+        //dumpOsc(m);   // OSCメッセージをそのままコンソールに出力 (本番では重いのでコメントアウト
     }
     
 }
@@ -793,7 +787,7 @@ void testApp::receiveOscMessage() {
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     
-    if (key == ' ') {
+    if (key == ' ') {                   // space key で GUI のOn/Off
         
         if(gui->isEnabled()) {
             gui->disable();
@@ -801,7 +795,7 @@ void testApp::keyPressed(int key){
             gui->enable();
         }
         
-    } else if (key == 's') {
+    } else if (key == 's') {             // 's' key で screen shot
         _saveScreenShot();
     }
 }
@@ -809,7 +803,10 @@ void testApp::keyPressed(int key){
 void testApp::_saveScreenShot() {
     
     //ofSaveFrame();
+
     stringstream ss;
+
+    // 保存するファイルパスを生成 --------------
     ss << "record/";
     ss << ofGetYear();
     ss << boost::format( "%02d" ) % ofGetMonth();
@@ -819,7 +816,7 @@ void testApp::_saveScreenShot() {
     ss << boost::format( "%02d" ) % ofGetMinutes();
     ss << boost::format( "%02d" ) % ofGetSeconds();
     
-    // 撮影日時が同じ場合はファイル名に連番を付ける
+    // 撮影日時が前回と同じ場合はファイル名に連番を追加
     string dateTime = ss.str();
     if (dateTime == prevScreenShotDateTime) {
         screenShotCounter++;
@@ -829,12 +826,14 @@ void testApp::_saveScreenShot() {
     ss << "_" << (screenShotCounter+1);
     ss << ".png";
     
-        ofSaveScreen(ss.str());
+    // スクリーンショットを保存 --------------
+    ofSaveScreen(ss.str());
+
     /*
     ofPixels ofp;
     screenFbo.readToPixels(ofp);
     ofSaveImage(ofp, ss.str());
-     */
+    */
     
     sndMap["se_screen_shot"].play();
     
@@ -894,6 +893,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+
     if (button == 2) {
         rightClick = true;
     }
@@ -919,9 +919,11 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
+
     if (button == 2) {
         rightClick = true;
     }
+
 }
 
 //--------------------------------------------------------------
@@ -941,31 +943,19 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void testApp::exit(){
+
     gui->saveSettings("GUI/guiSettings.xml"); 
     delete gui; 
+
 }
 
 //--------------------------------------------------------------
 void testApp::guiEvent(ofxUIEventArgs &e)
 {
+
+    string name = e.widget->getName();
     
-    if(e.widget->getName() == "BG FILE OPEN")
-    {
-        ofxUIButton *button = (ofxUIButton *) e.widget;
-        
-        //size = button->getScaledValue();
-        if (!button->getValue()) {
-            ofFileDialogResult t = ofSystemLoadDialog("Select background image file");
-            //ofSystemTextBoxDialog(t.getPath());
-            if (t.getPath() != "") {
-                bgImgPath = t.getPath();
-                bgImg.loadImage(bgImgPath);
-                showBgImg = true;
-            }
-        }
-        
-    }
-    else if (e.widget->getName() == "LOAD_PIXEL_ART")
+    if (name == "LOAD_PIXEL_ART")
     {
         ofxUIButton *button = (ofxUIButton *) e.widget;
         
@@ -980,7 +970,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         }
         
     }
-    else if (e.widget->getName() == "SAVE_SCREENSHOT")
+
+    else if (name == "SAVE_SCREENSHOT")
     {
         ofxUIButton *button = (ofxUIButton *) e.widget;
         
@@ -988,12 +979,14 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             _saveScreenShot();
         }        
     }
-    else if(e.widget->getName() == "FULLSCREEN")
+
+    else if(name == "FULLSCREEN")
     {
         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
         ofSetFullscreen(toggle->getValue());   
     }
-    else if(e.widget->getName() == "BLEND_MODE")
+
+    else if(name == "BLEND_MODE")
     {
         ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
@@ -1019,7 +1012,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         cout << blendMode << endl;
         
     }
-    else if(e.widget->getName() == "BLEND_MODE")
+
+    else if(name == "BLEND_MODE")
     {
         ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
@@ -1046,7 +1040,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         
     }
     
-    else if(e.widget->getName() == "P_IMG_PATTERN") {
+    else if(name == "P_IMG_PATTERN") {
         
         ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
@@ -1064,7 +1058,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         }
     }
     
-    else if(e.widget->getName() == "PARTICLE_IMAGE") {
+    else if(name == "PARTICLE_IMAGE") {
         
         cout<< "PART_IMAGE!"<<endl;
         
@@ -1092,7 +1086,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             
         }
     }
-    else if(e.widget->getName() == "TILE_IMAGE") {
+
+    else if(name == "TILE_IMAGE") {
         
         ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
@@ -1104,7 +1099,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             tileImg.loadImage(ss.str());
         }
     }
-    else if(e.widget->getName() == "PIXEL_ART") {
+
+    else if(name == "PIXEL_ART") {
         
         ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
@@ -1116,8 +1112,25 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             img.loadImage(ss.str());
             _imgLoad();
         }
+    }
+
+    else if(name == "BG FILE OPEN")
+    {
+        ofxUIButton *button = (ofxUIButton *) e.widget;
         
-    } else {
+        //size = button->getScaledValue();
+        if (!button->getValue()) {
+            ofFileDialogResult t = ofSystemLoadDialog("Select background image file");
+            //ofSystemTextBoxDialog(t.getPath());
+            if (t.getPath() != "") {
+                bgImgPath = t.getPath();
+                bgImg.loadImage(bgImgPath);
+                showBgImg = true;
+            }
+        }
+    }
+
+    else {
         if (e.widget->getKind() == OFX_UI_WIDGET_SLIDER_H) {
             ofxUISlider* slider = (ofxUISlider *) e.widget;
             //cout << slider->getName() << endl;
@@ -1147,6 +1160,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             }
         }
     }
+
 }
 
 
