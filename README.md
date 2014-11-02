@@ -1,4 +1,4 @@
-[PixelGirls_DungeonWitches]
+PixelGirls_DungeonWitches
 ===========================
 
 PixelGirls_DungeonWitches is a action game that featured pixel art.
@@ -12,5 +12,5 @@ PixelGirls_DungeonWitches use following libraries. ( libraries/ )
   - License  : MIT License
 
 * [ofxUI] ( https://github.com/rezaali/ofxUI )
-  - * Copyright: (c) 2012 Syed Reza Ali (www.syedrezaali.com)
-  - * License  : MIT License
+  - Copyright: (c) 2012 Syed Reza Ali (www.syedrezaali.com)
+  - License  : MIT License
