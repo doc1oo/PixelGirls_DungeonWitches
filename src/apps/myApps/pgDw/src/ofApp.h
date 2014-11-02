@@ -11,35 +11,31 @@
 #include "ofVbo.h"
 
 #include "ofxUI.h"
-//#include "ofxSoundInput.h"
 #include "ofxOsc.h"
 #define PORT 7778           // OSCメッセージの受信に使うポート番号（送信側と揃える）
 
 #define NUM_BILLBOARDS 40000
 
 
-
 class Parameter {
+
 public:
-    float max, min;
-    float init;
-    
-    string name;
-    
-    float floatVal;
     int intVal;
+	float floatVal;
+    float max, min, init;
+    string name;   
     
 };
 
 
 class AppParameter:public Parameter {
+
 public:
     int posX, posY, w, h, fontSize;
+    string dir, uiType;
     const type_info* type;
-    string dir;
-    string uiType;
-    
-    AppParameter(string _name, const type_info* _type, string _uiType, int _min=0, int _max=100, int _init=0, int _w=100, int _h=40, string _dir="bottom") {
+
+	AppParameter(string _name, const type_info* _type, string _uiType, int _min=0, int _max=100, int _init=0, int _w=100, int _h=40, string _dir="bottom") {
         
         name = _name;
         type = _type;
@@ -56,90 +52,67 @@ public:
         
         /*
         floatValue = (float)_value;
-        intValue = (int)_value;*/
+        intValue = (int)_value;
+		*/
     }
-    
-        
+
 };
 
 
 class testApp : public ofBaseApp{
+
 public:
-
-    ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス
-    ofImage img;
-    ofImage particleImg;
-    ofImage tileImg;
-    ofImage bgImg;
-    map<string, boost::any> oscPrm;
-    map<string, ofSoundPlayer> sndMap;
-
-    vector<AppParameter> prmLst;
-//    map<string, boost::any> prmValLst;
-    map<string, AppParameter *> prmMap;
-
-    ofCamera    cam;
-
     int screenShotCounter;
-    string prevScreenShotDateTime;
-    
-    vector <ofColor> imgColorLst;
-    
-
-    float size, pitch;
-    float rotateX, rotateY, rotateZ;
-    float bgH, bgS, bgB;
     int blendMode;
-
-    string bgImgPath;
-    bool showBgImg;
-    bool rightClick;
-
-    int compH, compS, compB, compA;
     int addR, addG, addB;
-    
-    ofPoint prevClickPoint;
-    int prevClickButton;
-    float prevRotateX, prevRotateY, prevRotateZ;
-    float prevPosX, prevPosY, prevPosZ;
-    
+    int compH, compS, compB, compA;
     int pImgPattern;
-
-    
-    ofFbo screenFbo;
-
-    ofFbo maskFbo;
-    
-    // billboard particles
-    float billboardSizeTarget[NUM_BILLBOARDS];
-    
-    ofShader billboardShader;
-    ofImage texture;
-    
-    //ofVbo billboards;
-    ofVboMesh billboards;
-    ofVec3f billboardVels[NUM_BILLBOARDS];
-
+    int prevClickButton;
     int imgPixels;
-
-    ofxUICanvas *gui;
-    void exit(); //iOedC…ewiECμC?CμC?C§C±C?C…C≫CECAC?cIeuC∑CECcEREAEiEgEAEEEg 
-    void guiEvent(ofxUIEventArgs &e); 
-
+    float size, pitch;
     float posX, posY, posZ;
     float posRandomize;
     float posRandomSeed;
+    float rotateX, rotateY, rotateZ;
+    float bgH, bgS, bgB;
+    float prevRotateX, prevRotateY, prevRotateZ;
+    float prevPosX, prevPosY, prevPosZ;
+    float billboardSizeTarget[NUM_BILLBOARDS];	// billboard particles
+    bool showBgImg;
+    bool rightClick;
+
+    string prevScreenShotDateTime;
+    string bgImgPath;
+
+    ofPoint prevClickPoint;
+    ofImage img, particleImg, tileImg, bgImg;
+    ofImage texture;
+    map<string, boost::any> oscPrm;
+    map<string, ofSoundPlayer> sndMap;
+    map<string, AppParameter *> prmMap;
+    vector<AppParameter> prmLst;
+    vector <ofColor> imgColorLst;
+	// map<string, boost::any> prmValLst;
+
+    ofCamera cam;
+    ofFbo screenFbo;
+    ofFbo maskFbo;
+    ofVboMesh billboards;						//ofVbo billboards;
+    ofVec3f billboardVels[NUM_BILLBOARDS];
+    ofShader billboardShader;
+
+	ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス
+    ofxUICanvas *gui;
+
+	// ---------------------------------------------
 
     void setup();
     void update();
     void draw();
-
-    void _imgLoad();
-    void _drawTransparentTile();
-    void _saveScreenShot();
-
+	
+    void exit();
+    void guiEvent(ofxUIEventArgs &e);
     void receiveOscMessage();
-    
     
     void keyPressed(int key);
     void keyReleased(int key);
@@ -151,6 +124,9 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+	void _imgLoad();
+    void _drawTransparentTile();
+    void _saveScreenShot();
 
 };
 
