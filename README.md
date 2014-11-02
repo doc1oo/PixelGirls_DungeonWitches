@@ -5,7 +5,7 @@ PixelGirls_DungeonWitches is a action game that featured pixel art.
 
 ![title_banner](https://github.com/doc1oo/PixelGirls_DungeonWitches/wiki/img/title_banner.png)
 
-This program is open source under an MIT License. see LICENSE.txt.
+This program is open source under an MIT License. see LICENSE.md.
 
 PixelGirls_DungeonWitches use following libraries. ( libraries/ )
 
