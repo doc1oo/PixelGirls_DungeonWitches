@@ -33,5 +33,9 @@ PixelGirls_DungeonWitches use following libralies. ( libraries/ )
   - License  : MIT License
 
 * [ofxUI] ( https://github.com/rezaali/ofxUI )
-  - * Copyright: (c) 2012 Syed Reza Ali (www.syedrezaali.com)
-  - * License  : MIT License
+  - Copyright: (c) 2012 Syed Reza Ali (www.syedrezaali.com)
+  - License  : MIT License
+
+* [boost] ( http://www.boost.org/ )
+  - Copyright: Copyright Beman Dawes, David Abrahams, 1998-2005. Copyright Rene Rivera 2004-2007.
+  - License  : Boost Software License, Version 1.0
