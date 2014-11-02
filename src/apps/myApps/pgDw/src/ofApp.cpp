@@ -215,12 +215,11 @@ void testApp::setup(){
         gui->addWidgetRight(new ofxUIDropDownList("BLEND_MODE", items, 120));
     }
     
-    // --------------------------------------------------------------------------
-
-    _imgLoad();
     
     ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
     
+    // パラメータの初期値の設定
+
     for(int i=0; i<prmLst.size(); i++) {
         AppParameter* prm = &prmLst.at(i);
         prmMap[prm->name] = prm;
@@ -243,15 +242,21 @@ void testApp::setup(){
         
     }
     
-    //gui->loadSettings("GUI/guiSettings.xml");               // 最後に実行しないと実行時エラー
-
     // 今は隠しておきたいパラメータを下に列記
     gui->getWidget( prmMap["BG_A"]->name)->setVisible(false);
+
+    //gui->loadSettings("GUI/guiSettings.xml");               // 最後に実行しないと実行時エラー
     //gui->getWidget( prmMap["COLOR_A"]->name)->setVisible(false);
+
+    // --------------------------------------------------------------------------
+    
+    _imgLoad();
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+
     //cam.setFov(prmMap["CAM_FOV"]->floatVal);
     //cam.setNearClip(prmMap["CAM_NEAR"]->floatVal);
     //cam.setFarClip(prmMap["CAM_FAR"]->floatVal);
@@ -260,9 +265,11 @@ void testApp::update(){
 
     receiveOscMessage();
 
-	stringstream ss;
-	ss << "pixelFx ver.0.1 - fps:" << ofGetFrameRate();
-	ofSetWindowTitle(ss.str());
+    {
+    	stringstream ss;
+	    ss << "pixelFx ver.0.1 - fps:" << ofGetFrameRate();
+	    ofSetWindowTitle(ss.str());
+    }
     
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
     
@@ -299,8 +306,7 @@ void testApp::update(){
         float north = (y - imgHeight/2.0 - dotSize/2.0+0.5)  + ry ;
         float south = (y - imgHeight/2.0 + dotSize/2.0+0.5 )  + ry;
 
-        ///*
-        ofColor c = imgColorLst[x+ y*imgWidth];
+        ofColor c = imgColorLst[x + y*imgWidth];
         
         if ((c.r ==0 && c.g ==0 && c.b ==0) || c.a == 0) {
             c = ofColor(0,0,0,0);
