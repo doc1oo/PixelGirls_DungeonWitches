@@ -9,6 +9,7 @@ void testApp::setup(){
     showBgImg = false;
     rightClick = false;
     pImgPattern = 0;
+    size = 10;
     prevClickPoint = ofPoint(0,0);
 
     // GUI関係の情報設定 -----------------------------------------------
@@ -61,7 +62,9 @@ void testApp::setup(){
 	//cam.setNearClip(0.f);
 	//cam.setFarClip(-1000.f);
 	//cam.enableOrtho();
-    cam.setupPerspective();
+    
+    //cam.setupPerspective();
+    
     //cam.setNearClip(10);
     //cam.setFarClip(1000);
     //cam.
@@ -273,225 +276,21 @@ void testApp::update(){
     
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
     
-    // 高速化するために変数に展開（mapがなぜかめちゃくちゃ遅い）
-    int imgWidth = img.getWidth();
-    int imgHeight = img.getHeight();
-    float dotSize = prmMap["DOT_SIZE"]->floatVal;
-    float posRandomize = prmMap["POS_RANDOMIZE"]->floatVal;
-    float colorH = prmMap["COLOR_H"]->floatVal;
-    float colorS = prmMap["COLOR_S"]->floatVal;
-    float colorB = prmMap["COLOR_B"]->floatVal;
-    float colorA = prmMap["COLOR_A"]->floatVal;
-    float addR = prmMap["ADD_R"]->floatVal;
-    float addG = prmMap["ADD_G"]->floatVal;
-    float addB = prmMap["ADD_B"]->floatVal;
-    float addA = prmMap["ADD_A"]->floatVal;
-    int particleImgNum = particleImg.getWidth() / particleImg.getHeight();
-    int pSize = particleImg.getHeight();
-    int pWidth = particleImg.getWidth();
-    
-    imgPixels =(int)img.getWidth() * (int)img.getHeight();
-    
-    for (int i=0; i<imgPixels; i++) {
-        
-        int p = i * 6;
-        int x = i % imgWidth;
-        int y = i / imgWidth;
-		
-        float rx = (ofRandomuf() - 0.5) * posRandomize;
-        float ry = (ofRandomuf() - 0.5) * posRandomize;
-
-        float west = (x - imgWidth/2.0 - dotSize/2.0+0.5)  + rx;
-        float east = (x - imgWidth/2.0 + dotSize/2.0+0.5)  + rx;
-        float north = (y - imgHeight/2.0 - dotSize/2.0+0.5)  + ry ;
-        float south = (y - imgHeight/2.0 + dotSize/2.0+0.5 )  + ry;
-
-        ofColor c = imgColorLst[x + y*imgWidth];
-        
-        if ((c.r ==0 && c.g ==0 && c.b ==0) || c.a == 0) {
-            c = ofColor(0,0,0,0);
-            //ofSetColor(c);
-        } else {
-            int r = c.r + addR;
-            int g = c.g + addG;
-            int b = c.b + addB;
-            int a = c.a + addA + colorA;
-            r = ofClamp(r, 0, 255);
-            g = ofClamp(g, 0, 255);
-            b = ofClamp(b, 0, 255);
-            a = ofClamp(a, 0, 255);
-
-            c = ofColor(r, g, b);
-            
-            float hsbH, hsbS, hsbB, hsbA;
-            c.getHsb(hsbH, hsbS, hsbB);
-            
-            hsbH += colorH;
-            hsbS += colorS;
-            hsbB += colorB;
-            c = ofColor::fromHsb(hsbH, hsbS, hsbB);
-            c.a = a;
-        
-            if (pImgPattern == 1) {
-                float b2 = (((int)c.getBrightness())/3)*3;
-                if (b2 > 255) {
-                    b2 = 255;
-                }
-                c = ofColor::fromHsb(hsbH, hsbS, b2);
-            }
-        }
-        
-        //billboards.setColor(p, c);
-        //billboards.setColor(p+1, c);
-        //billboards.setColor(p+2, c);
-        //billboards.setColor(p+3, c);
-        //billboards.setColor(p+4, c);
-        //billboards.setColor(p+5, c);
-        billboards.setColorForIndices(p,p+6,c);
-        //*/
-        
-        billboards.setVertex(p, ofVec3f(west, south, 0));
-        billboards.setVertex(p+1, ofVec3f(west, north, 0));
-        billboards.setVertex(p+2, ofVec3f(east, south, 0));
-        billboards.setVertex(p+3, ofVec3f(east, south, 0));
-        billboards.setVertex(p+4, ofVec3f(west, north, 0));
-        billboards.setVertex(p+5, ofVec3f(east, north, 0));
-        
-        /*
-        billboards.setNormal(p, ofVec3f(12,0,0));
-    	billboards.setNormal(p+1, ofVec3f(12,0,0));
-    	billboards.setNormal(p+2, ofVec3f(12,0,0));
-    	billboards.setNormal(p+3, ofVec3f(12,0,0));
-    	billboards.setNormal(p+4, ofVec3f(12,0,0));
-    	billboards.setNormal(p+5, ofVec3f(12,0,0));
-         */
-
-        
-        if (pImgPattern == 0) {
-        
-            float srcX = ((int)ofRandom(particleImgNum)) / (float)particleImgNum;
-            west = srcX;
-            east = west + (1.0/particleImgNum);
-            north = 0;
-            south = 1;
-        } else {
-            //int penSlashNum = ((int)c.b / (255 / particleImgNum));
-            /*
-            if (penSlashNum > (pNum/2-1)) {
-                penSlashNum = pNum/2-1;
-            }
-             */
-            int pNum = pWidth / pSize / 2;
-            west = (  ((int) ( (c.getBrightness() / 256.0) * pNum))*2  + (int)ofRandom(2))  / ((float)pNum*2) ;
-            
-            east = west + (1.0/particleImgNum);
-            north = 0;
-            south = 1;
-        }
-        billboards.setTexCoord(p, ofVec2f(west, south));
-        billboards.setTexCoord(p+1, ofVec2f(west, north));
-        billboards.setTexCoord(p+2, ofVec2f(east, south));
-        billboards.setTexCoord(p+3, ofVec2f(east, south));
-        billboards.setTexCoord(p+4, ofVec2f(west, north));
-        billboards.setTexCoord(p+5, ofVec2f(east, north));
-	}
-
-    ofSetColor(255);
 }
 
 
 void testApp::_imgLoad(){
 
     imgPixels = img.getWidth() * img.getHeight();
-    
+    /*
     imgColorLst.clear();
     for(int i=0; i<imgPixels; i++) {
         imgColorLst.push_back( img.getColor( i%(int)img.getWidth(), i/(int)img.getWidth() ) );
     }
+    */
     
     int particleImgNum = particleImg.getWidth() / particleImg.getHeight();
     
-    billboards.setUsage( GL_DYNAMIC_DRAW );
-	billboards.setMode(OF_PRIMITIVE_TRIANGLES);
-    
-    //billboards.clear();
-    billboards.clearVertices();
-    billboards.clearColors();
-    billboards.clearNormals();
-    billboards.clearTexCoords();
-    billboards.clearIndices();
-    
-	// ------------------------- billboard particles
-    billboards.usingTextures();
-	for (int i=0; i<imgPixels; i++) {
-        int x = i % (int)img.getWidth();
-        int y = i / (int)img.getWidth();        
-        
-        int rate = 1;
-        float west = x*rate;
-        float east = (x+1)*rate;
-        float north = y*rate;
-        float south = (y+1)*rate;
-
-        ofColor c = img.getColor(x, y);
-        billboards.addColor(c);
-        billboards.addColor(c);
-        billboards.addColor(c);
-        billboards.addColor(c);
-        billboards.addColor(c);
-        billboards.addColor(c);
-        
-        billboards.addIndex(i*6);
-        billboards.addIndex(i*6+1);
-        billboards.addIndex(i*6+2);
-        billboards.addIndex(i*6+3);
-        billboards.addIndex(i*6+4);
-        billboards.addIndex(i*6+5);
-
-		//billboards.getVertices()[i].set(x * 30+ofRandom(10), y * 30+ofRandom(10), 0);
-        //billboards.getTexCoords()[i].set(i*1+ofRandom(10),i*3+ofRandom(10) );
-        ofPushMatrix();
-        {
-            //ofTranslate(x, y);
-            billboards.addVertex(ofVec3f(west, south, 0));
-            billboards.addVertex(ofVec3f(west, north, 0));
-            billboards.addVertex(ofVec3f(east, south, 0));
-            
-            billboards.addVertex(ofVec3f(east, south, 0));
-            billboards.addVertex(ofVec3f(west, north, 0));
-            billboards.addVertex(ofVec3f(east, north, 0));
-            
-            float srcX = ((int)ofRandom(particleImgNum)) / (float)particleImgNum;
-            west = srcX;
-            east = west + (1.0/particleImgNum);
-            north = 0;
-            south = 1;
-            //cout << particleImgNum;
-
-            billboards.addTexCoord(ofVec2f(west, south));
-            billboards.addTexCoord(ofVec2f(west, north));
-            billboards.addTexCoord(ofVec2f(east, south));
-            billboards.addTexCoord(ofVec2f(east, south));
-            billboards.addTexCoord(ofVec2f(west, north));
-            billboards.addTexCoord(ofVec2f(east, north));
-        }
-        ofPopMatrix();
-		
-        //billboards.getColors()[i].set(c);
-        
-    	billboards.addNormal(ofVec3f(12,0,0));
-    	billboards.addNormal(ofVec3f(12,0,0));
-    	billboards.addNormal(ofVec3f(12,0,0));
-    	billboards.addNormal(ofVec3f(12,0,0));
-    	billboards.addNormal(ofVec3f(12,0,0));
-    	billboards.addNormal(ofVec3f(12,0,0));
-
-		//billboards.getColors()[i].set(ofColor::fromHsb(ofRandom(96, 160), 255, 255));
-	    //billboardSizeTarget[i] = ofRandom(4, 64);
-        
-		//cout << x << endl;
-	}
-	
 }
 
 //--------------------------------------------------------------
@@ -500,7 +299,7 @@ void testApp::draw(){
     ofSetColor(255);
     
     //screenFbo.begin();
-    cam.begin();
+    //cam.begin();
     
 	//ofEnableAlphaBlending();
 	//ofEnableAntiAliasing();
@@ -535,37 +334,142 @@ void testApp::draw(){
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); ニアレストネイバー拡大
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     
-    /*
-	for(int i=0; i<(ofGetHeight()/tileImg.getHeight()); i++) {
-		for(int j=0; j<(ofGetWidth()/tileImg.getWidth()); j++) {
-			tileImg.draw(j*tileImg.getWidth(), i*tileImg.getHeight(), tileImg.getWidth(), tileImg.getHeight());
-		}
-	}
-     */
+    
+	//maskFbo.begin();
+	//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    
+    
+	//ofEnableAlphaBlending();
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+    
+    
+    int imgWidth = img.getWidth();
+    int imgHeight = img.getHeight();
+    float _size = prmMap["SIZE"]->floatVal;
+    float dotSize = prmMap["DOT_SIZE"]->floatVal;
+    float posX = prmMap["POS_X"]->floatVal;
+    float posY = prmMap["POS_Y"]->floatVal;
+    float rotateX = prmMap["ROTATE_X"]->floatVal;
+    float rotateY = prmMap["ROTATE_Y"]->floatVal;
+    float rotateZ = prmMap["ROTATE_Z"]->floatVal;
+    float posRandomize = prmMap["POS_RANDOMIZE"]->floatVal;
+    float colorH = prmMap["COLOR_H"]->floatVal;
+    float colorS = prmMap["COLOR_S"]->floatVal;
+    float colorB = prmMap["COLOR_B"]->floatVal;
+    float colorA = prmMap["COLOR_A"]->floatVal;
+    float addR = prmMap["ADD_R"]->floatVal;
+    float addG = prmMap["ADD_G"]->floatVal;
+    float addB = prmMap["ADD_B"]->floatVal;
+    float addA = prmMap["ADD_A"]->floatVal;
+    int particleImgNum = particleImg.getWidth() / particleImg.getHeight();
+    int pSize = particleImg.getHeight();
+    int pWidth = particleImg.getWidth();
+    pitch = _size;
+
+	//ofBackground(192,128,160);
+    //int bgColor = 224;
+    //ofBackground(bgColor);
     
     {
         ofPushMatrix();
     
-        ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 500);
-    
-     //   ofScale(prmMap["SIZE"]->floatVal,　prmMap["SIZE"]->floatVal);
-        ofTranslate(prmMap["POS_X"]->floatVal, prmMap["POS_Y"]->floatVal, prmMap["POS_Z"]->floatVal);
+        //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
+	    //		ofRotate(180,rotateX,rotateY,rotateZ);
+        /*
+        ofRotateX(rotateX);
+        ofRotateY(rotateY);
+        ofRotateZ(rotateZ);
+        */
+        ofColor c;
+        float h, s, b;
+	    for(int i=0; i<img.getHeight(); i++) {
+		    for(int j=0; j<img.getWidth(); j++) {
+            
+			    c = img.getColor(j, i);
+            
+                //stringstream ss;
+                //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
+                //cout << ss.str();
 
-        ofScale(prmMap["SIZE"]->floatVal, prmMap["SIZE"]->floatVal);
+			    if (c.a == 0) {
+                    continue;
+			    } 
+                
+                ofPushMatrix();
+                c.getHsb(h, s, b);
+            
+                    c.r += addR;
+                    c.g += addG;
+                    c.b += addB;
+                    if (c.r > 255) {
+                        c.r = 255;
+                    }
+				    ofSetColor(c);
+                
+                    float b2 = (((int)b)/3)*3;
+                    if (b2 > 255) {
+                        b2 = 255;
+                    }
+                
+                    //ofSetColor(ofColor::fromHsb(h, s, b2));
 
-        ofRotateX(prmMap["ROTATE_X"]->floatVal);
-        ofRotateY(prmMap["ROTATE_Y"]->floatVal);
-        ofRotateZ(prmMap["ROTATE_Z"]->floatVal);
-
-	    particleImg.getTextureReference().bind();
-	    //billboards.draw(OF_MESH_WIREFRAME);
-	    billboards.draw();
-	    particleImg.getTextureReference().unbind();
-    
+                //cout << " " << c.r << " " << c.g << " " << c.b << endl;
+                //ofTranslate(j, i);
+			        //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
+                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
+			        //ofScale(size/256,size/256);
+                    
+                ofRotateX(rotateX);
+                ofRotateY(rotateY);
+                ofRotateZ(rotateZ);
+			        //ofRotate(45,0,0,1);
+            
+                    //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
+                    int tNum = (int)pWidth/(int)pSize;
+            
+                    //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
+                    int penSlashNum = tNum/2 - ((int)b / tNum) + 4;
+                    if (penSlashNum > (tNum/2-1)) {
+                        penSlashNum = tNum/2-1;
+                    }
+            
+                    //ofRect(0,0, pSize, pSize);
+                    //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
+                    particleImg.drawSubsection(0, 0, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(2)) * pSize, 0, pSize, pSize);
+            
+        ofPopMatrix();
+                    //cout << pSize;
+		    }
+	    }
         ofPopMatrix();
     }
+	
+	//maskFbo.end();
+
+	//ofSetColor( ofColor::fromHsb(compH, compS, compB) );
+
+	
+	//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+	//maskFbo.draw(0,0);
+
+	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
-    cam.end();
+    
+    
+    {
+        stringstream ss;
+        ss << "ofScr_" << ofGetFrameNum() << ".png";
+        //ofSaveScreen(ss.str());
+        //ofSaveFrame();
+    }
+	
+	//particleImg.draw(0, 0);
+     
+    
+    //cam.end();
     //screenFbo.end();
 
     //ofEnableAlphaBlending();
@@ -579,115 +483,7 @@ void testApp::draw(){
 
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
-    
     return;
-    
-    
-    /*
-
-	maskFbo.begin();
-	//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-    
-    
-	//ofEnableAlphaBlending();
-	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    
-	//ofBackground(192,128,160);
-    //int bgColor = 224;
-    //ofBackground(bgColor);
-    
-    ofPushMatrix();
-    
-    //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
-	//		ofRotate(180,rotateX,rotateY,rotateZ);
-    ofRotateX(rotateX);
-    ofRotateY(rotateY);
-    ofRotateZ(rotateZ);
-	for(int i=0; i<img.getHeight(); i++) {
-		for(int j=0; j<img.getWidth(); j++) {
-            
-			ofColor c = img.getColor(j, i);
-            float h, s, b;
-            c.getHsb(h, s, b);
-            
-			if ((c.r ==0 && c.g ==0 && c.b ==0) || c.a == 0) {
-				c = ofColor(0,0,0,0);
-				ofSetColor(c);
-			} else {
-                c.r += addR;
-                c.g += addG;
-                c.b += addB;
-                if (c.r > 255) {
-                    c.r = 255;
-                }
-				//ofSetColor(c);
-                
-                float b2 = (((int)b)/3)*3;
-                if (b2 > 255) {
-                    b2 = 255;
-                }
-                
-                ofSetColor(ofColor::fromHsb(h, s, b2));
-			}
-            
-            //cout << " " << c.r << " " << c.g << " " << c.b << endl;
-
-			//ofRect(ofPoint(j*pitch, i*pitch), size, size);
-
-			ofPushMatrix();
-			ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize, ofRandomuf()*posRandomize);
-			ofScale(size/256,size/256);
-            
-            
-            
-			//ofRotate(45,0,0,1);
-            int pSize = particleImg.getHeight();
-            int pWidth = particleImg.getWidth();
-			//particleImg.draw(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
-			//particleImg.draw(-particleImg.getWidth()/2,-particleImg.getHeight()/2);
-            
-            //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
-                int tNum = (int)pWidth/(int)pSize;
-            
-                //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
-                int penSlashNum = tNum/2 - ((int)b / tNum) + 4;
-            if (penSlashNum > (tNum/2-1)) {
-                penSlashNum = tNum/2-1;
-            }
-            
-            ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
-                //particleImg.drawSubsection(0, 0, pSize, pSize, (penSlashNum * 2 + (int)ofRandom(2)) * pSize, 0, pSize, pSize);
-            
-            //cout << pSize;
-			ofPopMatrix();
-		}
-	}
-    ofPopMatrix();
-	
-	maskFbo.end();
-
-	ofSetColor( ofColor::fromHsb(compH, compS, compB) );
-
-	
-	ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	maskFbo.draw(0,0);
-
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    
-    
-    //soundInput.drawMicLevelMeter(800, 200);        // 動作チェック用。（なくても動作します） tanaka add
-    
-    {
-        stringstream ss;
-        ss << "ofScr_" << ofGetFrameNum() << ".png";
-        //ofSaveScreen(ss.str());
-        //ofSaveFrame();
-    }
-	
-	//particleImg.draw(0, 0);
-     
-     */
 
 }
 
