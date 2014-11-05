@@ -53,11 +53,32 @@ void ofApp::setup(){
 	tileImg.loadImage("tileImg/default.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
 
-    vector<string> charPartsPathList = getDirectoryFileListRecursive("./data/img/charParts/");
+    auto charPartsPathMap = getDirectoryFileListRecursive("./data/img/charParts/");
 
-    for (auto path : charPartsPathList) {
-        cout << "vec-output: " << path << endl;
+    for (auto path : charPartsPathMap) {
+        cout << "vec-output: " << path.first << " " << path.second << endl;
+        imgCharPartsMap[path.first] = ofImage();
+
+        auto res = imgCharPartsMap[path.first].loadImage("../" + path.first);
+        cout << "loadImage: " << "" << "../" << path.first;
+        if (res) {
+            cout << " - OK";
+        } else {
+            cout << " - NG";
+        }
+        cout << endl;
     }
+
+    imgHero.allocate(CS, CS, OF_IMAGE_COLOR_ALPHA);
+
+    string sel;
+    auto itr = charPartsPathMap.begin();
+    for(int i=0; i<(int)ofRandom(charPartsPathMap.size()); i++) {
+        sel = itr->first;
+        itr++;
+    }
+    cout << "random image: " << sel << endl;
+    img = imgCharPartsMap[sel];
 
     // 初期化 -----------------------------------------------------------------
     
@@ -977,9 +998,9 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 }
 
 // 2014/11/6 referenced:  http://qiita.com/episteme/items/0e3c2ee8a8c03780f01e
-vector<string> getDirectoryFileListRecursive(string targetDir) {
+map<string, string> getDirectoryFileListRecursive(string targetDir) {
 
-    vector<string> pathList;
+    map<string, string> pathList;
 
     namespace sys = std::tr2::sys;
     sys::path p(targetDir); // 列挙の起点
@@ -989,7 +1010,9 @@ vector<string> getDirectoryFileListRecursive(string targetDir) {
         [&](const sys::path& p) {
             if (sys::is_regular_file(p)) { // ファイルなら...
                 cout << "file: " << p.string() << endl;     // "/" << p.filename()
-                pathList.push_back((string)p.filename());
+
+                pathList[p.string()] = p.filename();
+
             } else if (sys::is_directory(p)) { // ディレクトリなら...
                 cout << "dir.: " << p.string() << endl;
             }

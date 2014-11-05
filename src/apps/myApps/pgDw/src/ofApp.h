@@ -20,7 +20,7 @@
 
 #define PORT 7778                       // OSCメッセージの受信に使うポート番号（送信側と揃える）
 #define NUM_BILLBOARDS 40000
-
+#define CS 16                       // ChipSize
 
 class Parameter {
 
@@ -93,6 +93,8 @@ public:
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg;
     ofImage texture;
+    ofImage imgHero;
+    map<string, ofImage> imgCharPartsMap;
     map<string, boost::any> oscPrm;
     map<string, ofSoundPlayer> sndMap;
     map<string, AppParameter *> prmMap;
@@ -136,4 +138,4 @@ public:
 
 };
 
-vector<string> getDirectoryFileListRecursive(string targetDir);
+map<string, string> getDirectoryFileListRecursive(string targetDir);
