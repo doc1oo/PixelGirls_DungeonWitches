@@ -3,9 +3,14 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <filesystem> // std::tr2::sys::path etc.
+
 #include <boost/any.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+
 #include "ofMain.h"
 #include "ofUtils.h"
 #include "ofVbo.h"
@@ -60,7 +65,7 @@ public:
 };
 
 
-class testApp : public ofBaseApp{
+class ofApp : public ofBaseApp{
 
 public:
     int imgPixels;
@@ -83,6 +88,7 @@ public:
     bool rightClick;
     string bgImgPath;
     string prevScreenShotDateTime;
+    vector<string> charPartsPathList;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg;
@@ -130,3 +136,4 @@ public:
 
 };
 
+vector<string> getDirectoryFileListRecursive(string targetDir);

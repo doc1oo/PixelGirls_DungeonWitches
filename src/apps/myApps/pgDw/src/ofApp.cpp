@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 
-void testApp::setup(){
+void ofApp::setup(){
     
     // 変数の初期値設定 -----------------------------------------------
 
@@ -11,6 +11,11 @@ void testApp::setup(){
     pImgPattern = 0;
     size = 10;
     prevClickPoint = ofPoint(0,0);
+    charPartsPathList.push_back("body");
+    charPartsPathList.push_back("face");
+    charPartsPathList.push_back("eyes");
+    charPartsPathList.push_back("hair");
+    charPartsPathList.push_back("hairAcce");
 
     // GUI関係の情報設定 -----------------------------------------------
     {
@@ -47,6 +52,12 @@ void testApp::setup(){
 	particleImg.loadImage("particleImg/default.tif");
 	tileImg.loadImage("tileImg/default.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
+
+    vector<string> charPartsPathList = getDirectoryFileListRecursive("./data/img/charParts/");
+
+    for (auto path : charPartsPathList) {
+        cout << "vec-output: " << path << endl;
+    }
 
     // 初期化 -----------------------------------------------------------------
     
@@ -219,7 +230,7 @@ void testApp::setup(){
     }
     
     
-    ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
+    ofAddListener(gui->newGUIEvent, this, &ofApp::guiEvent);
     
     // パラメータの初期値の設定
 
@@ -258,7 +269,7 @@ void testApp::setup(){
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
 
     //cam.setFov(prmMap["CAM_FOV"]->floatVal);
     //cam.setNearClip(prmMap["CAM_NEAR"]->floatVal);
@@ -279,7 +290,7 @@ void testApp::update(){
 }
 
 
-void testApp::_imgLoad(){
+void ofApp::_imgLoad(){
 
     imgPixels = img.getWidth() * img.getHeight();
     /*
@@ -294,7 +305,7 @@ void testApp::_imgLoad(){
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
     
     ofSetColor(255);
     
@@ -488,7 +499,7 @@ void testApp::draw(){
 }
 
 // 半透明を表す市松模様を描く
-void testApp::_drawTransparentTile() {
+void ofApp::_drawTransparentTile() {
 
     int size = 25;
     for(int i=0; i<=ofGetHeight()/size; i++) {
@@ -504,7 +515,7 @@ void testApp::_drawTransparentTile() {
 
 }
 
-void testApp::receiveOscMessage() {
+void ofApp::receiveOscMessage() {
     
     //現在順番待ちのOSCメッセージがあるか確認
     while( oscReceiver.hasWaitingMessages() ) {
@@ -587,7 +598,7 @@ void testApp::receiveOscMessage() {
 
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
     
     if (key == ' ') {                   // space key で GUI のOn/Off
         
@@ -602,7 +613,7 @@ void testApp::keyPressed(int key){
     }
 }
 
-void testApp::_saveScreenShot() {
+void ofApp::_saveScreenShot() {
     
     //ofSaveFrame();
 
@@ -644,17 +655,17 @@ void testApp::_saveScreenShot() {
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
     
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y){
+void ofApp::mouseMoved(int x, int y){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
     
     if (!(x < 600 && y < 400) || gui->isEnabled() == false) {
         if (button == 0) { // left click
@@ -694,7 +705,7 @@ void testApp::mouseDragged(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 
     if (button == 2) {
         rightClick = true;
@@ -720,7 +731,7 @@ void testApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 
     if (button == 2) {
         rightClick = true;
@@ -729,22 +740,22 @@ void testApp::mouseReleased(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
 
 //--------------------------------------------------------------
-void testApp::exit(){
+void ofApp::exit(){
 
     gui->saveSettings("GUI/guiSettings.xml"); 
     delete gui; 
@@ -752,7 +763,7 @@ void testApp::exit(){
 }
 
 //--------------------------------------------------------------
-void testApp::guiEvent(ofxUIEventArgs &e)
+void ofApp::guiEvent(ofxUIEventArgs &e)
 {
 
     string name = e.widget->getName();
@@ -965,4 +976,24 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 
 }
 
+// 2014/11/6 referenced:  http://qiita.com/episteme/items/0e3c2ee8a8c03780f01e
+vector<string> getDirectoryFileListRecursive(string targetDir) {
 
+    vector<string> pathList;
+
+    namespace sys = std::tr2::sys;
+    sys::path p(targetDir); // 列挙の起点
+    //std::for_each(sys::directory_iterator(p), sys::directory_iterator(),
+    //  再帰的に走査するならコチラ↓
+    std::for_each(sys::recursive_directory_iterator(p), sys::recursive_directory_iterator(),
+        [&](const sys::path& p) {
+            if (sys::is_regular_file(p)) { // ファイルなら...
+                cout << "file: " << p.string() << endl;     // "/" << p.filename()
+                pathList.push_back((string)p.filename());
+            } else if (sys::is_directory(p)) { // ディレクトリなら...
+                cout << "dir.: " << p.string() << endl;
+            }
+    });
+
+    return pathList;
+}
