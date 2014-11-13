@@ -64,6 +64,12 @@ public:
 
 };
 
+class Char {
+public:
+    map<string, ofImage*> imgMap;
+    map<string, string> partsMap;
+    int x, y, z;
+};
 
 class ofApp : public ofBaseApp{
 
@@ -89,17 +95,21 @@ public:
     string bgImgPath;
     string prevScreenShotDateTime;
     vector<string> charPartsPathList;
+    vector<string> charPartsDrawOrder;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg;
     ofImage texture;
     ofImage imgHero;
     map<string, ofImage> imgCharPartsMap;
+    map<string, map<string, ofImage> > charPartsMap;
+
     map<string, boost::any> oscPrm;
     map<string, ofSoundPlayer> sndMap;
     map<string, AppParameter *> prmMap;
     vector<AppParameter> prmLst;
     vector <ofColor> imgColorLst;
+    vector <Char> charList;
 	// map<string, boost::any> prmValLst;
 
     ofCamera cam;

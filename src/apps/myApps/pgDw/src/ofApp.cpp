@@ -1,6 +1,5 @@
 #include "ofApp.h"
 
-
 void ofApp::setup(){
     
     // 変数の初期値設定 -----------------------------------------------
@@ -13,9 +12,16 @@ void ofApp::setup(){
     prevClickPoint = ofPoint(0,0);
     charPartsPathList.push_back("body");
     charPartsPathList.push_back("face");
-    charPartsPathList.push_back("eyes");
+    charPartsPathList.push_back("eye");
     charPartsPathList.push_back("hair");
     charPartsPathList.push_back("hairAcce");
+
+    
+    charPartsDrawOrder.push_back("body");
+    charPartsDrawOrder.push_back("face");
+    charPartsDrawOrder.push_back("hair");
+    charPartsDrawOrder.push_back("hairAcce");
+    charPartsDrawOrder.push_back("eye");
 
     // GUI関係の情報設定 -----------------------------------------------
     {
@@ -56,29 +62,68 @@ void ofApp::setup(){
     auto charPartsPathMap = getDirectoryFileListRecursive("./data/img/charParts/");
 
     for (auto path : charPartsPathMap) {
-        cout << "vec-output: " << path.first << " " << path.second << endl;
-        imgCharPartsMap[path.first] = ofImage();
 
-        auto res = imgCharPartsMap[path.first].loadImage("../" + path.first);
-        cout << "loadImage: " << "" << "../" << path.first;
+        cout << "vec-output: " << path.first << " " << path.second << endl;
+
+        auto p = std::tr2::sys::path(path.second);
+        string parentDirName = p.parent_path().filename();
+        string fileName = p.stem();
+
+        ofImage tImg;
+        auto res = tImg.loadImage("../" + path.second);
+        cout << "loadImage: [" << parentDirName << "][" << fileName << "] " << "../" << path.second;
+            
         if (res) {
             cout << " - OK";
+            charPartsMap[parentDirName][fileName] = tImg;
+            cout << endl;
+
         } else {
             cout << " - NG";
         }
-        cout << endl;
+
     }
 
-    imgHero.allocate(CS, CS, OF_IMAGE_COLOR_ALPHA);
+    // random charMake
+    for (int charCount = 0; charCount < 20; charCount++) {
 
-    string sel;
-    auto itr = charPartsPathMap.begin();
+        Char tChar = Char();
+
+        auto itr = charPartsMap.begin();
+        for(int i=0; i<charPartsMap.size(); i++) {
+            string index;
+            index = itr->first;
+
+            auto subItr = charPartsMap[index].begin();
+            for(int j=0; j<(int)ofRandom(charPartsMap[index].size()); j++) {
+                subItr++;
+            }
+            string imgFileName = subItr->first;
+            tChar.partsMap[index] = imgFileName;
+            tChar.imgMap[index] = &charPartsMap[index][imgFileName];
+
+            tChar.x = ofRandom(-50, 1200);
+            tChar.y = ofRandom(-30, 700);
+            tChar.z = ofRandom(-100, 1200);
+
+            cout << "char parts" << index << "/" <<imgFileName << endl;
+            itr++;
+        }
+
+        charList.push_back(tChar);
+    }
+
+    /* ランダム選択処理
     for(int i=0; i<(int)ofRandom(charPartsPathMap.size()); i++) {
         sel = itr->first;
+        cout << sel << endl;
         itr++;
-    }
+    }*/
+    /*
     cout << "random image: " << sel << endl;
     img = imgCharPartsMap[sel];
+    */
+
 
     // 初期化 -----------------------------------------------------------------
     
@@ -302,7 +347,7 @@ void ofApp::update(){
 
     {
     	stringstream ss;
-	    ss << "pixelFx ver.0.1 - fps:" << ofGetFrameRate();
+	    ss << "pixeGirls+ DungeonWitches  ver.0.0.1a - fps:" << ofGetFrameRate();
 	    ofSetWindowTitle(ss.str());
     }
     
@@ -348,7 +393,7 @@ void ofApp::draw(){
         float imgAspect = img.getWidth() / img.getHeight();
         bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
     }
-
+    
     if (blendMode == 0) {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     } else if (blendMode == 1) {
@@ -372,7 +417,7 @@ void ofApp::draw(){
     
     
 	//ofEnableAlphaBlending();
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -405,78 +450,91 @@ void ofApp::draw(){
     //int bgColor = 224;
     //ofBackground(bgColor);
     
-    {
-        ofPushMatrix();
+
+
+    for(int charCount=0; charCount<charList.size(); charCount++){
+
+        Char tChar = charList[charCount];
+
+        auto imgItr = tChar.imgMap.begin();
+            cout << "char parts num: " << tChar.imgMap.size() << endl;
+        for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
+            img = *tChar.imgMap[charPartsDrawOrder[categoryCount]];
+            imgItr++;
+
+            ofPushMatrix();
     
-        //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
-	    //		ofRotate(180,rotateX,rotateY,rotateZ);
-        /*
-        ofRotateX(rotateX);
-        ofRotateY(rotateY);
-        ofRotateZ(rotateZ);
-        */
-        ofColor c;
-        float h, s, b;
-	    for(int i=0; i<img.getHeight(); i++) {
-		    for(int j=0; j<img.getWidth(); j++) {
+            //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
+	        //		ofRotate(180,rotateX,rotateY,rotateZ);
+            /*
+            ofRotateX(rotateX);
+            ofRotateY(rotateY);
+            ofRotateZ(rotateZ);
+            */
+            ofColor c;
+            float h, s, b;
+	        for(int i=0; i<img.getHeight(); i++) {
+		        for(int j=0; j<img.getWidth(); j++) {
             
-			    c = img.getColor(j, i);
+			        c = img.getColor(j, i);
             
-                //stringstream ss;
-                //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
-                //cout << ss.str();
+                    //stringstream ss;
+                    //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
+                    //cout << ss.str();
 
-			    if (c.a == 0) {
-                    continue;
-			    } 
+			        if (c.a == 0) {
+                        continue;
+			        } 
                 
-                ofPushMatrix();
-                c.getHsb(h, s, b);
+                    ofPushMatrix();
+                    c.getHsb(h, s, b);
             
-                    c.r += addR;
-                    c.g += addG;
-                    c.b += addB;
-                    if (c.r > 255) {
-                        c.r = 255;
-                    }
-				    ofSetColor(c);
+                        c.r += addR;
+                        c.g += addG;
+                        c.b += addB;
+                        if (c.r > 255) {
+                            c.r = 255;
+                        }
+				        ofSetColor(c);
                 
-                    float b2 = (((int)b)/3)*3;
-                    if (b2 > 255) {
-                        b2 = 255;
-                    }
+                        float b2 = (((int)b)/3)*3;
+                        if (b2 > 255) {
+                            b2 = 255;
+                        }
                 
-                    //ofSetColor(ofColor::fromHsb(h, s, b2));
+                        //ofSetColor(ofColor::fromHsb(h, s, b2));
 
-                //cout << " " << c.r << " " << c.g << " " << c.b << endl;
-                //ofTranslate(j, i);
-			        //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
-                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
-			        //ofScale(size/256,size/256);
+                    //cout << " " << c.r << " " << c.g << " " << c.b << endl;
+                    //ofTranslate(j, i);
+			            //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
+                        ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
+			            //ofScale(size/256,size/256);
                     
-                ofRotateX(rotateX);
-                ofRotateY(rotateY);
-                ofRotateZ(rotateZ);
-			        //ofRotate(45,0,0,1);
+                    ofRotateX(rotateX);
+                    ofRotateY(rotateY);
+                    ofRotateZ(rotateZ);
+			            //ofRotate(45,0,0,1);
             
-                    //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
-                    int tNum = (int)pWidth/(int)pSize;
+                        //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
+                        int tNum = (int)pWidth/(int)pSize;
             
-                    //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
-                    int penSlashNum = tNum/2 - ((int)b / tNum) + 4;
-                    if (penSlashNum > (tNum/2-1)) {
-                        penSlashNum = tNum/2-1;
-                    }
+                        //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
+                        int penSlashNum = tNum/2 - ((int)b / tNum) + 4;
+                        if (penSlashNum > (tNum/2-1)) {
+                            penSlashNum = tNum/2-1;
+                        }
+                        penSlashNum = 0;
             
-                    //ofRect(0,0, pSize, pSize);
-                    //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
-                    particleImg.drawSubsection(0, 0, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(2)) * pSize, 0, pSize, pSize);
+                        //ofRect(0,0, pSize, pSize);
+                        //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
+                        particleImg.drawSubsection(tChar.x, tChar.y, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
             
-        ofPopMatrix();
-                    //cout << pSize;
-		    }
-	    }
-        ofPopMatrix();
+            ofPopMatrix();
+                        //cout << pSize;
+		        }
+	        }
+            ofPopMatrix();
+        }
     }
 	
 	//maskFbo.end();
@@ -1010,8 +1068,9 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
         [&](const sys::path& p) {
             if (sys::is_regular_file(p)) { // ファイルなら...
                 cout << "file: " << p.string() << endl;     // "/" << p.filename()
+                string parentDirName = p.parent_path().filename();
 
-                pathList[p.string()] = p.filename();
+                pathList[ parentDirName + "/" + p.stem() ] = p.string();
 
             } else if (sys::is_directory(p)) { // ディレクトリなら...
                 cout << "dir.: " << p.string() << endl;
