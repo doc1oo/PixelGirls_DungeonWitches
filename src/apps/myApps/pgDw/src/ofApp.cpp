@@ -16,6 +16,7 @@ void ofApp::setup(){
     charPartsPathList.push_back("hair");
     charPartsPathList.push_back("hairAcce");
 
+    srand(time(NULL));
     
     charPartsDrawOrder.push_back("body");
     charPartsDrawOrder.push_back("face");
@@ -94,11 +95,15 @@ void ofApp::setup(){
             string index;
             index = itr->first;
 
-            auto subItr = charPartsMap[index].begin();
-            for(int j=0; j<(int)ofRandom(charPartsMap[index].size()); j++) {
-                subItr++;
+            map<string,  ofImage> tMap = itr->second;
+
+            vector<string> nameList;
+            
+            for(auto t : tMap) {
+                nameList.push_back(t.first);
             }
-            string imgFileName = subItr->first;
+            string imgFileName = nameList[rand()%tMap.size()];
+
             tChar.partsMap[index] = imgFileName;
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
 
@@ -106,7 +111,7 @@ void ofApp::setup(){
             tChar.y = ofRandom(-30, 700);
             tChar.z = ofRandom(-100, 1200);
 
-            cout << "char parts" << index << "/" <<imgFileName << endl;
+            cout << "char parts: " << index << "/" <<imgFileName << endl;
             itr++;
         }
 
@@ -457,7 +462,7 @@ void ofApp::draw(){
         Char tChar = charList[charCount];
 
         auto imgItr = tChar.imgMap.begin();
-            cout << "char parts num: " << tChar.imgMap.size() << endl;
+        //cout << "char parts num: " << tChar.imgMap.size() << endl;
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
             img = *tChar.imgMap[charPartsDrawOrder[categoryCount]];
             imgItr++;
