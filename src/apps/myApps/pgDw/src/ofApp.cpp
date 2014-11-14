@@ -17,12 +17,13 @@ void ofApp::setup(){
     charPartsPathList.push_back("hairAcce");
 
     srand(time(NULL));
-    
+    charPartsDrawOrder.push_back("backAcce");
+    charPartsDrawOrder.push_back("weapon");
     charPartsDrawOrder.push_back("body");
     charPartsDrawOrder.push_back("face");
+    charPartsDrawOrder.push_back("eye");
     charPartsDrawOrder.push_back("hair");
     charPartsDrawOrder.push_back("hairAcce");
-    charPartsDrawOrder.push_back("eye");
 
     // GUI関係の情報設定 -----------------------------------------------
     {
@@ -85,8 +86,9 @@ void ofApp::setup(){
 
     }
 
+    charList.clear();
     // random charMake
-    for (int charCount = 0; charCount < 20; charCount++) {
+    for (int charCount = 0; charCount < 50; charCount++) {
 
         Char tChar = Char();
 
@@ -107,9 +109,9 @@ void ofApp::setup(){
             tChar.partsMap[index] = imgFileName;
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
 
-            tChar.x = ofRandom(-50, 1200);
-            tChar.y = ofRandom(-30, 700);
-            tChar.z = ofRandom(-100, 1200);
+            tChar.x = (charCount%8)*160+80;//ofRandom(-50, 1200);
+            tChar.y = (charCount/8)*120+60;//ofRandom(-30, 700);
+            tChar.z = 0;//ofRandom(-100, 1200);
 
             cout << "char parts: " << index << "/" <<imgFileName << endl;
             itr++;
@@ -378,6 +380,41 @@ void ofApp::_imgLoad(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    srand(time(NULL));
+
+    charList.clear();
+    // random charMake
+    for (int charCount = 0; charCount < 50; charCount++) {
+
+        Char tChar = Char();
+
+        auto itr = charPartsMap.begin();
+        for(int i=0; i<charPartsMap.size(); i++) {
+            string index;
+            index = itr->first;
+
+            map<string,  ofImage> tMap = itr->second;
+
+            vector<string> nameList;
+            
+            for(auto t : tMap) {
+                nameList.push_back(t.first);
+            }
+            string imgFileName = nameList[rand()%tMap.size()];
+
+            tChar.partsMap[index] = imgFileName;
+            tChar.imgMap[index] = &charPartsMap[index][imgFileName];
+
+            tChar.x = (charCount%8)*160+80;//ofRandom(-50, 1200);
+            tChar.y = (charCount/8)*120+60;//ofRandom(-30, 700);
+            tChar.z = 0;//ofRandom(-100, 1200);
+
+            cout << "char parts: " << index << "/" <<imgFileName << endl;
+            itr++;
+        }
+
+        charList.push_back(tChar);
+    }
     ofSetColor(255);
     
     //screenFbo.begin();
