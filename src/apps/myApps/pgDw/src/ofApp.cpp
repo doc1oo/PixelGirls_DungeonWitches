@@ -86,6 +86,7 @@ void ofApp::setup(){
 
     }
 
+
     charList.clear();
     // random charMake
     for (int charCount = 0; charCount < 50; charCount++) {
@@ -109,11 +110,10 @@ void ofApp::setup(){
             tChar.partsMap[index] = imgFileName;
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
 
-            tChar.x = (charCount%8)*160+80;//ofRandom(-50, 1200);
-            tChar.y = (charCount/8)*120+60;//ofRandom(-30, 700);
+            tChar.x = (charCount%8+0.5)*160;//ofRandom(-50, 1200);
+            tChar.y = (charCount/8+0.5)*120;//ofRandom(-30, 700);
             tChar.z = 0;//ofRandom(-100, 1200);
 
-            cout << "char parts: " << index << "/" <<imgFileName << endl;
             itr++;
         }
 
@@ -382,39 +382,6 @@ void ofApp::draw(){
     
     srand(time(NULL));
 
-    charList.clear();
-    // random charMake
-    for (int charCount = 0; charCount < 50; charCount++) {
-
-        Char tChar = Char();
-
-        auto itr = charPartsMap.begin();
-        for(int i=0; i<charPartsMap.size(); i++) {
-            string index;
-            index = itr->first;
-
-            map<string,  ofImage> tMap = itr->second;
-
-            vector<string> nameList;
-            
-            for(auto t : tMap) {
-                nameList.push_back(t.first);
-            }
-            string imgFileName = nameList[rand()%tMap.size()];
-
-            tChar.partsMap[index] = imgFileName;
-            tChar.imgMap[index] = &charPartsMap[index][imgFileName];
-
-            tChar.x = (charCount%8)*160+80;//ofRandom(-50, 1200);
-            tChar.y = (charCount/8)*120+60;//ofRandom(-30, 700);
-            tChar.z = 0;//ofRandom(-100, 1200);
-
-            cout << "char parts: " << index << "/" <<imgFileName << endl;
-            itr++;
-        }
-
-        charList.push_back(tChar);
-    }
     ofSetColor(255);
     
     //screenFbo.begin();
