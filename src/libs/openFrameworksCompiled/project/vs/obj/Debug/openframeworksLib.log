@@ -1,4 +1,4 @@
-﻿2014/11/02 23:58:34 にビルドを開始しました。
+﻿2014/11/21 7:46:04 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj" (Build ターゲット)。
      1>Lib:
          openframeworksLib.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\..\..\lib\vs\openframeworksLib_debug.lib
@@ -6,4 +6,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:00.12
+経過時間 00:00:00.16

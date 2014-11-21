@@ -1,7 +1,17 @@
-#include "ofApp.h"
+﻿#include "ofApp.h"
 
 void ofApp::setup(){
-    
+    // 標準入出力をファイルに変更
+    //ofstream ofs("debug.log");
+    //cout.rdbuf(ofs.rdbuf());
+    /*
+
+    streambuf *old = cout.rdbuf(); // <-- save        
+    stringstream ss;
+
+    cout.rdbuf (ss.rdbuf());       // <-- redirect
+    */
+
     // 変数の初期値設定 -----------------------------------------------
 
     bgImgPath = "";
@@ -76,8 +86,13 @@ void ofApp::setup(){
         cout << "loadImage: [" << parentDirName << "][" << fileName << "] " << "../" << path.second;
             
         if (res) {
-            cout << " - OK";
+            cout << " - OK" << endl;
             charPartsMap[parentDirName][fileName] = tImg;
+            cout << parentDirName << fileName << endl;
+            indexImgMap[parentDirName + fileName] = getIndexImageFromPNG(path.second);
+
+            imgMapPalette[parentDirName + fileName] = getPaletteFromPNG(path.second);
+
             cout << endl;
 
         } else {
@@ -109,6 +124,8 @@ void ofApp::setup(){
 
             tChar.partsMap[index] = imgFileName;
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
+            tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
+            tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
             tChar.x = (charCount%8+0.5)*160;//ofRandom(-50, 1200);
             tChar.y = (charCount/8+0.5)*120;//ofRandom(-30, 700);
@@ -130,8 +147,7 @@ void ofApp::setup(){
     cout << "random image: " << sel << endl;
     img = imgCharPartsMap[sel];
     */
-
-
+    
     // 初期化 -----------------------------------------------------------------
     
     screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -338,7 +354,8 @@ void ofApp::setup(){
     // --------------------------------------------------------------------------
     
     _imgLoad();
-    
+
+    // ファイルを閉じる
 }
 
 //--------------------------------------------------------------
@@ -379,9 +396,8 @@ void ofApp::_imgLoad(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    srand(time(NULL));
 
+    srand(time(NULL));
     ofSetColor(255);
     
     //screenFbo.begin();
@@ -397,6 +413,7 @@ void ofApp::draw(){
 
     //ofClear(0,0,0,255);
 	ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
+    ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
     if (showBgImg) {
         float imgAspect = img.getWidth() / img.getHeight();
@@ -465,11 +482,40 @@ void ofApp::draw(){
 
         Char tChar = charList[charCount];
 
-        auto imgItr = tChar.imgMap.begin();
+        /* キャラごと色相変化
+        int partsH = (int)ofRandom(0, 255);
+        int partsS = (int)ofRandom(0, 255);
+        int partsB = (int)ofRandom(0, 255);
+        */
+        
+        //cout << "char draw" << endl;
+        //auto imgItr = tChar.imgMap.begin();
+
         //cout << "char parts num: " << tChar.imgMap.size() << endl;
+
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
-            img = *tChar.imgMap[charPartsDrawOrder[categoryCount]];
-            imgItr++;
+
+            string partsCategoryName = charPartsDrawOrder[categoryCount];
+            //cout << "partsCategoryName: " << partsCategoryName << endl;
+            
+            img = *tChar.imgMap[partsCategoryName];
+            //imgItr++;
+
+            // パーツごと色相変化
+            int partsH = (int)ofRandom(0, 255);
+            int partsS = (int)ofRandom(0, 255);
+            int partsB = (int)ofRandom(0, 255);
+
+
+            //cout << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
+
+            auto indexImg = tChar.indexImgMap.at(partsCategoryName );
+            //cout << "access: " << indexImg << "partsCategoryName" << endl;
+            
+            auto palette = tChar.imgMapPalette.at(partsCategoryName );
+            //cout << "access: " << palette << "partsCategoryName" << endl;
+            
+            //cout << "parts loaded: " << endl;
 
             ofPushMatrix();
     
@@ -481,64 +527,86 @@ void ofApp::draw(){
             ofRotateZ(rotateZ);
             */
             ofColor c;
-            float h, s, b;
+            float h, s, bri;
 	        for(int i=0; i<img.getHeight(); i++) {
 		        for(int j=0; j<img.getWidth(); j++) {
             
-			        c = img.getColor(j, i);
-            
-                    //stringstream ss;
-                    //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
-                    //cout << ss.str();
+                    //cout << "x:" << j << " y:" << i << " - "   << endl; 
+			        //c = img.getColor(j, i);
+                    vector<unsigned char> t = palette.at(indexImg[i][j]);
+                    ofColor c = ofColor(t[0], t[1], t[2], t[3]);
 
-			        if (c.a == 0) {
+                    
+			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする（高速化のため。（if文とどちらが重いのかは？
                         continue;
 			        } 
-                
                     ofPushMatrix();
-                    c.getHsb(h, s, b);
-            
-                        c.r += addR;
-                        c.g += addG;
-                        c.b += addB;
-                        if (c.r > 255) {
-                            c.r = 255;
-                        }
-				        ofSetColor(c);
-                
-                        float b2 = (((int)b)/3)*3;
-                        if (b2 > 255) {
-                            b2 = 255;
-                        }
-                
-                        //ofSetColor(ofColor::fromHsb(h, s, b2));
+
+                    c.getHsb(h, s, bri);
+           
+                    /*
+                    c.r += addR;
+                    c.g += addG;
+                    c.b += addB;
+                    if (c.r > 255) {
+                        c.r = 255;
+                    }*/
+
+                    //c.setHue(c.getHue() + partsH); // 色相変換
+                    //ofSetColor(c);
+
+
+                /*
+                    float b2 = (((int)b)/3)*3;
+                    if (b2 > 255) {
+                        b2 = 255;
+                    }
+                    if(h>=256) {
+                        cout << h << endl;
+                    }*/
+                    if (indexImg[i][j] < 16) {
+                        ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
+                    } else {
+                        ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , s, bri));
+                    }
 
                     //cout << " " << c.r << " " << c.g << " " << c.b << endl;
                     //ofTranslate(j, i);
-			            //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
-                        ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
-			            //ofScale(size/256,size/256);
-                    
+                                                        //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
+                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
+                                                        //ofScale(size/256,size/256);
+                   
                     ofRotateX(rotateX);
                     ofRotateY(rotateY);
                     ofRotateZ(rotateZ);
-			            //ofRotate(45,0,0,1);
-            
+                                                            //ofRotate(45,0,0,1);
+           
                         //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
-                        int tNum = (int)pWidth/(int)pSize;
-            
+                        int tNum = (int )pWidth/(int)pSize;
+           
                         //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
-                        int penSlashNum = tNum/2 - ((int)b / tNum) + 4;
+                        int penSlashNum = tNum/2 - ((int )bri / tNum) + 4;
                         if (penSlashNum > (tNum/2-1)) {
                             penSlashNum = tNum/2-1;
                         }
                         penSlashNum = 0;
-            
+           
                         //ofRect(0,0, pSize, pSize);
                         //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
                         particleImg.drawSubsection(tChar.x, tChar.y, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
-            
+           
             ofPopMatrix();
+
+
+
+
+
+
+                    //stringstream ss;
+                    //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
+                    //cout << ss.str();
+
+                
                         //cout << pSize;
 		        }
 	        }
@@ -1064,6 +1132,405 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 
 }
 
+
+
+// 2014/11/21 referenced:  http://d.hatena.ne.jp/shinji210/20061219
+// http://d.hatena.ne.jp/yutopp/20110703/1309689369
+vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
+{
+	cout << "palette load start " << endl;
+    
+    vector<vector<unsigned char>> palette;
+	// "IHDR"チャンク
+	int offset = 8;
+	int headerLength, chunkLength;
+    int l;
+    size_t fileSize;
+    int imgWidth, imgHeight;
+
+	cout << "palette png file  " << filePath  << endl;
+    // ファイル読み込み
+    std::vector<unsigned char> buf;
+    std::ifstream fs( filePath, std::ios_base::in | std::ios_base::binary );
+    if ( !fs )
+	    return palette;
+    
+	cout << "palette png file opened  " << endl;
+    fileSize = (size_t)fs.seekg(0, std::ios::end).tellg();
+    fs.seekg(0, std::ios::beg);     // ストリームのポインタを一番前に戻して、これから先で使いやすいようにする
+    
+    unsigned char data;
+    for(int i = 0; i < fileSize; i++){
+        //fin >> x;
+        fs.read((char*)&data, sizeof(char));
+        buf.push_back((unsigned char)data);
+        //cout << std::to_string(data) << ", ";    // 確認用
+    }
+    cout << endl;
+    
+    fs.close();
+
+
+	// PNGシグネチャ
+	if(!(buf[0] == 0x89) &&
+			(buf[1] == 0x50) &&
+			(buf[2] == 0x4E) &&
+			(buf[3] == 0x47) &&
+			(buf[4] == 0x0D) &&
+			(buf[5] == 0x0A) &&
+			(buf[6] == 0x1A) &&
+			(buf[7] == 0x0A))
+    {
+		return palette;
+	}
+	cout << "palette png sign checked " << endl;
+    
+    offset += 8;
+
+	// IHDRチャンクサイズ
+	l = buf[offset + 0];
+	l = (l << 8) + buf[offset + 1];
+	l = (l << 8) + buf[offset + 2];
+	l = (l << 8) + buf[offset + 3];
+    headerLength = l;
+
+    offset += 4;
+
+	// IHDR:
+    offset = 16;
+    imgWidth = (buf[offset+0] << 24) + (buf[offset+1] << 16) + (buf[offset+2] << 8) + buf[offset+3];
+
+    imgHeight = (buf[offset+4] << 24) + (buf[offset+5] << 16) + (buf[offset+6] << 8) +buf[offset+7];
+    
+    cout<<"size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
+    // カラータイプがパレット(= 3)か
+	if(buf[25] != 3) {
+        cout << "indexImage png color type is "<< std::to_string(buf[offset + 1]) << endl;
+		return palette;
+	}
+    cout << "palette png color type checked " << endl;
+
+	//offset += headerLength + 4;
+
+	offset = 16 + headerLength + 4;
+
+	// "tRNS"チャンクを探す
+	int transparentColorId = -1;
+	while(offset < fileSize) {
+		// チャンクサイズ
+		l = buf[offset + 0];
+		l = (l << 8) + buf[offset + 1];
+		l = (l << 8) + buf[offset + 2];
+		l = (l << 8) + buf[offset + 3];
+        chunkLength = l;
+
+		// チャンクID tRNS
+		if((buf[offset + 4] == 0x74) &&
+				(buf[offset + 5] == 0x52) &&
+				(buf[offset + 6] == 0x4E) &&
+				(buf[offset + 7] == 0x53))
+		{
+			// 透過色を探す
+			int idx = offset + 8;
+			for(int i = 0; i < chunkLength; i++) {
+				if(buf[idx] == 0) {
+					transparentColorId = i;
+					break;
+				}
+				idx++;
+			}
+			break;
+		} else {
+			offset += 8 + chunkLength + 4;
+		}
+	}
+    	cout << "palette  png tRNS chunk checked " << endl;
+        
+					transparentColorId = 0;
+
+	// "PLTE"チャンク
+	offset = 37;
+	// チャンクサイズ
+	l = buf[offset + 0];
+	l = (l << 8) + buf[offset + 1];
+	l = (l << 8) + buf[offset + 2];
+	l = (l << 8) + buf[offset + 3];
+    chunkLength = l;
+	offset += 4;
+
+	// チャンクID PLTE
+//	if((buf[offset + 0] == 0x50) &&
+//			(buf[offset + 1] == 0x4C) &&
+//			(buf[offset + 2] == 0x54) &&
+//			(buf[offset + 3] == 0x45))
+//	{
+        cout << "palette png PLTE chunk checked " << endl;
+        offset = 41;
+        for(int i=0; i<256; i++) {
+            vector<unsigned char> color;
+            color.clear();
+            for (int j=0; j<3; j++) {        // RGB値を取得
+                color.push_back( (unsigned char)buf[offset] );
+                offset++;
+            }
+
+            // アルファチャンネル値を追加
+            if (i == transparentColorId) {
+                color.push_back(0);     // transparent alpha value
+            } else {
+                color.push_back(255);   // non transparent alpha value
+            }
+
+            palette.push_back(color);
+        }
+
+		return palette;
+	//} 
+    
+	cout << "palette loaded" << endl;
+
+	return palette;
+}
+
+
+
+// 2014/11/21 referenced:  http://d.hatena.ne.jp/shinji210/20061219
+// http://d.hatena.ne.jp/yutopp/20110703/1309689369
+vector<vector<unsigned char>> getIndexImageFromPNG(string filePath)
+{
+    
+	cout << "indexImage load start " << endl;
+
+    vector<vector<unsigned char>> img;
+	// "IHDR"チャンク
+	int offset = 0;
+	unsigned int headerLength, chunkLength;
+    unsigned int l;
+    size_t fileSize;
+    int imgWidth, imgHeight;
+    
+	cout << "indexImage png file  " << filePath  << endl;
+    // ファイル読み込み
+    std::vector<unsigned char> buf;
+    std::ifstream fs( filePath, std::ios_base::in | std::ios_base::binary );
+    if ( !fs )
+	    return img;
+    
+	cout << "indexImage png file opened  " << endl;
+    fileSize = (size_t)fs.seekg(0, std::ios::end).tellg();
+    fs.seekg(0, std::ios::beg);     // ストリームのポインタを一番前に戻して、これから先で使いやすいようにする
+
+    //const std::istreambuf_iterator<char> begin = fs, end;
+    //std::copy( begin, end, std::back_inserter( buf ) );
+
+    unsigned char data;
+    for(int i = 0; i < fileSize; i++){
+        //fin >> x;
+        fs.read((char*)&data, sizeof(char));
+        buf.push_back((unsigned char)data);
+        //cout << std::to_string(data) << ", ";    // 確認用
+    }
+    cout << endl;
+    
+    fs.close();
+
+
+	// PNGシグネチャ
+	if((buf[0] == 0x89) &&
+			(buf[1] ==  0x50) &&
+			(buf[2] ==  0x4E) &&
+			(buf[3] ==  0x47) &&
+			(buf[4] ==  0x0D) &&
+			(buf[5] ==  0x0A) &&
+			(buf[6] ==  0x1A) &&
+			(buf[7] ==  0x0A)){
+	} else {
+     	return img;
+    }
+    
+	cout << "indexImage png sign checked " << endl;
+    
+    offset += 8;
+
+	// IHDRチャンクサイズ
+	l = buf[offset + 0];
+	l = (l << 8) + buf[offset + 1];
+	l = (l << 8) + buf[offset + 2];
+	l = (l << 8) + buf[offset + 3];
+    headerLength = l;
+
+    offset += 4;
+
+	// IHDR:
+    offset += 4;
+    imgWidth = (buf[offset+0] << 24) + (buf[offset+1] << 16) + (buf[offset+2] << 8) + buf[offset+3];
+
+    imgHeight = (buf[offset+4] << 24) + (buf[offset+5] << 16) + (buf[offset+6] << 8) +buf[offset+7];
+    
+    cout<<"size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
+    // カラータイプがパレット(= 3)か
+	if(buf[offset + 9] != 3) {
+        cout << "indexImage png color type is "<< std::to_string(buf[offset + 1]) << endl;
+		return img;
+	}
+    cout << "indexImage png color type checked " << endl;
+
+	offset += headerLength + 4;
+
+	// "IDAT"チャンクを探す
+	while(offset < fileSize) {
+
+		// チャンクサイズ
+		l = buf[offset + 0];
+		l = (l << 8) + buf[offset + 1];
+		l = (l << 8) + buf[offset + 2];
+		l = (l << 8) + buf[offset + 3];
+        chunkLength = l;
+
+        offset += 4;
+
+		// チャンクID IDAT
+		if((buf[offset + 0] == 0x49) &&
+				(buf[offset + 1] == 0x44) &&
+				(buf[offset + 2] == 0x41) &&
+				(buf[offset + 3] == 0x54))
+		{
+            offset += 4;
+    	    cout << "indexImage png idat chunk checked " << endl;
+
+            //std::unique_ptr<unsigned char[]> compressedData(new unsigned char[chunkLength]);
+            unsigned char compressedData[4096] = {};         // 32*32
+            unsigned char decompressedData[4096] = {};         // 32*32画像までを想定
+            //boost::array<unsigned char, chunkLength> compressedData;
+            //unsigned char compressedData[chunkLength] = {};
+            cout << "offset: " << offset << endl;
+                for(int i=0; i<chunkLength; i++) {
+                    compressedData[i] = buf[offset];
+                    offset++;
+                }
+                
+            //std::unique_ptr<unsigned char[]> decompressedData(new unsigned char[imgWidth * imgHeight]);
+
+            z_stream z;  // zlib
+            // すべてのメモリ管理をライブラリに任せる
+            z.zalloc = Z_NULL;
+            z.zfree = Z_NULL;
+            z.opaque = Z_NULL;
+            
+            z.next_in = (Bytef *)compressedData; //入力ポインタ;
+            z.avail_in = chunkLength;   //入力データの残量;
+            z.next_out = (Bytef *)decompressedData;//出力ポインタ;
+            z.avail_out = (imgWidth+1) * imgHeight;//出力バッファの残量;    画像各行の先頭にフィルタ指定の0がはいるので、1増やしておく
+
+            cout << "input size: " <<  z.avail_in << " outputsize:" << z.avail_out << endl;
+
+            if (inflateInit(&z) == Z_OK) {
+
+                while(1) {
+                    int z_status = inflate(&z, Z_FINISH);//Z_NO_FLUSH);
+                
+                    if (z_status == Z_STREAM_END) {
+                        cout << "zlib inflate Z_STREAM_END:" << endl;
+                        //inflate(&z, Z_FINISH);
+                        break;
+                    }
+
+                    if (z_status == Z_OK) {
+                        cout << "zlib inflate ok:" << endl;
+                        //inflate(&z, Z_FINISH);
+                     
+                    } else {
+                        cout << "zlib inflate error: " << z_status << endl;
+                        break;
+                    }
+                }
+
+            } else {
+                cout << "zlib inflateInit error:" << endl;
+            }
+
+            inflateEnd(&z);
+            cout << "zlib inflate end:" << endl;
+
+            unsigned char imgData[64][64]={};
+            int count = 0;
+            for(int i=0; i<imgHeight+1; i++) {
+                for(int j=0; j<imgWidth+2; j++) {
+                    if (j > 0 && i>0) {
+                        imgData[i][j] = decompressedData[count];
+                    } else {
+                    }
+                }
+                count++;
+            }
+
+            count = 0;
+            for(int i=1; i<imgHeight+1; i++) {
+
+                vector<unsigned char> colorLine;
+
+                // 画像各行の先頭にフィルタ指定の0がはいるので、飛ばす
+                int filterType = decompressedData[count];
+                count++;
+
+                unsigned char nowColor = 0;
+
+                for(int j=1; j<imgWidth+1; j++) {
+
+                    if (filterType == 0) {
+                        nowColor = decompressedData[count];
+                        colorLine.push_back(nowColor);
+
+                        imgData[i][j] = nowColor;
+
+                    } else if (filterType == 1) {
+                        nowColor = (imgData[i][j-1] + decompressedData[count]) % 256;
+                        colorLine.push_back( nowColor );
+
+                        imgData[i][j] = nowColor;
+
+                    } else if (filterType == 2) {
+                        nowColor = (imgData[i-1][j] + decompressedData[count]) % 256;
+                        colorLine.push_back(nowColor);
+
+                        imgData[i][j] = nowColor;
+
+                    } else if (filterType == 3) {
+                        nowColor = ( (unsigned char)floor(((int)imgData[i][j-1] + (int)imgData[i-1][j]) / 2) + decompressedData[count]) % 256;
+                        colorLine.push_back( nowColor );
+                        
+                        imgData[i][j] = nowColor;
+                    } else if (filterType == 4) {
+                        nowColor = (paethPredictor(imgData[i][j-1], imgData[i-1][j], imgData[i-1][j-1]) + decompressedData[count]) % 256;
+                        colorLine.push_back( nowColor );
+                        
+                        imgData[i][j] = nowColor;
+                    } else {
+                    }
+                    
+                   //cout << "" << std::to_string(decompressedData[count]) << ", ";          //std::to_string(
+                   count++;
+                }
+
+                cout << endl;
+                    
+                img.push_back(colorLine);
+            }
+
+            offset += 4;
+            cout << "indexImage loaded" << endl;
+		} else {
+    		offset += 4 + chunkLength + 4;
+        }
+		
+	}
+
+    
+	cout << "indexImage load end" << endl;
+
+	return img;
+}
+
 // 2014/11/6 referenced:  http://qiita.com/episteme/items/0e3c2ee8a8c03780f01e
 map<string, string> getDirectoryFileListRecursive(string targetDir) {
 
@@ -1087,4 +1554,17 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
     });
 
     return pathList;
+}
+
+unsigned char paethPredictor(unsigned char a, unsigned char b, unsigned char c) // a:左、b:上、c:左上
+{
+	UInt16	X,A,B,C;
+	
+	X = (UInt16)a + (UInt16)b - (UInt16)c;
+	A = abs(X - a);
+	B = abs(X - b);
+	C = abs(X - c);
+	if (A <= B && A <= C) return a;
+	else if (B <= C) return b;
+	else return c;
 }

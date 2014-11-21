@@ -1,0 +1,59 @@
+1>------ ビルド開始: プロジェクト: pgDw, 構成: Debug Win32 ------
+1>  ofApp.cpp
+1>e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>          c:\program files (x86)\microsoft visual studio 11.0\vc\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>          c:\program files (x86)\microsoft visual studio 11.0\vc\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>  コードを生成中...
+1>  コンパイル中...
+1>  main.cpp
+1>e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>          c:\program files (x86)\microsoft visual studio 11.0\vc\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>          c:\program files (x86)\microsoft visual studio 11.0\vc\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+1>          with
+1>          [
+1>              _Elem=char,
+1>              _Traits=std::char_traits<char>
+1>          ]
+1>  コードを生成中...
+1>main.obj : warning LNK4075: /EDITANDCONTINUE は /SAFESEH の指定によって無視されます。
+1>     ライブラリ bin\pgDw_debug.lib とオブジェクト bin\pgDw_debug.exp を作成中
+1>ofApp.obj : error LNK2019: 未解決の外部シンボル "class std::map<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct std::less<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >,class std::allocator<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > > > > __cdecl getDirectoryFileListRecursive(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?getDirectoryFileListRecursive@@YA?AV?$map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@@std@@@2@@std@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z) が関数 "public: virtual void __thiscall ofApp::setup(void)" (?setup@ofApp@@UAEXXZ) で参照されました。
+1>bin\pgDw_debug.exe : fatal error LNK1120: 1 件の未解決の外部参照
+========== ビルド: 0 正常終了、1 失敗、1 更新不要、0 スキップ ==========

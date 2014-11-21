@@ -4,12 +4,15 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+//#include <fstream>
 #include <algorithm>
+#include <cmath>
 #include <filesystem> // std::tr2::sys::path etc.
 
 #include <boost/any.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+#include <boost/array.hpp>
 
 #include "ofMain.h"
 #include "ofUtils.h"
@@ -17,6 +20,10 @@
 
 #include "ofxUI.h"
 #include "ofxOsc.h"
+
+#include "zlib.h"
+#include "zconf.h"
+#pragma comment (lib, "project1.lib")
 
 #define PORT 7778                       // OSCメッセージの受信に使うポート番号（送信側と揃える）
 #define NUM_BILLBOARDS 40000
@@ -68,6 +75,8 @@ class Char {
 public:
     map<string, ofImage*> imgMap;
     map<string, string> partsMap;
+    map<string, vector<vector<unsigned char>> > imgMapPalette;
+    map<string, vector<vector<unsigned char>> > indexImgMap;
     int x, y, z;
 };
 
@@ -102,6 +111,8 @@ public:
     ofImage texture;
     ofImage imgHero;
     map<string, ofImage> imgCharPartsMap;
+    map<string, vector<vector<unsigned char>> > indexImgMap;
+    map<string, vector<vector<unsigned char>> > imgMapPalette;
     map<string, map<string, ofImage> > charPartsMap;
 
     map<string, boost::any> oscPrm;
@@ -149,3 +160,7 @@ public:
 };
 
 map<string, string> getDirectoryFileListRecursive(string targetDir);
+vector<vector<unsigned char>> getPaletteFromPNG(string filePath);
+vector<vector<unsigned char>> getIndexImageFromPNG(string filePath);
+
+unsigned char paethPredictor(unsigned char a, unsigned char b, unsigned char c);
