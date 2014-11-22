@@ -1,24 +1,25 @@
-﻿  ofApp.cpp
-e:\works\project\pixelgirls_dungeonwitches\src\apps\myapps\pgdw\src\ofapp.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
-e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+﻿cl : コマンド ライン warning D9002: 不明なオプション '/lz' を無視します
+  ofApp.cpp
+e:\works\project\pixelgirls_dungeonwitches\src\apps\myapps\pgdw\src\ofApp.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
           with
           [
               _Elem=char,
               _Traits=std::char_traits<char>
           ]
-          c:\program files (x86)\microsoft visual studio 11.0\vc\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
           with
           [
               _Elem=char,
               _Traits=std::char_traits<char>
           ]
-e:\works\project\pixelgirls_dungeonwitches\src\libs\poco\include\poco\streamconverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
           with
           [
               _Elem=char,
               _Traits=std::char_traits<char>
           ]
-          c:\program files (x86)\microsoft visual studio 11.0\vc\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
           with
           [
               _Elem=char,

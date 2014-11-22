@@ -1,0 +1,39 @@
+﻿  ofApp.cpp
+e:\works\project\pixelgirls_dungeonwitches\src\apps\myapps\pgdw\src\ofApp.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+     ライブラリ bin\pgDw.lib とオブジェクト bin\pgDw.exp を作成中
+  LINK : /LTCG が指定されましたが、コードの生成は必要ありません。リンク コマンド ラインから /LTCG を削除し、リンカーの性能を改善してください。
+  pgDw.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\bin\pgDw.exe
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\Assimp32.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\fmodex.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\fmodexL.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\FreeImage.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\FreeType-6.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\glut32.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\libeay32.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\ssleay32.dll
+  E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\Zlib.dll
+  9 個のファイルをコピーしました

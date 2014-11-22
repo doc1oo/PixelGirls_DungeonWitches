@@ -7,7 +7,13 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    unsigned char a = 200;
+    unsigned char b = 57;
 
+    unsigned char c = 0;
+
+    c = a + b;
+    cout << std::to_string(c) << endl;
 }
 
 //--------------------------------------------------------------

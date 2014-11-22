@@ -89,7 +89,7 @@ void ofApp::setup(){
             cout << " - OK" << endl;
             charPartsMap[parentDirName][fileName] = tImg;
             cout << parentDirName << fileName << endl;
-            indexImgMap[parentDirName + fileName] = getIndexImageFromPNG(path.second);
+            indexImgMap[parentDirName + fileName] = getPngIndexImage(path.second);//getIndexImageFromPNG(path.second);
 
             imgMapPalette[parentDirName + fileName] = getPaletteFromPNG(path.second);
 
@@ -1132,6 +1132,107 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 
 }
 
+// 2014/11/22 referenced:  http://gmoon.jp/png/
+//http://yahirohumpty.blog2.fc2.com/blog-entry-280.html
+vector<vector<unsigned char>> getPngIndexImage(string filePath) {
+    
+    vector<vector<unsigned char>> img;
+    FILE            *fp;
+	png_struct     *png_ptr;
+	png_info       *info_ptr;
+	unsigned int    width, height;
+	int             bit_depth, color_type, interlace_type;
+	unsigned char   **image;
+	int             i;
+    int fsize;
+    unsigned char *filebuf;
+  int bdepth,ctype;
+
+	
+	if ( (fp = fopen(filePath.c_str(), "rb"))  == NULL){                         // まずファイルを開きます
+        cout << "png file load error" << endl;
+        return img;
+    }
+    
+  fseek(fp,0,SEEK_END);
+  fsize=ftell(fp);
+  fseek(fp,0,SEEK_SET);
+  
+  filebuf=(unsigned char *)malloc(fsize);
+  
+  fread(filebuf,fsize,1,fp);
+
+  
+  if(!png_check_sig(filebuf,fsize)){
+    fprintf(stderr,"File is not PNG: %s\n","Yukkuri.png");
+    fclose(fp);
+    return img;
+  }
+  
+
+	png_ptr = png_create_read_struct(                       // png_ptr構造体を確保・初期化します
+	                PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+	info_ptr = png_create_info_struct(png_ptr);             // info_ptr構造体を確保・初期化します
+
+
+            if( setjmp(png_jmpbuf(png_ptr)) )
+        {
+                png_destroy_read_struct(&png_ptr,&info_ptr,(png_infopp)NULL);
+                fclose(fp);
+                return img;
+        }
+
+
+            
+  png_set_read_fn(png_ptr, (png_voidp)&filebuf,(png_rw_ptr)pngreadfunction);
+
+//            png_init_io(png_ptr, fp);                               // libpngにfpを知らせます
+    
+	png_read_info(png_ptr, info_ptr);                       // PNGファイルのヘッダを読み込みます       // ここからクラッシュ
+    
+	png_get_IHDR(png_ptr, info_ptr, &width, &height,        // IHDRチャンク情報を取得します
+	                &bit_depth, &color_type, &interlace_type,
+	                NULL, NULL);
+
+
+    // ここからオリジナル ---- 
+
+	image = (png_bytepp)malloc(height * sizeof(png_bytep)); // 以下３行は２次元配列を確保します
+    for (i = 0; i < height; i++) {
+	   image[i] = (png_bytep)malloc(png_get_rowbytes(png_ptr, info_ptr));
+    }
+
+    png_read_image(png_ptr, image);                         // 画像データを読み込みます
+
+    //
+
+    int count = 0;
+    for(int i=0; i<height; i++) {
+
+        vector<unsigned char> lineImg;
+
+        for(int j=0; j<width; j++) {
+
+            lineImg.push_back((unsigned char)image[i][j]);
+            count++;
+        }
+
+        img.push_back(lineImg);
+    }
+
+    for (i = 0; i < height; i++) {
+        free(image[i]);
+    }            // ２次元配列を解放します
+	free(image);
+
+  	png_destroy_read_struct(                                // ２つの構造体のメモリを解放します
+	        &png_ptr, &info_ptr, (png_infopp)NULL);
+	fclose(fp);                                             // ファイルを閉じます
+
+
+    return img;
+}
 
 
 // 2014/11/21 referenced:  http://d.hatena.ne.jp/shinji210/20061219
@@ -1454,14 +1555,12 @@ vector<vector<unsigned char>> getIndexImageFromPNG(string filePath)
 
             unsigned char imgData[64][64]={};
             int count = 0;
-            for(int i=0; i<imgHeight+1; i++) {
-                for(int j=0; j<imgWidth+2; j++) {
-                    if (j > 0 && i>0) {
-                        imgData[i][j] = decompressedData[count];
-                    } else {
-                    }
-                }
+            for(int i=1; i<imgHeight+1; i++) {
                 count++;
+                for(int j=1; j<imgWidth+1; j++) {
+                    imgData[i][j] = decompressedData[count];
+                    count++;
+                }
             }
 
             count = 0;
@@ -1469,51 +1568,60 @@ vector<vector<unsigned char>> getIndexImageFromPNG(string filePath)
 
                 vector<unsigned char> colorLine;
 
-                // 画像各行の先頭にフィルタ指定の0がはいるので、飛ばす
+                // 画像各行の先頭にフィルタ指定の数値を取得して、カウントを飛ばす
                 int filterType = decompressedData[count];
                 count++;
 
-                unsigned char nowColor = 0;
+                unsigned char newColor = 0;
 
                 for(int j=1; j<imgWidth+1; j++) {
 
-                    if (filterType == 0) {
-                        nowColor = decompressedData[count];
-                        colorLine.push_back(nowColor);
+                    unsigned char centerColor = imgData[i][j];//decompressedData[count];
 
-                        imgData[i][j] = nowColor;
+                    if (filterType == 0) {
+
+                        newColor = centerColor;
+
+                        imgData[i][j] = newColor;
 
                     } else if (filterType == 1) {
-                        nowColor = (imgData[i][j-1] + decompressedData[count]) % 256;
-                        colorLine.push_back( nowColor );
 
-                        imgData[i][j] = nowColor;
+                        newColor = imgData[i][j-1] + centerColor;
+
+                        imgData[i][j] = newColor;
 
                     } else if (filterType == 2) {
-                        nowColor = (imgData[i-1][j] + decompressedData[count]) % 256;
-                        colorLine.push_back(nowColor);
 
-                        imgData[i][j] = nowColor;
+                        newColor = imgData[i-1][j] + centerColor;
+
+                        imgData[i][j] = newColor;
 
                     } else if (filterType == 3) {
-                        nowColor = ( (unsigned char)floor(((int)imgData[i][j-1] + (int)imgData[i-1][j]) / 2) + decompressedData[count]) % 256;
-                        colorLine.push_back( nowColor );
-                        
-                        imgData[i][j] = nowColor;
+
+                        newColor = ( (unsigned char)floor( ((int)imgData[i][j-1] + (int)imgData[i-1][j]) / 2) + centerColor) % 256;
+                       
+                        //imgData[i][j] = newColor;
+
                     } else if (filterType == 4) {
-                        nowColor = (paethPredictor(imgData[i][j-1], imgData[i-1][j], imgData[i-1][j-1]) + decompressedData[count]) % 256;
-                        colorLine.push_back( nowColor );
-                        
-                        imgData[i][j] = nowColor;
-                    } else {
-                    }
+
+                        newColor = paethPredictor(imgData[i][j-1], imgData[i-1][j], imgData[i-1][j-1]) + centerColor;
+                     
+                        //imgData[i][j] = newColor;
+                    } 
                     
                    //cout << "" << std::to_string(decompressedData[count]) << ", ";          //std::to_string(
                    count++;
                 }
 
-                cout << endl;
+                //cout << endl;
                     
+            }
+
+            for(int i=1; i<imgHeight+1; i++) {
+                vector<unsigned char> colorLine;
+                for(int j=1; j<imgWidth+1; j++) {
+                    colorLine.push_back( imgData[i][j] );   
+                }
                 img.push_back(colorLine);
             }
 
@@ -1556,6 +1664,7 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
     return pathList;
 }
 
+/*
 unsigned char paethPredictor(unsigned char a, unsigned char b, unsigned char c) // a:左、b:上、c:左上
 {
 	UInt16	X,A,B,C;
@@ -1567,4 +1676,29 @@ unsigned char paethPredictor(unsigned char a, unsigned char b, unsigned char c) 
 	if (A <= B && A <= C) return a;
 	else if (B <= C) return b;
 	else return c;
+}*/
+
+UInt8 paethPredictor(UInt8 a, UInt8 b, UInt8 c)
+{
+	UInt16	p,pa,pb,pc;
+	
+	p=(UInt16)a+b-c;
+	pa=abs(p-a);
+	pb=abs(p-b);
+	pc=abs(p-c);
+	if (pa <= pb && pa <= pc){
+        return a;
+    }
+	else if (pb <= pc){
+        return b;
+    }
+	else {
+        return c;
+    }
+}
+
+void pngreadfunction(png_struct *png,png_bytep buf,png_size_t size){
+  unsigned char** p = (unsigned char**)png_get_io_ptr(png);
+  memcpy(buf, *p, size);
+  *p += (int)size;
 }

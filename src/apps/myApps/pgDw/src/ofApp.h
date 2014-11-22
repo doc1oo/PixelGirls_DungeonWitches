@@ -23,7 +23,10 @@
 
 #include "zlib.h"
 #include "zconf.h"
-#pragma comment (lib, "project1.lib")
+#include "png.h"
+
+//#pragma comment (lib, "zlib.lib")
+//#pragma comment (lib, "libpng16.lib")
 
 #define PORT 7778                       // OSCメッセージの受信に使うポート番号（送信側と揃える）
 #define NUM_BILLBOARDS 40000
@@ -163,4 +166,10 @@ map<string, string> getDirectoryFileListRecursive(string targetDir);
 vector<vector<unsigned char>> getPaletteFromPNG(string filePath);
 vector<vector<unsigned char>> getIndexImageFromPNG(string filePath);
 
-unsigned char paethPredictor(unsigned char a, unsigned char b, unsigned char c);
+
+
+UInt8 paethPredictor(UInt8 a, UInt8 b, UInt8 c);
+vector<vector<unsigned char>> getPngIndexImage(string filePath);
+
+
+void pngreadfunction(png_struct *png,png_bytep buf,png_size_t size);

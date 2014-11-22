@@ -365,13 +365,25 @@
     <ClInclude Include="src\zlib.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\png.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pngconf.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pnglibconf.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\libz.a">
+    <Library Include="libpng16.lib">
       <Filter>src</Filter>
-    </None>
+    </Library>
+    <Library Include="zlib.lib">
+      <Filter>src</Filter>
+    </Library>
   </ItemGroup>
 </Project>

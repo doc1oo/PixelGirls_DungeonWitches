@@ -1,0 +1,34 @@
+﻿  pngstest.c
+  コード生成しています。
+  コード生成が終了しました。
+  pngstest.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\lpng1614\projects\vstudio\Release Library\pngstest.exe
+  PASS: --strict ../../../contrib/pngsuite/basn0g01.png
+  PASS: --strict ../../../contrib/pngsuite/basn0g02.png
+  PASS: --strict ../../../contrib/pngsuite/basn0g04.png
+  PASS: --strict ../../../contrib/pngsuite/basn0g08.png
+  PASS: --strict ../../../contrib/pngsuite/basn0g16.png
+  PASS: --strict ../../../contrib/pngsuite/basn2c08.png
+  PASS: --strict ../../../contrib/pngsuite/basn2c16.png
+  PASS: --strict ../../../contrib/pngsuite/basn3p01.png
+  PASS: --strict ../../../contrib/pngsuite/basn3p02.png
+  PASS: --strict ../../../contrib/pngsuite/basn3p04.png
+  PASS: --strict ../../../contrib/pngsuite/basn3p08.png
+  PASS: --strict ../../../contrib/pngsuite/basn4a08.png
+  PASS: --strict ../../../contrib/pngsuite/basn4a16.png
+  PASS: --strict ../../../contrib/pngsuite/basn6a08.png
+  PASS: --strict ../../../contrib/pngsuite/basn6a16.png
+  PASS: --strict ../../../contrib/pngsuite/ftbbn0g01.png
+  PASS: --strict ../../../contrib/pngsuite/ftbbn0g02.png
+  PASS: --strict ../../../contrib/pngsuite/ftbbn0g04.png
+  PASS: --strict ../../../contrib/pngsuite/ftbbn2c16.png
+  PASS: --strict ../../../contrib/pngsuite/ftbbn3p08.png
+  PASS: --strict ../../../contrib/pngsuite/ftbgn2c16.png
+  PASS: --strict ../../../contrib/pngsuite/ftbgn3p08.png
+  PASS: --strict ../../../contrib/pngsuite/ftbrn2c08.png
+  PASS: --strict ../../../contrib/pngsuite/ftbwn0g16.png
+  PASS: --strict ../../../contrib/pngsuite/ftbwn3p08.png
+  PASS: --strict ../../../contrib/pngsuite/ftbyn3p08.png
+  PASS: --strict ../../../contrib/pngsuite/ftp0n0g08.png
+  PASS: --strict ../../../contrib/pngsuite/ftp0n2c08.png
+  PASS: --strict ../../../contrib/pngsuite/ftp0n3p08.png
+  PASS: --strict ../../../contrib/pngsuite/ftp1n3p08.png

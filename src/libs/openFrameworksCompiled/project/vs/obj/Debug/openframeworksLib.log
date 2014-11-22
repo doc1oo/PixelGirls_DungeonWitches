@@ -1,9 +1,144 @@
-﻿2014/11/21 7:46:04 にビルドを開始しました。
-     1>ノード 2 上のプロジェクト "E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj" (Build ターゲット)。
-     1>Lib:
-         openframeworksLib.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\..\..\lib\vs\openframeworksLib_debug.lib
-     1>プロジェクト "E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj" (Build ターゲット) のビルドが完了しました。
-
-ビルドに成功しました。
-
-経過時間 00:00:00.16
+﻿  ofSerial.cpp
+  ofArduino.cpp
+  ofVideoPlayer.cpp
+  ofVideoGrabber.cpp
+  ofQuickTimePlayer.cpp
+  ofQuickTimeGrabber.cpp
+  ofQtUtils.cpp
+  ofDirectShowGrabber.cpp
+  ofXml.cpp
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+  ofUtils.cpp
+  ofURLFileLoader.cpp
+  ofThread.cpp
+  ofSystemUtils.cpp
+  ofMatrixStack.cpp
+  ofLog.cpp
+  ofFileUtils.cpp
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/FileStream.h(130): warning C4250: 'Poco::FileInputStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/FileStream.h(162): warning C4250: 'Poco::FileOutputStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/FileStream.h(192): warning C4250: 'Poco::FileStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/FileStream.h(192): warning C4250: 'Poco::FileStream' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+  ofRectangle.cpp
+  ofParameterGroup.cpp
+  ofParameter.cpp
+  ofColor.cpp
+  コードを生成中...
+  コンパイル中...
+  ofBaseTypes.cpp
+  ofSoundStream.cpp
+  ofSoundPlayer.cpp
+  ofRtAudioSoundStream.cpp
+  ofFmodSoundPlayer.cpp
+  ofVec4f.cpp
+  ofVec2f.cpp
+  ofQuaternion.cpp
+  ofMatrix4x4.cpp
+  ofMatrix3x3.cpp
+  ofMath.cpp
+  ofTrueTypeFont.cpp
+  ofTessellator.cpp
+  ofRendererCollection.cpp
+  ofPolyline.cpp
+  ofPixels.cpp
+  ofPath.cpp
+  ofImage.cpp
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\freeImage\include\FreeImage.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+  ofGraphics.cpp
+  ofCairoRenderer.cpp
+  コードを生成中...
+  コンパイル中...
+  ofBitmapFont.cpp
+  of3dGraphics.cpp
+  ofVboMesh.cpp
+  ofVbo.cpp
+  ofTexture.cpp
+  ofShader.cpp
+  ofGLProgrammableRenderer.cpp
+  ofMaterial.cpp
+  ofLight.cpp
+  ofGLUtils.cpp
+  ofGLRenderer.cpp
+  ofFbo.cpp
+  ofEvents.cpp
+  ofAppRunner.cpp
+  ofAppNoWindow.cpp
+  ofAppGlutWindow.cpp
+  ofAppGLFWWindow.cpp
+  ofNode.cpp
+  ofMesh.cpp
+  ofEasyCam.cpp
+  コードを生成中...
+  コンパイル中...
+  ofCamera.cpp
+  of3dUtils.cpp
+  of3dPrimitives.cpp
+  コードを生成中...
+  openframeworksLib.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\libs\openFrameworksCompiled\project\vs\..\..\lib\vs\openframeworksLib_debug.lib
