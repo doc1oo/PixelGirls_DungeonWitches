@@ -104,7 +104,7 @@ void ofApp::setup(){
 
     charList.clear();
     // random charMake
-    for (int charCount = 0; charCount < 50; charCount++) {
+    for (int charCount = 0; charCount < 40; charCount++) {
 
         Char tChar = Char();
 
@@ -121,14 +121,18 @@ void ofApp::setup(){
                 nameList.push_back(t.first);
             }
             string imgFileName = nameList[rand()%tMap.size()];
+            if (itr->first == "body") imgFileName = "blazer" ;
+            if (itr->first == "weapon") imgFileName = "nihontou" ;
+            if (itr->first == "backAcce") imgFileName = "none" ;
+            if (itr->first == "hairAcce") imgFileName = "null" ;
 
             tChar.partsMap[index] = imgFileName;
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
-            tChar.x = (charCount%8+0.5)*160;//ofRandom(-50, 1200);
-            tChar.y = (charCount/8+0.5)*120;//ofRandom(-30, 700);
+            tChar.x = (charCount%6+0.6)*200;//ofRandom(-50, 1200);
+            tChar.y = (charCount/6+0.5)*140;//ofRandom(-30, 700);
             tChar.z = 0;//ofRandom(-100, 1200);
 
             itr++;
@@ -487,6 +491,10 @@ void ofApp::draw(){
         int partsS = (int)ofRandom(0, 255);
         int partsB = (int)ofRandom(0, 255);
         */
+            // パーツごと色相変化
+            int partsH = (int)ofRandom(0, 255);
+            int partsS = (int)ofRandom(0, 255);
+            int partsB = (int)ofRandom(0, 255);
         
         //cout << "char draw" << endl;
         //auto imgItr = tChar.imgMap.begin();
@@ -501,10 +509,6 @@ void ofApp::draw(){
             img = *tChar.imgMap[partsCategoryName];
             //imgItr++;
 
-            // パーツごと色相変化
-            int partsH = (int)ofRandom(0, 255);
-            int partsS = (int)ofRandom(0, 255);
-            int partsB = (int)ofRandom(0, 255);
 
 
             //cout << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
