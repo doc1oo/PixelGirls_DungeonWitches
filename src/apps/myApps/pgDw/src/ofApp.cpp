@@ -9,14 +9,7 @@ void ofApp::setup(){
     // 標準入出力をファイルに変更
     //ofstream ofs("debug.log");
     //cout.rdbuf(ofs.rdbuf());
-    /*
 
-    streambuf *old = cout.rdbuf(); // <-- save        
-    stringstream ss;
-
-    cout.rdbuf (ss.rdbuf());       // <-- redirect
-    */
-    
     srand(time(NULL));
 
     // 変数の初期値設定 -----------------------------------------------
@@ -407,16 +400,8 @@ void ofApp::update(){
 
 
 void ofApp::_imgLoad(){
-
-    imgPixels = img.getWidth() * img.getHeight();
-    /*
-    imgColorLst.clear();
-    for(int i=0; i<imgPixels; i++) {
-        imgColorLst.push_back( img.getColor( i%(int)img.getWidth(), i/(int)img.getWidth() ) );
-    }
-    */
     
-    int particleImgNum = particleImg.getWidth() / particleImg.getHeight();
+    //particleImgNum = particleImg.getWidth() / particleImg.getHeight();
     
 }
 
@@ -426,7 +411,16 @@ void ofApp::_imgLoad(){
 void ofApp::draw(){
 
     trace("draw() start");
-    srand(time(NULL));
+
+    /*
+    std::mt19937 engine;
+    std::vector< std::uint_least32_t > v;
+    v.push_back( prmMap["randomize"]);
+    std::seed_seq seed( v.begin(), v.end() ) ;
+    std::mt19937 engine( seed ) ;
+    */
+    ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
+
     ofSetColor(255);
     
     //screenFbo.begin();
@@ -1084,16 +1078,19 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
             stringstream s;
             s << "particleImg/" << selected[i]->getName();
             
-            s << "prtImage: " << s.str() << endl;
+            ss << "prtImage: " << s.str() << endl;
+            trace(&ss);
             
             //ofImage tImg;
             //tImg.loadImage(s.str());
             
             //particleImg.
+
+            //trace("particle:" + s.str());
             
             particleImg.loadImage(s.str());
             
-            _imgLoad();
+            //_imgLoad();
             
             
             //ofColor centerColor = particleImg.getColor(particleImg.getWidth()/2, particleImg.getWidth()/2);

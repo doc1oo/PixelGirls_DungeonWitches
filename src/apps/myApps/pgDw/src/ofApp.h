@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <filesystem> // std::tr2::sys::path etc.
+#include <random>
 
 #include <boost/any.hpp>
 #include <boost/algorithm/string.hpp>
