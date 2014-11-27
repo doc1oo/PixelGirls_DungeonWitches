@@ -80,7 +80,8 @@ void ofApp::setup(){
 
     for (auto path : charPartsPathMap) {
 
-        cout << "vec-output: " << path.first << " " << path.second << endl;
+        ss << "vec-output: " << path.first << " " << path.second << endl;
+        trace(&ss);
 
         auto p = std::tr2::sys::path(path.second);
         string parentDirName = p.parent_path().filename();
@@ -88,20 +89,28 @@ void ofApp::setup(){
 
         ofImage tImg;
         auto res = tImg.loadImage("../" + path.second);
-        cout << "loadImage: [" << parentDirName << "][" << fileName << "] " << "../" << path.second;
-            
+        ss << "loadImage: [" << parentDirName << "][" << fileName << "] " << "../" << path.second;
+        trace(&ss);
+
         if (res) {
-            cout << " - OK" << endl;
+            ss << " - OK" << endl;
+            trace(&ss);
+
             charPartsMap[parentDirName][fileName] = tImg;
-            cout << parentDirName << fileName << endl;
+
+            ss << parentDirName << fileName << endl;
+            trace(&ss);
+
             indexImgMap[parentDirName + fileName] = getPngIndexImage(path.second);//getIndexImageFromPNG(path.second);
 
             imgMapPalette[parentDirName + fileName] = getPaletteFromPNG(path.second);
 
-            cout << endl;
+            ss << endl;
+            trace(&ss);
 
         } else {
-            cout << " - NG";
+            ss << " - NG";
+            trace(&ss);
         }
 
     }
@@ -148,11 +157,11 @@ void ofApp::setup(){
     /* ランダム選択処理
     for(int i=0; i<(int)ofRandom(charPartsPathMap.size()); i++) {
         sel = itr->first;
-        cout << sel << endl;
+        ss << sel << endl;
         itr++;
     }*/
     /*
-    cout << "random image: " << sel << endl;
+    ss << "random image: " << sel << endl;
     img = imgCharPartsMap[sel];
     */
     
@@ -178,12 +187,13 @@ void ofApp::setup(){
     //cam.
     //cam.setFov(10.0);
 	//cam.setPosition(0, 0, 0);
-    cout << "cam:" << endl;
-    cout << cam.getNearClip() << endl;
-    cout << cam.getFarClip() << endl;
-    cout << cam.getFov() << endl;
-    cout << cam.getAspectRatio() << endl;
-    cout << cam.getForceAspectRatio() << endl;
+    ss << "cam:" << endl;
+    ss << cam.getNearClip() << endl;
+    ss << cam.getFarClip() << endl;
+    ss << cam.getFov() << endl;
+    ss << cam.getAspectRatio() << endl;
+    ss << cam.getForceAspectRatio() << endl;
+    trace(&ss);
     //cam.setNearClip(0.8505);
     //cam.setFarClip(1578.5);
     
@@ -238,14 +248,14 @@ void ofApp::setup(){
         ofDirectory ofDir;
         ofDir.listDir("./pixelArt/");
         
-        //cout << "dir: ";
+        //ss << "dir: ";
         
         vector<ofFile> files = ofDir.getFiles();
         vector<ofFile>::iterator itr = files.begin();  // イテレータのインスタンス化
         while( itr != files.end() )  // 末尾要素まで
         {
             if (!itr->isDirectory()) {
-                //cout << itr->getFileName() << endl;  // *演算子で間接参照
+                //ss << itr->getFileName() << endl;  // *演算子で間接参照
                 
                 items.push_back(itr->getFileName());
             }
@@ -271,7 +281,7 @@ void ofApp::setup(){
         while( itr != files.end() )  // 末尾要素まで
         {
             if (!itr->isDirectory()) {
-                //cout << itr->getFileName() << endl;  // *演算子で間接参照
+                //ss << itr->getFileName() << endl;  // *演算子で間接参照
                 
                 items.push_back(itr->getFileName());
             }
@@ -296,7 +306,7 @@ void ofApp::setup(){
         while( itr != files.end() )  // 末尾要素まで
         {
             if (!itr->isDirectory()) {
-                //cout << itr->getFileName() << endl;  // *演算子で間接参照
+                //ss << itr->getFileName() << endl;  // *演算子で間接参照
                 
                 items.push_back(itr->getFileName());
             }
@@ -380,9 +390,9 @@ void ofApp::update(){
     receiveOscMessage();
 
     {
-    	stringstream ss;
-	    ss << "pixeGirls+ DungeonWitches  ver.0.0.1a - fps:" << ofGetFrameRate();
-	    ofSetWindowTitle(ss.str());
+    	stringstream s;
+	    s << "pixeGirls+ DungeonWitches  ver.0.0.1a - fps:" << ofGetFrameRate();
+	    ofSetWindowTitle(s.str());
     }
     
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
@@ -505,30 +515,30 @@ void ofApp::draw(){
             int partsS = (int)ofRandom(0, 255);
             int partsB = (int)ofRandom(0, 255);
         
-        //cout << "char draw" << endl;
+        //ss << "char draw" << endl;
         //auto imgItr = tChar.imgMap.begin();
 
-        //cout << "char parts num: " << tChar.imgMap.size() << endl;
+        //ss << "char parts num: " << tChar.imgMap.size() << endl;
 
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
 
             string partsCategoryName = charPartsDrawOrder[categoryCount];
-            //cout << "partsCategoryName: " << partsCategoryName << endl;
+            //ss << "partsCategoryName: " << partsCategoryName << endl;
             
             img = *tChar.imgMap[partsCategoryName];
             //imgItr++;
 
 
 
-            //cout << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
+            //ss << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
 
             auto indexImg = tChar.indexImgMap.at(partsCategoryName );
-            //cout << "access: " << indexImg << "partsCategoryName" << endl;
+            //ss << "access: " << indexImg << "partsCategoryName" << endl;
             
             auto palette = tChar.imgMapPalette.at(partsCategoryName );
-            //cout << "access: " << palette << "partsCategoryName" << endl;
+            //ss << "access: " << palette << "partsCategoryName" << endl;
             
-            //cout << "parts loaded: " << endl;
+            //ss << "parts loaded: " << endl;
 
             ofPushMatrix();
     
@@ -544,7 +554,7 @@ void ofApp::draw(){
 	        for(int i=0; i<img.getHeight(); i++) {
 		        for(int j=0; j<img.getWidth(); j++) {
             
-                    //cout << "x:" << j << " y:" << i << " - "   << endl; 
+                    //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
                     vector<unsigned char> t = palette.at(indexImg[i][j]);
                     ofColor c = ofColor(t[0], t[1], t[2], t[3]);
@@ -575,7 +585,7 @@ void ofApp::draw(){
                         b2 = 255;
                     }
                     if(h>=256) {
-                        cout << h << endl;
+                        ss << h << endl;
                     }*/
                     if (indexImg[i][j] < 16) {
                         ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
@@ -583,7 +593,7 @@ void ofApp::draw(){
                         ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , s, bri));
                     }
 
-                    //cout << " " << c.r << " " << c.g << " " << c.b << endl;
+                    //ss << " " << c.r << " " << c.g << " " << c.b << endl;
                     //ofTranslate(j, i);
                                                         //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
                     ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
@@ -617,10 +627,10 @@ void ofApp::draw(){
 
                     //stringstream ss;
                     //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
-                    //cout << ss.str();
+                    //ss << ss.str();
 
                 
-                        //cout << pSize;
+                        //ss << pSize;
 		        }
 	        }
             ofPopMatrix();
@@ -640,8 +650,9 @@ void ofApp::draw(){
     
     
     {
-        stringstream ss;
-        ss << "ofScr_" << ofGetFrameNum() << ".png";
+        stringstream s;
+        s << "ofScr_" << ofGetFrameNum() << ".png";
+        trace(&s);
         //ofSaveScreen(ss.str());
         //ofSaveFrame();
     }
@@ -704,8 +715,9 @@ void ofApp::receiveOscMessage() {
         for(int i=0; i<prmLst.size(); i++) {
             if ( m.getAddress() == header+prmLst[i].name ){
                 
-                cout << "OSC mes: " << m.getAddress() << endl;
-                
+                ss << "OSC mes: " << m.getAddress() << endl;
+                trace(&ss);
+
                 if (prmLst[i].uiType == "slider") {
                 
                     ofxUISlider *w = (ofxUISlider *)gui->getWidget(prmLst[i].name);
@@ -731,7 +743,7 @@ void ofApp::receiveOscMessage() {
                     w->setValue(n);
                     //w->update();
                     w->triggerSelf();       // 変数に反映
-                    //cout << "OSC / " << prmLst[i] << ":" << n << endl;
+                    //ss << "OSC / " << prmLst[i] << ":" << n << endl;
 
                 } else if (prmLst[i].uiType == "dropdownList") {
                     
@@ -746,7 +758,8 @@ void ofApp::receiveOscMessage() {
                     //w->update();
                     vector<ofxUILabelToggle *> toggles = w->getToggles();
                     for(int i=0; i<toggles.size(); i++) {
-                        cout << "t:" << toggles[i]->getName() << endl;
+                        ss << "t:" << toggles[i]->getName() << endl;
+                        trace(&ss);
                     }
                     if (n < 0) {
                         n = 0;
@@ -792,30 +805,30 @@ void ofApp::_saveScreenShot() {
     
     //ofSaveFrame();
 
-    stringstream ss;
+    stringstream s;
 
     // 保存するファイルパスを生成 --------------
-    ss << "record/";
-    ss << ofGetYear();
-    ss << boost::format( "%02d" ) % ofGetMonth();
-    ss << boost::format( "%02d" ) % ofGetDay();
-    ss << "_";
-    ss << boost::format( "%02d" ) % ofGetHours();
-    ss << boost::format( "%02d" ) % ofGetMinutes();
-    ss << boost::format( "%02d" ) % ofGetSeconds();
-    
+    s << "record/";
+    s << ofGetYear();
+    s << boost::format( "%02d" ) % ofGetMonth();
+    s << boost::format( "%02d" ) % ofGetDay();
+    s << "_";
+    s << boost::format( "%02d" ) % ofGetHours();
+    s << boost::format( "%02d" ) % ofGetMinutes();
+    s << boost::format( "%02d" ) % ofGetSeconds();
+
     // 撮影日時が前回と同じ場合はファイル名に連番を追加
-    string dateTime = ss.str();
+    string dateTime = s.str();
     if (dateTime == prevScreenShotDateTime) {
         screenShotCounter++;
     } else {
         screenShotCounter = 0;
     }
-    ss << "_" << (screenShotCounter+1);
-    ss << ".png";
+    s << "_" << (screenShotCounter+1);
+    s << ".png";
     
     // スクリーンショットを保存 --------------
-    ofSaveScreen(ss.str());
+    ofSaveScreen(s.str());
 
     /*
     ofPixels ofp;
@@ -909,7 +922,8 @@ void ofApp::mousePressed(int x, int y, int button){
     }
     
     
-    cout << "pressed";
+    ss << "pressed";
+    trace(&ss);
 
 }
 
@@ -1000,24 +1014,25 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         
         for(int i=0; i<selected.size(); i++) {
-            stringstream ss;
-            ss << selected[i]->getName();
-            if ( ss.str() == "NORMAL") {
+            stringstream s;
+            s << selected[i]->getName();
+            if ( s.str() == "NORMAL") {
                 blendMode = 0;
-            } else if (ss.str() == "ADD") {
+            } else if (s.str() == "ADD") {
                 blendMode = 1;
-            } else if (ss.str() == "MULTIPLY") {
+            } else if (s.str() == "MULTIPLY") {
                 blendMode = 2;
-            } else if (ss.str() == "SUB") {
+            } else if (s.str() == "SUB") {
                 blendMode = 3;
-            } else if (ss.str() == "SCREEN") {
+            } else if (s.str() == "SCREEN") {
                 blendMode = 4;
-            } else if (ss.str() == "ALPHA") {
+            } else if (s.str() == "ALPHA") {
                 blendMode = 5;
             }
             
         }
-        cout << blendMode << endl;
+        ss << blendMode << endl;
+        trace(&ss);
         
     }
 
@@ -1027,25 +1042,25 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         
         for(int i=0; i<selected.size(); i++) {
-            stringstream ss;
-            ss << selected[i]->getName();
-            if ( ss.str() == "NORMAL") {
+            stringstream s;
+            s << selected[i]->getName();
+            if ( s.str() == "NORMAL") {
                 blendMode = 0;
-            } else if (ss.str() == "ADD") {
+            } else if (s.str() == "ADD") {
                 blendMode = 1;
-            } else if (ss.str() == "MULTIPLY") {
+            } else if (s.str() == "MULTIPLY") {
                 blendMode = 2;
-            } else if (ss.str() == "SUB") {
+            } else if (s.str() == "SUB") {
                 blendMode = 3;
-            } else if (ss.str() == "SCREEN") {
+            } else if (s.str() == "SCREEN") {
                 blendMode = 4;
-            } else if (ss.str() == "ALPHA") {
+            } else if (s.str() == "ALPHA") {
                 blendMode = 5;
-            }
-            
+            }            
         }
-        cout << blendMode << endl;
-        
+        ss << blendMode << endl;
+        trace(&ss);
+
     }
     
     else if(name == "P_IMG_PATTERN") {
@@ -1054,12 +1069,12 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         
         for(int i=0; i<selected.size(); i++) {
-            stringstream ss;
-            ss << selected[i]->getName();
+            stringstream s;
+            s << selected[i]->getName();
             
-            if ( ss.str() == "RANDOM") {
+            if ( s.str() == "RANDOM") {
                 pImgPattern = 0;
-            } else if (ss.str() == "BRIGHTNESS/2") {
+            } else if (s.str() == "BRIGHTNESS/2") {
                 pImgPattern = 1;
             }
             
@@ -1074,17 +1089,17 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         
         for(int i=0; i<selected.size(); i++) {
-            stringstream ss;
-            ss << "particleImg/" << selected[i]->getName();
+            stringstream s;
+            s << "particleImg/" << selected[i]->getName();
             
-            cout << "prtImage: " << ss.str() << endl;
+            s << "prtImage: " << s.str() << endl;
             
             //ofImage tImg;
-            //tImg.loadImage(ss.str());
+            //tImg.loadImage(s.str());
             
             //particleImg.
             
-            particleImg.loadImage(ss.str());
+            particleImg.loadImage(s.str());
             
             _imgLoad();
             
@@ -1101,10 +1116,10 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         for(int i=0; i<selected.size(); i++) {
         
-            stringstream ss;
-            ss << "tileImg/" << selected[i]->getName();
+            stringstream s;
+            s << "tileImg/" << selected[i]->getName();
             
-            tileImg.loadImage(ss.str());
+            tileImg.loadImage(s.str());
         }
     }
 
@@ -1114,10 +1129,10 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
         vector<ofxUIWidget *> &selected = ddlist->getSelected();
         
         for(int i=0; i<selected.size(); i++) {
-            stringstream ss;
-            ss << "pixelArt/" << selected[i]->getName();
+            stringstream s;
+            s << "pixelArt/" << selected[i]->getName();
             
-            img.loadImage(ss.str());
+            img.loadImage(s.str());
             _imgLoad();
         }
     }
@@ -1141,8 +1156,8 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
     else {
         if (e.widget->getKind() == OFX_UI_WIDGET_SLIDER_H) {
             ofxUISlider* slider = (ofxUISlider *) e.widget;
-            //cout << slider->getName() << endl;
-            //cout << typeid(*prmMap[name]).name() << endl;
+            //ss << slider->getName() << endl;
+            //ss << typeid(*prmMap[name]).name() << endl;
             string name = (string)slider->getName();
 
             if (!rightClick) {
@@ -1150,7 +1165,7 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
                 if (*prmMap[name]->type == typeid(float)) {
                     prmMap[name]->floatVal = slider->getScaledValue();
                     
-                    //cout << "float" << name << ":" << prmMap[name]->floatVal << endl;
+                    //ss << "float" << name << ":" << prmMap[name]->floatVal << endl;
                 } else if (*prmMap[name]->type == typeid(int)) {
                     string label = slider->getLabel()->getLabel();      // PITCH: 0 のような文字列
                     
@@ -1158,7 +1173,7 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
                     boost::algorithm::split( strLst, label, boost::algorithm::is_space() );
                     prmMap[name]->intVal = ofToInt( strLst[1] );
                     
-                    //cout << "int " << name << ":" << prmMap[name]->intVal << endl;
+                    //ss << "int " << name << ":" << prmMap[name]->intVal << endl;
                 }
             }
             else {
@@ -1179,6 +1194,7 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 vector<vector<unsigned char>> getPngIndexImage(string filePath) {
     
     vector<vector<unsigned char>> img;
+    stringstream ss;
 	unsigned char   **image;
     FILE            *fp;
     unsigned char   *filebuf;
@@ -1191,7 +1207,8 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath) {
     int             bdepth,ctype;
 	
 	if ( (fp = fopen(filePath.c_str(), "rb"))  == NULL){                         // まずファイルを開きます
-        cout << "png file load error" << endl;
+        ss << "png file load error" << endl;
+        trace(&ss);
         return img;
     }
     
@@ -1275,8 +1292,11 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath) {
 //
 vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 
-	cout << "palette load start " << endl;
- 
+    stringstream ss;
+
+	ss << "palette load start " << endl;
+    trace(&ss);
+
     vector<vector<unsigned char>> palette;
 
 	// "IHDR"チャンク
@@ -1286,7 +1306,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
     int imgWidth, imgHeight;
     size_t fileSize;
 
-	cout << "palette png file  " << filePath  << endl;
+	ss << "palette png file  " << filePath  << endl;
+    trace(&ss);
 
     // ファイル読み込み
     std::vector<unsigned char> buf;
@@ -1294,7 +1315,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
     if ( !fs )
 	    return palette;
     
-	cout << "palette png file opened  " << endl;
+	ss << "palette png file opened  " << endl;
+    trace(&ss);
 
     fileSize = (size_t)fs.seekg(0, std::ios::end).tellg();
     fs.seekg(0, std::ios::beg);                                         // ストリームのポインタを一番前に戻して、これから先で使いやすいようにする
@@ -1303,9 +1325,10 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
     for(int i = 0; i < fileSize; i++){
         fs.read((char*)&data, sizeof(char));
         buf.push_back((unsigned char)data);
-        //cout << std::to_string(data) << ", ";    // 確認用
+        //ss << std::to_string(data) << ", ";    // 確認用
     }
-    cout << endl;
+    ss << endl;
+    trace(&ss);
     
     fs.close();
 
@@ -1320,7 +1343,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 			(buf[7] == 0x0A)) {
 		return palette;
 	}
-	cout << "palette png sign checked " << endl;
+	ss << "palette png sign checked " << endl;
+    trace(&ss);
     
     offset += 8;
 
@@ -1336,18 +1360,19 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 	// IHDR:
     offset = 16;
     imgWidth = (buf[offset+0] << 24) + (buf[offset+1] << 16) + (buf[offset+2] << 8) + buf[offset+3];
-
     imgHeight = (buf[offset+4] << 24) + (buf[offset+5] << 16) + (buf[offset+6] << 8) +buf[offset+7];
     
     cout<<"size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
 
     // カラータイプがパレット(= 3)か
 	if(buf[25] != 3) {
-        cout << "indexImage png color type is "<< std::to_string(buf[offset + 1]) << endl;
+        ss << "indexImage png color type is "<< std::to_string(buf[offset + 1]) << endl;
+        trace(&ss);
 		return palette;
 	}
 
-    cout << "palette png color type checked " << endl;
+    ss << "palette png color type checked " << endl;
+    trace(&ss);
 
 	//offset += headerLength + 4;
 
@@ -1356,7 +1381,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 	// "tRNS"チャンクを探す
 	int transparentColorId = -1;
 	while(offset < fileSize) {
-		// チャンクサイズ
+
+        // チャンクサイズ
 		l = buf[offset + 0];
 		l = (l << 8) + buf[offset + 1];
 		l = (l << 8) + buf[offset + 2];
@@ -1368,9 +1394,11 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 				(buf[offset + 5] == 0x52) &&
 				(buf[offset + 6] == 0x4E) &&
 				(buf[offset + 7] == 0x53)) {
-			// 透過色を探す
+	
+            // 透過色を探す
 			int idx = offset + 8;
 			for(int i = 0; i < chunkLength; i++) {
+
 				if(buf[idx] == 0) {
 					transparentColorId = i;
 					break;
@@ -1378,12 +1406,14 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 				idx++;
 			}
 			break;
+
 		} else {
 			offset += 8 + chunkLength + 4;
 		}
 	}
 
-    cout << "palette  png tRNS chunk checked " << endl;
+    ss << "palette  png tRNS chunk checked " << endl;
+    trace(&ss);
         
 	transparentColorId = 0;
 
@@ -1403,12 +1433,17 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
     //			(buf[offset + 2] == 0x54) &&
     //			(buf[offset + 3] == 0x45))
     //	{
-    cout << "palette png PLTE chunk checked " << endl;
+    ss << "palette png PLTE chunk checked " << endl;
+    trace(&ss);
+
     offset = 41;
     for(int i=0; i<256; i++) {
+
         vector<unsigned char> color;
         color.clear();
+
         for (int j=0; j<3; j++) {        // RGB値を取得
+
             color.push_back( (unsigned char)buf[offset] );
             offset++;
         }
@@ -1426,7 +1461,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 	return palette;
     //} 
     
-	cout << "palette loaded" << endl;
+	ss << "palette loaded" << endl;
+    trace(&ss);
 
 	return palette;
 }
@@ -1437,6 +1473,7 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
 map<string, string> getDirectoryFileListRecursive(string targetDir) {
 
     map<string, string> pathList;
+    stringstream ss;
 
     namespace sys = std::tr2::sys;
     sys::path p(targetDir);                  // 列挙の起点
@@ -1447,13 +1484,16 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
         [&](const sys::path& p) {
 
             if (sys::is_regular_file(p)) { // ファイルなら...
-                cout << "file: " << p.string() << endl;     // "/" << p.filename()
+                ss << "file: " << p.string() << endl;     // "/" << p.filename()
+                trace(&ss);
+
                 string parentDirName = p.parent_path().filename();
 
                 pathList[ parentDirName + "/" + p.stem() ] = p.string();
 
             } else if (sys::is_directory(p)) { // ディレクトリなら...
-                cout << "dir.: " << p.string() << endl;
+                ss << "dir.: " << p.string() << endl;
+                trace(&ss);
             }
     });
 
@@ -1464,8 +1504,17 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
 
 void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size){
 
-  unsigned char** p = (unsigned char**)png_get_io_ptr(png);
-  memcpy(buf, *p, size);
-  *p += (int)size;
+    unsigned char** p = (unsigned char**)png_get_io_ptr(png);
+    memcpy(buf, *p, size);
+    *p += (int)size;
 
+}
+
+
+// デバッグ用のトレース文出力
+void trace(stringstream *ss) {
+
+    //cout << ss->str();
+
+    ss->str("");
 }
