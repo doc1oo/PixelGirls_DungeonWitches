@@ -522,7 +522,7 @@ void ofApp::draw(){
             //ss << "partsCategoryName: " << partsCategoryName << endl;
             
 
-            //img = *tChar->imgMap[partsCategoryName];
+            ofImage *tImg = tChar->imgMap[partsCategoryName];
             //imgItr++;
 
             //ss << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
@@ -551,13 +551,14 @@ void ofApp::draw(){
             */
             ofColor c;
             float h, s, bri;
-	        for(int i=0; i<img.getHeight(); i++) {
-		        for(int j=0; j<img.getWidth(); j++) {
+	        for(int i=0; i<tImg->getHeight(); i++) {
+		        for(int j=0; j<tImg->getWidth(); j++) {
             
                     //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
-                    vector<unsigned char> *t = &(*palette).at((*indexImg)[i][j]);
-                    ofColor c = ofColor((*t)[0], (*t)[1], (*t)[2], (*t)[3]);
+                    unsigned char index = (*indexImg)[i][j];
+                    vector<unsigned char> *t = &(*palette).at(index);
+                    ofColor c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
 
 			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする（高速化のため。（if文とどちらが重いのかは？
                         continue;
@@ -595,7 +596,7 @@ void ofApp::draw(){
                     //ss << " " << c.r << " " << c.g << " " << c.b << endl;
                     //ofTranslate(j, i);
                                                         //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
-                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*img.getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * img.getHeight()/2));
+                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*tImg->getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * tImg->getHeight()/2));
                                                         //ofScale(size/256,size/256);
                    
                     ofRotateX(rotateX);
