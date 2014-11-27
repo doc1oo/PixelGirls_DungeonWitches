@@ -39,3 +39,11 @@ PixelGirls_DungeonWitches use following libralies. ( libraries/ )
 * [boost] ( http://www.boost.org/ )
   - Copyright: Copyright Beman Dawes, David Abrahams, 1998-2005. Copyright Rene Rivera 2004-2007.
   - License  : Boost Software License, Version 1.0
+
+* [libpng] ( http://www.libpng.org/pub/png/libpng.html )
+  - Copyright: Copyright (c) 1998-2014 Glenn Randers-Pehrson
+  - License  : libpng License
+
+* [zlib] ( http://zlib.net/ )
+  - Copyright:  (C) 1995-2013 Jean-loup Gailly and Mark Adler
+  - License  : zlib License
