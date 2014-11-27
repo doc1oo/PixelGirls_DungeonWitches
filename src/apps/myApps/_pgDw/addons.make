@@ -1,4 +1,0 @@
-ofxNetwork
-ofxOsc
-ofxXmlSettings
-ofxUI
