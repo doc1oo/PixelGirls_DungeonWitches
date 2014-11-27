@@ -4,6 +4,8 @@
 
 void ofApp::setup(){
 
+    trace("setup() started.");
+
     // 標準入出力をファイルに変更
     //ofstream ofs("debug.log");
     //cout.rdbuf(ofs.rdbuf());
@@ -373,13 +375,16 @@ void ofApp::setup(){
     
     _imgLoad();
 
-    // ファイルを閉じる
+    trace("setup() finished.");
+
 }
 
 
 
 // メイン更新処理 --------------------------------------------------------------
 void ofApp::update(){
+    
+    trace("update() start");
 
     //cam.setFov(prmMap["CAM_FOV"]->floatVal);
     //cam.setNearClip(prmMap["CAM_NEAR"]->floatVal);
@@ -387,7 +392,7 @@ void ofApp::update(){
 
     rightClick = false;
 
-    receiveOscMessage();
+    //receiveOscMessage();
 
     {
     	stringstream s;
@@ -420,6 +425,7 @@ void ofApp::_imgLoad(){
 // メイン描画処理 --------------------------------------------------------------
 void ofApp::draw(){
 
+    trace("draw() start");
     srand(time(NULL));
     ofSetColor(255);
     
@@ -503,17 +509,7 @@ void ofApp::draw(){
 
     for(int charCount=0; charCount<charList.size(); charCount++){
 
-        Char tChar = charList[charCount];
-
-        /* キャラごと色相変化
-        int partsH = (int)ofRandom(0, 255);
-        int partsS = (int)ofRandom(0, 255);
-        int partsB = (int)ofRandom(0, 255);
-        */
-            // パーツごと色相変化
-            int partsH = (int)ofRandom(0, 255);
-            int partsS = (int)ofRandom(0, 255);
-            int partsB = (int)ofRandom(0, 255);
+        Char *tChar = &charList[charCount];
         
         //ss << "char draw" << endl;
         //auto imgItr = tChar.imgMap.begin();
@@ -525,20 +521,24 @@ void ofApp::draw(){
             string partsCategoryName = charPartsDrawOrder[categoryCount];
             //ss << "partsCategoryName: " << partsCategoryName << endl;
             
-            img = *tChar.imgMap[partsCategoryName];
+
+            //img = *tChar->imgMap[partsCategoryName];
             //imgItr++;
-
-
 
             //ss << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
 
-            auto indexImg = tChar.indexImgMap.at(partsCategoryName );
+            vector<vector<unsigned char>> *indexImg = &(tChar->indexImgMap.at(partsCategoryName ));
             //ss << "access: " << indexImg << "partsCategoryName" << endl;
             
-            auto palette = tChar.imgMapPalette.at(partsCategoryName );
+            vector<vector<unsigned char>> *palette = &(tChar->imgMapPalette.at(partsCategoryName ));
             //ss << "access: " << palette << "partsCategoryName" << endl;
             
             //ss << "parts loaded: " << endl;
+
+            // パーツごと色相変化
+            int partsH = (int)ofRandom(0, 255);
+            int partsS = (int)ofRandom(0, 255);
+            int partsB = (int)ofRandom(0, 255);
 
             ofPushMatrix();
     
@@ -556,7 +556,7 @@ void ofApp::draw(){
             
                     //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
-                    vector<unsigned char> t = palette.at(indexImg[i][j]);
+                    vector<unsigned char> t = (*palette).at((*indexImg)[i][j]);
                     ofColor c = ofColor(t[0], t[1], t[2], t[3]);
 
                     
@@ -587,7 +587,7 @@ void ofApp::draw(){
                     if(h>=256) {
                         ss << h << endl;
                     }*/
-                    if (indexImg[i][j] < 16) {
+                    if ((*indexImg)[i][j] < 16) {
                         ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
                     } else {
                         ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , s, bri));
@@ -604,33 +604,27 @@ void ofApp::draw(){
                     ofRotateZ(rotateZ);
                                                             //ofRotate(45,0,0,1);
            
-                        //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
-                        int tNum = (int )pWidth/(int)pSize;
+                    //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
+                    int tNum = (int )pWidth/(int)pSize;
            
-                        //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
-                        int penSlashNum = tNum/2 - ((int )bri / tNum) + 4;
-                        if (penSlashNum > (tNum/2-1)) {
-                            penSlashNum = tNum/2-1;
-                        }
-                        penSlashNum = 0;
+                    //int penSlashNum = abs(((int)bgColor-(int)b))/tNum;
+                    int penSlashNum = tNum/2 - ((int )bri / tNum) + 4;
+                    if (penSlashNum > (tNum/2-1)) {
+                        penSlashNum = tNum/2-1;
+                    }
+                    penSlashNum = 0;
            
-                        //ofRect(0,0, pSize, pSize);
-                        //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
-                        particleImg.drawSubsection(tChar.x, tChar.y, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                    //ofRect(0,0, pSize, pSize);
+                    //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
+                    particleImg.drawSubsection(tChar->x, tChar->y, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
            
-            ofPopMatrix();
-
-
-
-
-
+                    ofPopMatrix();
 
                     //stringstream ss;
                     //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
                     //ss << ss.str();
 
-                
-                        //ss << pSize;
+                    //ss << pSize;
 		        }
 	        }
             ofPopMatrix();
@@ -646,8 +640,6 @@ void ofApp::draw(){
 	//maskFbo.draw(0,0);
 
 	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    
-    
     
     {
         stringstream s;
@@ -1362,7 +1354,8 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
     imgWidth = (buf[offset+0] << 24) + (buf[offset+1] << 16) + (buf[offset+2] << 8) + buf[offset+3];
     imgHeight = (buf[offset+4] << 24) + (buf[offset+5] << 16) + (buf[offset+6] << 8) +buf[offset+7];
     
-    cout<<"size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
+    ss << "size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
+    trace(&ss);
 
     // カラータイプがパレット(= 3)か
 	if(buf[25] != 3) {
@@ -1517,4 +1510,13 @@ void trace(stringstream *ss) {
     //cout << ss->str();
 
     ss->str("");
+}
+
+
+
+// デバッグ用のトレース文出力
+void trace(string s) {
+
+    cout << s << endl;
+
 }

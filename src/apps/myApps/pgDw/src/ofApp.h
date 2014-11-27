@@ -178,3 +178,4 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath);
 vector<vector<unsigned char>> getPngIndexImage(string filePath);
 void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size);
 void trace(stringstream *ss);
+void trace(string s);
