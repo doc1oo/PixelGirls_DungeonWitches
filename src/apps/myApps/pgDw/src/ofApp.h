@@ -32,6 +32,8 @@
 #define NUM_BILLBOARDS 40000
 #define CS 16                       // ChipSize
 
+
+
 class Parameter {
 
 public:
@@ -41,6 +43,7 @@ public:
     string name;   
     
 };
+
 
 
 class AppParameter:public Parameter {
@@ -74,7 +77,10 @@ public:
 
 };
 
+
+
 class Char {
+
 public:
     map<string, ofImage*> imgMap;
     map<string, string> partsMap;
@@ -82,6 +88,8 @@ public:
     map<string, vector<vector<unsigned char>> > indexImgMap;
     int x, y, z;
 };
+
+
 
 class ofApp : public ofBaseApp{
 
@@ -162,14 +170,9 @@ public:
 
 };
 
+
+
 map<string, string> getDirectoryFileListRecursive(string targetDir);
 vector<vector<unsigned char>> getPaletteFromPNG(string filePath);
-vector<vector<unsigned char>> getIndexImageFromPNG(string filePath);
-
-
-
-UInt8 paethPredictor(UInt8 a, UInt8 b, UInt8 c);
 vector<vector<unsigned char>> getPngIndexImage(string filePath);
-
-
-void pngreadfunction(png_struct *png,png_bytep buf,png_size_t size);
+void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size);

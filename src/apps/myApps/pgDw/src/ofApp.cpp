@@ -1,6 +1,9 @@
 ﻿#include "ofApp.h"
 
+
+
 void ofApp::setup(){
+
     // 標準入出力をファイルに変更
     //ofstream ofs("debug.log");
     //cout.rdbuf(ofs.rdbuf());
@@ -11,6 +14,8 @@ void ofApp::setup(){
 
     cout.rdbuf (ss.rdbuf());       // <-- redirect
     */
+    
+    srand(time(NULL));
 
     // 変数の初期値設定 -----------------------------------------------
 
@@ -20,13 +25,13 @@ void ofApp::setup(){
     pImgPattern = 0;
     size = 10;
     prevClickPoint = ofPoint(0,0);
+
     charPartsPathList.push_back("body");
     charPartsPathList.push_back("face");
     charPartsPathList.push_back("eye");
     charPartsPathList.push_back("hair");
     charPartsPathList.push_back("hairAcce");
 
-    srand(time(NULL));
     charPartsDrawOrder.push_back("backAcce");
     charPartsDrawOrder.push_back("weapon");
     charPartsDrawOrder.push_back("body");
@@ -100,10 +105,9 @@ void ofApp::setup(){
         }
 
     }
-
-
+    
+    // random charMake -------------------------------------------------
     charList.clear();
-    // random charMake
     for (int charCount = 0; charCount < 40; charCount++) {
 
         Char tChar = Char();
@@ -152,7 +156,7 @@ void ofApp::setup(){
     img = imgCharPartsMap[sel];
     */
     
-    // 初期化 -----------------------------------------------------------------
+    // システム初期化 -----------------------------------------------------------------
     
     screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	maskFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -362,7 +366,9 @@ void ofApp::setup(){
     // ファイルを閉じる
 }
 
-//--------------------------------------------------------------
+
+
+// メイン更新処理 --------------------------------------------------------------
 void ofApp::update(){
 
     //cam.setFov(prmMap["CAM_FOV"]->floatVal);
@@ -384,6 +390,7 @@ void ofApp::update(){
 }
 
 
+
 void ofApp::_imgLoad(){
 
     imgPixels = img.getWidth() * img.getHeight();
@@ -398,7 +405,9 @@ void ofApp::_imgLoad(){
     
 }
 
-//--------------------------------------------------------------
+
+
+// メイン描画処理 --------------------------------------------------------------
 void ofApp::draw(){
 
     srand(time(NULL));
@@ -658,6 +667,8 @@ void ofApp::draw(){
 
 }
 
+
+
 // 半透明を表す市松模様を描く
 void ofApp::_drawTransparentTile() {
 
@@ -674,6 +685,8 @@ void ofApp::_drawTransparentTile() {
     }
 
 }
+
+
 
 void ofApp::receiveOscMessage() {
     
@@ -773,6 +786,8 @@ void ofApp::keyPressed(int key){
     }
 }
 
+
+
 void ofApp::_saveScreenShot() {
     
     //ofSaveFrame();
@@ -814,15 +829,21 @@ void ofApp::_saveScreenShot() {
 
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
     
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y){
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
@@ -864,6 +885,8 @@ void ofApp::mouseDragged(int x, int y, int button){
     
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
 
@@ -890,6 +913,8 @@ void ofApp::mousePressed(int x, int y, int button){
 
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
 
@@ -899,20 +924,28 @@ void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
 
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -921,6 +954,8 @@ void ofApp::exit(){
     delete gui; 
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::guiEvent(ofxUIEventArgs &e)
@@ -1136,43 +1171,43 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 
 }
 
+
+
 // 2014/11/22 referenced:  http://gmoon.jp/png/
-//http://yahirohumpty.blog2.fc2.com/blog-entry-280.html
+// http://yahirohumpty.blog2.fc2.com/blog-entry-280.html
+// 
 vector<vector<unsigned char>> getPngIndexImage(string filePath) {
     
     vector<vector<unsigned char>> img;
+	unsigned char   **image;
     FILE            *fp;
-	png_struct     *png_ptr;
-	png_info       *info_ptr;
+    unsigned char   *filebuf;
+    int             fsize;
+	png_struct      *png_ptr;
+	png_info        *info_ptr;
 	unsigned int    width, height;
 	int             bit_depth, color_type, interlace_type;
-	unsigned char   **image;
 	int             i;
-    int fsize;
-    unsigned char *filebuf;
-  int bdepth,ctype;
-
+    int             bdepth,ctype;
 	
 	if ( (fp = fopen(filePath.c_str(), "rb"))  == NULL){                         // まずファイルを開きます
         cout << "png file load error" << endl;
         return img;
     }
     
-  fseek(fp,0,SEEK_END);
-  fsize=ftell(fp);
-  fseek(fp,0,SEEK_SET);
+    fseek(fp, 0, SEEK_END);
+    fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
   
-  filebuf=(unsigned char *)malloc(fsize);
+    filebuf = (unsigned char *)malloc(fsize);
   
-  fread(filebuf,fsize,1,fp);
-
+    fread(filebuf, fsize, 1, fp);
   
-  if(!png_check_sig(filebuf,fsize)){
-    fprintf(stderr,"File is not PNG: %s\n","Yukkuri.png");
-    fclose(fp);
-    return img;
-  }
-  
+    if(!png_check_sig(filebuf, fsize)){
+        fprintf(stderr,"File is not PNG: %s\n","Yukkuri.png");
+        fclose(fp);
+        return img;
+    }
 
 	png_ptr = png_create_read_struct(                       // png_ptr構造体を確保・初期化します
 	                PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -1180,25 +1215,21 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath) {
 	info_ptr = png_create_info_struct(png_ptr);             // info_ptr構造体を確保・初期化します
 
 
-            if( setjmp(png_jmpbuf(png_ptr)) )
-        {
-                png_destroy_read_struct(&png_ptr,&info_ptr,(png_infopp)NULL);
+    if( setjmp(png_jmpbuf(png_ptr)) ) {
+                png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
                 fclose(fp);
                 return img;
-        }
-
-
+    }
             
-  png_set_read_fn(png_ptr, (png_voidp)&filebuf,(png_rw_ptr)pngreadfunction);
+    png_set_read_fn(png_ptr, (png_voidp)&filebuf, (png_rw_ptr)pngReadFunction);
 
-//            png_init_io(png_ptr, fp);                               // libpngにfpを知らせます
+    // png_init_io(png_ptr, fp);                               // libpngにfpを知らせます
     
 	png_read_info(png_ptr, info_ptr);                       // PNGファイルのヘッダを読み込みます       // ここからクラッシュ
     
 	png_get_IHDR(png_ptr, info_ptr, &width, &height,        // IHDRチャンク情報を取得します
 	                &bit_depth, &color_type, &interlace_type,
 	                NULL, NULL);
-
 
     // ここからオリジナル ---- 
 
@@ -1208,8 +1239,6 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath) {
     }
 
     png_read_image(png_ptr, image);                         // 画像データを読み込みます
-
-    //
 
     int count = 0;
     for(int i=0; i<height; i++) {
@@ -1225,35 +1254,40 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath) {
         img.push_back(lineImg);
     }
 
+    // ２次元配列を解放します
     for (i = 0; i < height; i++) {
         free(image[i]);
-    }            // ２次元配列を解放します
+    }
 	free(image);
 
   	png_destroy_read_struct(                                // ２つの構造体のメモリを解放します
 	        &png_ptr, &info_ptr, (png_infopp)NULL);
-	fclose(fp);                                             // ファイルを閉じます
 
+	fclose(fp);                                             // ファイルを閉じます
 
     return img;
 }
 
 
+
 // 2014/11/21 referenced:  http://d.hatena.ne.jp/shinji210/20061219
 // http://d.hatena.ne.jp/yutopp/20110703/1309689369
-vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
-{
+//
+vector<vector<unsigned char>> getPaletteFromPNG(string filePath) {
+
 	cout << "palette load start " << endl;
-    
+ 
     vector<vector<unsigned char>> palette;
+
 	// "IHDR"チャンク
 	int offset = 8;
 	int headerLength, chunkLength;
     int l;
-    size_t fileSize;
     int imgWidth, imgHeight;
+    size_t fileSize;
 
 	cout << "palette png file  " << filePath  << endl;
+
     // ファイル読み込み
     std::vector<unsigned char> buf;
     std::ifstream fs( filePath, std::ios_base::in | std::ios_base::binary );
@@ -1261,12 +1295,12 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
 	    return palette;
     
 	cout << "palette png file opened  " << endl;
+
     fileSize = (size_t)fs.seekg(0, std::ios::end).tellg();
-    fs.seekg(0, std::ios::beg);     // ストリームのポインタを一番前に戻して、これから先で使いやすいようにする
+    fs.seekg(0, std::ios::beg);                                         // ストリームのポインタを一番前に戻して、これから先で使いやすいようにする
     
     unsigned char data;
     for(int i = 0; i < fileSize; i++){
-        //fin >> x;
         fs.read((char*)&data, sizeof(char));
         buf.push_back((unsigned char)data);
         //cout << std::to_string(data) << ", ";    // 確認用
@@ -1274,7 +1308,6 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
     cout << endl;
     
     fs.close();
-
 
 	// PNGシグネチャ
 	if(!(buf[0] == 0x89) &&
@@ -1284,8 +1317,7 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
 			(buf[4] == 0x0D) &&
 			(buf[5] == 0x0A) &&
 			(buf[6] == 0x1A) &&
-			(buf[7] == 0x0A))
-    {
+			(buf[7] == 0x0A)) {
 		return palette;
 	}
 	cout << "palette png sign checked " << endl;
@@ -1308,11 +1340,13 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
     imgHeight = (buf[offset+4] << 24) + (buf[offset+5] << 16) + (buf[offset+6] << 8) +buf[offset+7];
     
     cout<<"size:" << "wh" << imgWidth<<" "<<imgHeight<<endl;
+
     // カラータイプがパレット(= 3)か
 	if(buf[25] != 3) {
         cout << "indexImage png color type is "<< std::to_string(buf[offset + 1]) << endl;
 		return palette;
 	}
+
     cout << "palette png color type checked " << endl;
 
 	//offset += headerLength + 4;
@@ -1333,8 +1367,7 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
 		if((buf[offset + 4] == 0x74) &&
 				(buf[offset + 5] == 0x52) &&
 				(buf[offset + 6] == 0x4E) &&
-				(buf[offset + 7] == 0x53))
-		{
+				(buf[offset + 7] == 0x53)) {
 			// 透過色を探す
 			int idx = offset + 8;
 			for(int i = 0; i < chunkLength; i++) {
@@ -1349,9 +1382,10 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
 			offset += 8 + chunkLength + 4;
 		}
 	}
-    	cout << "palette  png tRNS chunk checked " << endl;
+
+    cout << "palette  png tRNS chunk checked " << endl;
         
-					transparentColorId = 0;
+	transparentColorId = 0;
 
 	// "PLTE"チャンク
 	offset = 37;
@@ -1364,33 +1398,33 @@ vector<vector<unsigned char>> getPaletteFromPNG(string filePath)
 	offset += 4;
 
 	// チャンクID PLTE
-//	if((buf[offset + 0] == 0x50) &&
-//			(buf[offset + 1] == 0x4C) &&
-//			(buf[offset + 2] == 0x54) &&
-//			(buf[offset + 3] == 0x45))
-//	{
-        cout << "palette png PLTE chunk checked " << endl;
-        offset = 41;
-        for(int i=0; i<256; i++) {
-            vector<unsigned char> color;
-            color.clear();
-            for (int j=0; j<3; j++) {        // RGB値を取得
-                color.push_back( (unsigned char)buf[offset] );
-                offset++;
-            }
-
-            // アルファチャンネル値を追加
-            if (i == transparentColorId) {
-                color.push_back(0);     // transparent alpha value
-            } else {
-                color.push_back(255);   // non transparent alpha value
-            }
-
-            palette.push_back(color);
+    //	if((buf[offset + 0] == 0x50) &&
+    //			(buf[offset + 1] == 0x4C) &&
+    //			(buf[offset + 2] == 0x54) &&
+    //			(buf[offset + 3] == 0x45))
+    //	{
+    cout << "palette png PLTE chunk checked " << endl;
+    offset = 41;
+    for(int i=0; i<256; i++) {
+        vector<unsigned char> color;
+        color.clear();
+        for (int j=0; j<3; j++) {        // RGB値を取得
+            color.push_back( (unsigned char)buf[offset] );
+            offset++;
         }
 
-		return palette;
-	//} 
+        // アルファチャンネル値を追加
+        if (i == transparentColorId) {
+            color.push_back(0);     // transparent alpha value
+        } else {
+            color.push_back(255);   // non transparent alpha value
+        }
+
+        palette.push_back(color);
+    }
+
+	return palette;
+    //} 
     
 	cout << "palette loaded" << endl;
 
@@ -1405,11 +1439,13 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
     map<string, string> pathList;
 
     namespace sys = std::tr2::sys;
-    sys::path p(targetDir); // 列挙の起点
+    sys::path p(targetDir);                  // 列挙の起点
+
     //std::for_each(sys::directory_iterator(p), sys::directory_iterator(),
     //  再帰的に走査するならコチラ↓
     std::for_each(sys::recursive_directory_iterator(p), sys::recursive_directory_iterator(),
         [&](const sys::path& p) {
+
             if (sys::is_regular_file(p)) { // ファイルなら...
                 cout << "file: " << p.string() << endl;     // "/" << p.filename()
                 string parentDirName = p.parent_path().filename();
@@ -1425,8 +1461,11 @@ map<string, string> getDirectoryFileListRecursive(string targetDir) {
 }
 
 
-void pngreadfunction(png_struct *png,png_bytep buf,png_size_t size){
+
+void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size){
+
   unsigned char** p = (unsigned char**)png_get_io_ptr(png);
   memcpy(buf, *p, size);
   *p += (int)size;
+
 }
