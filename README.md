@@ -6,6 +6,8 @@ PixelGirls_DungeonWitches
 
 ![title_banner](https://github.com/doc1oo/PixelGirls_DungeonWitches/wiki/img/title_banner.png)
 
+![screenshot_characters](https://github.com/doc1oo/PixelGirls_DungeonWitches/wiki/img/screenshot_char.png)
+
 ---
 
 This program is open source under an MIT License. see LICENSE.md.
