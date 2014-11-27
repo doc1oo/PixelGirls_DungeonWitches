@@ -556,10 +556,9 @@ void ofApp::draw(){
             
                     //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
-                    vector<unsigned char> t = (*palette).at((*indexImg)[i][j]);
-                    ofColor c = ofColor(t[0], t[1], t[2], t[3]);
+                    vector<unsigned char> *t = &(*palette).at((*indexImg)[i][j]);
+                    ofColor c = ofColor((*t)[0], (*t)[1], (*t)[2], (*t)[3]);
 
-                    
 			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする（高速化のため。（if文とどちらが重いのかは？
                         continue;
 			        } 
