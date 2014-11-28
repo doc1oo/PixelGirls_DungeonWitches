@@ -11,6 +11,7 @@ void ofApp::setup(){
     //cout.rdbuf(ofs.rdbuf());
 
     srand(time(NULL));
+    ofSetBackgroundAuto(false); 
 
     // 変数の初期値設定 -----------------------------------------------
 
@@ -20,6 +21,7 @@ void ofApp::setup(){
     pImgPattern = 0;
     size = 10;
     prevClickPoint = ofPoint(0,0);
+    screenShotCounter = 0;
     key["up"] = 0;
     key["down"] = 0;
     key["left"] = 0;
@@ -47,12 +49,15 @@ void ofApp::setup(){
         int h = 12;
         prmLst.push_back( AppParameter("SIZE", &typeid(float), "slider", 0, 50, 5, w, h, "bottom") );
         prmLst.push_back( AppParameter("DOT_SIZE", &typeid(float), "slider", 0, 5, 1, w, h, "right") );
-        prmLst.push_back( AppParameter("POS_X", &typeid(float), "slider", -500, 500, 0, w, h, "bottom") );
-        prmLst.push_back( AppParameter("POS_Y", &typeid(float), "slider", -500, 500, 0, w, h, "right") );
-        prmLst.push_back( AppParameter("POS_Z", &typeid(float), "slider", -500, 0, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("POS_X", &typeid(float), "slider", -1000, 1000, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("POS_Y", &typeid(float), "slider", -1000, 1000, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("POS_Z", &typeid(float), "slider", -1000, 0, 0, w, h, "right") );
         prmLst.push_back( AppParameter("ROTATE_X", &typeid(float), "slider", -360, 360, 0, w, h, "bottom") );
         prmLst.push_back( AppParameter("ROTATE_Y", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
         prmLst.push_back( AppParameter("ROTATE_Z", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("CAM_ROT_X", &typeid(float), "slider", -360, 360, 0, w, h, "bottom") );
+        prmLst.push_back( AppParameter("CAM_ROT_Y", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
+        prmLst.push_back( AppParameter("CAM_ROT_Z", &typeid(float), "slider", -360, 360, 0, w, h, "right") );
         prmLst.push_back( AppParameter("ADD_R", &typeid(float), "slider", -255, 255, 0, w, h, "bottom") );
         prmLst.push_back( AppParameter("ADD_G", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
         prmLst.push_back( AppParameter("ADD_B", &typeid(float), "slider", -255, 255, 0, w, h, "right") );
@@ -118,7 +123,7 @@ void ofApp::setup(){
     
     // random charMake -------------------------------------------------
     charList.clear();
-    for (int charCount = 0; charCount < 40; charCount++) {
+    for (int charCount = 0; charCount < 16; charCount++) {
 
         Char tChar = Char();
 
@@ -145,8 +150,8 @@ void ofApp::setup(){
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
-            tChar.x = (charCount%6)*200 + ofRandom(-40, 40);
-            tChar.y = (charCount/6)*140 + ofRandom(-40, 40);
+            tChar.x = (charCount%4)*280 + ofRandom(-40, 40) -600;
+            tChar.y = (charCount/4)*160 + ofRandom(-40, 40) -400;
             tChar.z = 0;//ofRandom(-100, 1200);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
@@ -404,22 +409,50 @@ void ofApp::update(){
 	    ofSetWindowTitle(s.str());
     }
     
-    ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
+    ofSeedRandom(time(NULL));
     
+    for(auto &tChar : charList) {
 
-    Char *tChar = &charList[0];
-    if (key["left"] == 1) {
-        tChar->x -= 5;
-        tChar->dir = LEFT;
-    } else if (key["right"] == 1) {
-        tChar->x += 5;
-        tChar->dir = RIGHT;
-    } else if (key["up"] == 1) {
-        tChar->y -= 5;
-        tChar->dir = LEFT;
-    } else if (key["down"] == 1) {
-        tChar->y += 5;
-        tChar->dir = LEFT;
+        cout << tChar.x << endl;
+
+        //Char *tChar = &charList[0];
+        if (key["left"] == 1) {
+            tChar.x -= 5;
+            tChar.dir = LEFT;
+        } else if (key["right"] == 1) {
+            tChar.x += 5;
+            tChar.dir = RIGHT;
+        } else if (key["up"] == 1) {
+            tChar.y -= 5;
+            tChar.dir = LEFT;
+        } else if (key["down"] == 1) {
+            tChar.y += 5;
+            tChar.dir = LEFT;
+        }
+        
+
+        if (tChar.action == ACT_NONE) {
+            if ((int)ofRandom(0, 20) == 0) {
+                tChar.action = ACT_ATTACK;
+                tChar.actCount = 0;
+                tChar.actTime = 10;
+            }
+        }
+
+        if (tChar.action != ACT_NONE) {
+
+            if (tChar.actCount >= tChar.actTime) {
+                tChar.action = ACT_NONE;
+                tChar.actCount = 0;
+            } else {
+            }
+
+            tChar.actCount++;
+
+        }
+
+    
+        tChar.count++;
     }
 
 }
@@ -449,7 +482,7 @@ void ofApp::draw(){
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
 
     ofSetColor(255);
-    
+    glReadBuffer(GL_FRONT);         // ofSaveScreenで画像が保存されない問題への対処
     //screenFbo.begin();
     //cam.begin();
     
@@ -462,7 +495,7 @@ void ofApp::draw(){
     //ofSetupScreenOrtho();
 
     //ofClear(0,0,0,255);
-	ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
+	//ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
     ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
     if (showBgImg) {
@@ -508,6 +541,9 @@ void ofApp::draw(){
     float rotateX = prmMap["ROTATE_X"]->floatVal;
     float rotateY = prmMap["ROTATE_Y"]->floatVal;
     float rotateZ = prmMap["ROTATE_Z"]->floatVal;
+    float camRotX = prmMap["CAM_ROT_X"]->floatVal;
+    float camRotY = prmMap["CAM_ROT_Y"]->floatVal;
+    float camRotZ = prmMap["CAM_ROT_Z"]->floatVal;
     float posRandomize = prmMap["POS_RANDOMIZE"]->floatVal;
     float colorH = prmMap["COLOR_H"]->floatVal;
     float colorS = prmMap["COLOR_S"]->floatVal;
@@ -527,7 +563,7 @@ void ofApp::draw(){
     //ofBackground(bgColor);
     
 
-
+    
     for(int charCount=0; charCount<charList.size(); charCount++){
 
         Char *tChar = &charList[charCount];
@@ -536,6 +572,7 @@ void ofApp::draw(){
         //auto imgItr = tChar.imgMap.begin();
 
         //ss << "char parts num: " << tChar.imgMap.size() << endl;
+        
 
         int faceAngle = ofRandom(-16,16);
 
@@ -565,25 +602,46 @@ void ofApp::draw(){
 
             ofPushMatrix();
     
+            ofRotateX(camRotX);
+            ofRotateY(camRotY);
+            ofRotateZ(camRotZ);
+
             //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
 	        //		ofRotate(180,rotateX,rotateY,rotateZ);
             
+            int dirFlag = 0;
+            if (tChar->dir != RIGHT) {
+                dirFlag = -1;
+            } else {
+                dirFlag = 1;
+            }
+
+
             ofTranslate(tChar->x+posX , tChar->y+posY );
+
             if (partsCategoryName == "weapon") {
-                if (tChar->dir != RIGHT) {
-                    ofTranslate(-4*pitch , 4*pitch );
+                if (tChar->action == ACT_NONE) {
+                        ofTranslate(4*pitch*dirFlag, 0*pitch );
                 } else{
-                    ofTranslate(4*pitch , 4*pitch );
+                    //ofTranslate(4*pitch , 4*pitch );
                 }
             }
             
-                    if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
-                        ofRotateX(rotateX);
-                        ofRotateY(rotateY);
-                        ofRotateZ(faceAngle);
-                    } else if (partsCategoryName == "weapon") {
-                        ofRotateZ(rotateZ);     // ofRandom(-90,90)
-                    }
+            // キャラごとの回転
+            //ofRotateX(rotateX);
+            //ofRotateY(rotateY);
+
+            if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
+                ofRotateZ(faceAngle);
+            } else if (partsCategoryName == "weapon") {
+
+                if (tChar->action == ACT_NONE) {
+                    ofRotateZ(rotateZ*dirFlag);     // ofRandom(-90,90)
+                } else if (tChar->action == ACT_ATTACK) {
+                    ofRotateZ(weaponAttackDeg(tChar->actCount));
+                }
+
+            }
 
 
             ofColor c;
@@ -609,6 +667,9 @@ void ofApp::draw(){
                         continue;
 			        } 
                     ofPushMatrix();
+                    
+                    ofRotateX(-rotateX);
+                    ofRotateY(-rotateY);
 
                     c.getHsb(h, s, bri);
            
@@ -642,22 +703,23 @@ void ofApp::draw(){
                                                         //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
                     if (partsCategoryName == "weapon") {
 //                        ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
-                        
-                        if (tChar->dir != RIGHT) {
-                            ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
-                                                        //ofScale(size/256,size/256);
+
+                        if (tChar->action == ACT_NONE) {
+                            ofTranslate((j-tImg->getWidth()/2 - 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 )*pitch+ ofRandomuf()*posRandomize);
                         } else {
-                            ofTranslate((j-tImg->getWidth()/2 - 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
+                            ofTranslate((j-tImg->getWidth()/2 + 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
                         }
+                                                        //ofScale(size/256,size/256);
                     } else {
                         ofTranslate((j-tImg->getWidth()/2)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2)*pitch+ ofRandomuf()*posRandomize);
                                                         //ofScale(size/256,size/256);
                     }
                    
-
-                    //ofRotateX(rotateX);
-                    //ofRotateY(rotateY);
-                    //ofRotateZ(rotateZ);
+                    /*
+                    ofRotateX(rotateX);
+                    ofRotateY(rotateY);
+                    ofRotateZ(rotateZ);
+                    */
                                                             //ofRotate(45,0,0,1);
            
                     //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
@@ -674,7 +736,11 @@ void ofApp::draw(){
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
                     if (partsCategoryName == "weapon") {
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
-                        particleImg.drawSubsection(0*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        if (tChar->action == ACT_ATTACK) {
+                            particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        } else {
+                            particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        }
                     } else {
                         particleImg.drawSubsection(0, 0, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                     }
@@ -726,6 +792,11 @@ void ofApp::draw(){
     //screenFbo.draw(0, 0);
 
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+
+    screenShotCounter++;
+    stringstream s;
+    s << screenShotCounter << ".png";
+    ofSaveScreen(s.str());
 
     return;
 
@@ -1605,5 +1676,15 @@ void trace(stringstream *ss) {
 void trace(string s) {
 
     cout << s << endl;
+
+}
+
+
+int weaponAttackDeg(int count) {
+    
+    //int deg[10] = {0,-120, 30, 90, -60, 30, 75, -90, 15, 75};
+    int deg[10] = {0,-120, -115, 40, 85, 90, -90, 0, 75, 80};
+
+    return deg[count];
 
 }

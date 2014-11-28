@@ -41,6 +41,8 @@
 #define DOWN_LEFT 5
 #define LEFT 6
 #define UP_LEFT 7
+#define ACT_NONE 0
+#define ACT_ATTACK 1
 
 
 class Parameter {
@@ -99,6 +101,8 @@ public:
     int animCount;
     int dir;
     int count;
+    int action;
+    int actCount, actTime;
 };
 
 
@@ -116,6 +120,7 @@ public:
     float size, pitch;
     float posX, posY, posZ;
     float rotateX, rotateY, rotateZ;
+    float camRotX, camRotY, camRotZ;
     float prevPosX, prevPosY, prevPosZ;
     float prevRotateX, prevRotateY, prevRotateZ;
     float bgH, bgS, bgB;
@@ -193,3 +198,4 @@ vector<vector<unsigned char>> getPngIndexImage(string filePath);
 void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size);
 void trace(stringstream *ss);
 void trace(string s);
+int weaponAttackDeg(int count);
