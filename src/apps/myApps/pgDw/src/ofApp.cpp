@@ -796,7 +796,7 @@ void ofApp::draw(){
     screenShotCounter++;
     stringstream s;
     s << screenShotCounter << ".png";
-    ofSaveScreen(s.str());
+    //ofSaveScreen(s.str());
 
     return;
 
