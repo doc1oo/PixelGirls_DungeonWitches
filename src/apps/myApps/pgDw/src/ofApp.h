@@ -136,7 +136,7 @@ public:
     vector<string> charPartsDrawOrder;
 
     ofPoint prevClickPoint;
-    ofImage img, particleImg, tileImg, bgImg;
+    ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
     ofImage texture;
     ofImage imgHero;
     map<string, ofImage> imgCharPartsMap;

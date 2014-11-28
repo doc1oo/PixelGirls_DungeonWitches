@@ -79,6 +79,8 @@ void ofApp::setup(){
 
 	img.loadImage("pixelArt/default.png");
 	particleImg.loadImage("particleImg/default.tif");
+	bgParticleImg.loadImage("particleImg/posca2.tif"); //circleAlpha.tif");
+	bgImg.loadImage("img/mapchip.png");
 	tileImg.loadImage("tileImg/default.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
 
@@ -498,6 +500,7 @@ void ofApp::draw(){
 	//ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
     ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
+
     if (showBgImg) {
         float imgAspect = img.getWidth() / img.getHeight();
         bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
@@ -516,6 +519,8 @@ void ofApp::draw(){
     } else if (blendMode == 5) {
         ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     }
+
+
 
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); ニアレストネイバー拡大
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -562,8 +567,44 @@ void ofApp::draw(){
     //int bgColor = 224;
     //ofBackground(bgColor);
     
-
     
+    // 背景描画 ---------------------
+    ofPushMatrix();
+    
+    ofRotateX(camRotX);
+    ofRotateY(camRotY);
+    ofRotateZ(camRotZ);
+
+    for(int y=0; y<4; y++) {
+        for(int x=0; x<6; x++) {
+
+            for(int i=0; i<8; i++) {
+                for(int j=0; j<8; j++) {
+
+                    
+
+                    int tSize = bgParticleImg.getHeight();
+                    int tpitch = 28;
+                    int tdotSize = 2;
+
+                    ofPushMatrix();
+                    
+                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8), (y*8+i)*tpitch + ofRandom(0,8));
+
+                    ofRotateZ(ofRandom(-10,10));
+                    ofColor c = bgImg.getColor(j+8*8, i+8);
+                    ofSetColor(c);
+
+                    bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
+                    ofPopMatrix();
+                }
+            }
+
+        }
+    }
+    ofPopMatrix();
+    
+    // キャラクター描画 ---------------------
     for(int charCount=0; charCount<charList.size(); charCount++){
 
         Char *tChar = &charList[charCount];
