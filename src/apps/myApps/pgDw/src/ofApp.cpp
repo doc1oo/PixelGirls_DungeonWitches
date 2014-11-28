@@ -79,7 +79,7 @@ void ofApp::setup(){
 
 	img.loadImage("pixelArt/default.png");
 	particleImg.loadImage("particleImg/default.tif");
-	bgParticleImg.loadImage("particleImg/posca2.tif"); //circleAlpha.tif");
+	bgParticleImg.loadImage("particleImg/posca.tif"); //circleAlpha.tif");
 	bgImg.loadImage("img/mapchip.png");
 	tileImg.loadImage("tileImg/default.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
@@ -152,9 +152,9 @@ void ofApp::setup(){
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
-            tChar.x = (charCount%4)*280 + ofRandom(-40, 40) -600;
-            tChar.y = (charCount/4)*160 + ofRandom(-40, 40) -400;
-            tChar.z = 0;//ofRandom(-100, 1200);
+            tChar.x = (charCount%4)*280 + ofRandom(-40, 40);
+            tChar.y = (charCount/4)*160 + ofRandom(-40, 40);
+            tChar.z = ofRandom(1, 300);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
             } else {
@@ -495,10 +495,11 @@ void ofApp::draw(){
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
     
     //ofSetupScreenOrtho();
-
-    //ofClear(0,0,0,255);
+    
+    ofClear(0,0,0,255);
+    //ofClear(255,255,255,255);
 	//ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
-    ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
+    //ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
 
     if (showBgImg) {
@@ -506,20 +507,6 @@ void ofApp::draw(){
         bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
     }
     
-    if (blendMode == 0) {
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    } else if (blendMode == 1) {
-        ofEnableBlendMode(OF_BLENDMODE_ADD);
-    } else if (blendMode == 2) {
-        ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-    } else if (blendMode == 3) {
-        ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-    } else if (blendMode == 4) {
-        ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-    } else if (blendMode == 5) {
-        ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    }
-
 
 
     //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); ニアレストネイバー拡大
@@ -543,6 +530,7 @@ void ofApp::draw(){
     float dotSize = prmMap["DOT_SIZE"]->floatVal;
     float posX = prmMap["POS_X"]->floatVal;
     float posY = prmMap["POS_Y"]->floatVal;
+    float posZ = prmMap["POS_Z"]->floatVal;
     float rotateX = prmMap["ROTATE_X"]->floatVal;
     float rotateY = prmMap["ROTATE_Y"]->floatVal;
     float rotateZ = prmMap["ROTATE_Z"]->floatVal;
@@ -569,6 +557,8 @@ void ofApp::draw(){
     
     
     // 背景描画 ---------------------
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
     ofPushMatrix();
     
     ofRotateX(camRotX);
@@ -589,7 +579,7 @@ void ofApp::draw(){
 
                     ofPushMatrix();
                     
-                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8), (y*8+i)*tpitch + ofRandom(0,8));
+                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX, (y*8+i)*tpitch + ofRandom(0,8)+ posY, ofRandom(0,100)+ posZ);
 
                     ofRotateZ(ofRandom(-10,10));
                     ofColor c = bgImg.getColor(j+8*8, i+8);
@@ -604,6 +594,20 @@ void ofApp::draw(){
     }
     ofPopMatrix();
     
+    if (blendMode == 0) {
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    } else if (blendMode == 1) {
+        ofEnableBlendMode(OF_BLENDMODE_ADD);
+    } else if (blendMode == 2) {
+        ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    } else if (blendMode == 3) {
+        ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+    } else if (blendMode == 4) {
+        ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+    } else if (blendMode == 5) {
+        ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    }
+
     // キャラクター描画 ---------------------
     for(int charCount=0; charCount<charList.size(); charCount++){
 
@@ -658,7 +662,7 @@ void ofApp::draw(){
             }
 
 
-            ofTranslate(tChar->x+posX , tChar->y+posY );
+            ofTranslate(tChar->x+posX , tChar->y+posY , tChar->z+posZ);
 
             if (partsCategoryName == "weapon") {
                 if (tChar->action == ACT_NONE) {
