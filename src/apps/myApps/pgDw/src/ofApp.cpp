@@ -20,6 +20,12 @@ void ofApp::setup(){
     pImgPattern = 0;
     size = 10;
     prevClickPoint = ofPoint(0,0);
+    key["up"] = 0;
+    key["down"] = 0;
+    key["left"] = 0;
+    key["right"] = 0;
+    key["enter"] = 0;
+    key["cancel"] = 0;
 
     charPartsPathList.push_back("body");
     charPartsPathList.push_back("face");
@@ -139,9 +145,14 @@ void ofApp::setup(){
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
-            tChar.x = (charCount%6+0.6)*200;//ofRandom(-50, 1200);
-            tChar.y = (charCount/6+0.5)*140;//ofRandom(-30, 700);
+            tChar.x = (charCount%6)*200 + ofRandom(-40, 40);
+            tChar.y = (charCount/6)*140 + ofRandom(-40, 40);
             tChar.z = 0;//ofRandom(-100, 1200);
+            if (ofRandom(0, 100) >= 50) {
+                tChar.dir = LEFT;
+            } else {
+                tChar.dir = RIGHT;
+            }
 
             itr++;
         }
@@ -395,6 +406,22 @@ void ofApp::update(){
     
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
     
+
+    Char *tChar = &charList[0];
+    if (key["left"] == 1) {
+        tChar->x -= 5;
+        tChar->dir = LEFT;
+    } else if (key["right"] == 1) {
+        tChar->x += 5;
+        tChar->dir = RIGHT;
+    } else if (key["up"] == 1) {
+        tChar->y -= 5;
+        tChar->dir = LEFT;
+    } else if (key["down"] == 1) {
+        tChar->y += 5;
+        tChar->dir = LEFT;
+    }
+
 }
 
 
@@ -510,6 +537,8 @@ void ofApp::draw(){
 
         //ss << "char parts num: " << tChar.imgMap.size() << endl;
 
+        int faceAngle = ofRandom(-16,16);
+
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
 
             string partsCategoryName = charPartsDrawOrder[categoryCount];
@@ -538,19 +567,41 @@ void ofApp::draw(){
     
             //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
 	        //		ofRotate(180,rotateX,rotateY,rotateZ);
-            /*
-            ofRotateX(rotateX);
-            ofRotateY(rotateY);
-            ofRotateZ(rotateZ);
-            */
+            
+            ofTranslate(tChar->x+posX , tChar->y+posY );
+            if (partsCategoryName == "weapon") {
+                if (tChar->dir != RIGHT) {
+                    ofTranslate(-4*pitch , 4*pitch );
+                } else{
+                    ofTranslate(4*pitch , 4*pitch );
+                }
+            }
+            
+                    if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
+                        ofRotateX(rotateX);
+                        ofRotateY(rotateY);
+                        ofRotateZ(faceAngle);
+                    } else if (partsCategoryName == "weapon") {
+                        ofRotateZ(rotateZ);     // ofRandom(-90,90)
+                    }
+
+
             ofColor c;
             float h, s, bri;
 	        for(int i=0; i<tImg->getHeight(); i++) {
 		        for(int j=0; j<tImg->getWidth(); j++) {
+
+                    int x, y, z;
+                    if (tChar->dir != RIGHT) {
+                        x = j;
+                    } else {
+                        x = (tImg->getWidth()-1) - j;
+                    }
+                    y = i;
             
                     //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
-                    unsigned char index = (*indexImg)[i][j];
+                    unsigned char index = (*indexImg)[y][x];
                     vector<unsigned char> *t = &(*palette).at(index);
                     ofColor c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
 
@@ -581,21 +632,32 @@ void ofApp::draw(){
                     if(h>=256) {
                         ss << h << endl;
                     }*/
-                    if ((*indexImg)[i][j] < 16) {
+                    if ((*indexImg)[y][x] < 16) {
                         ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
                     } else {
                         ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , s, bri));
                     }
-
                     //ss << " " << c.r << " " << c.g << " " << c.b << endl;
                     //ofTranslate(j, i);
                                                         //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
-                    ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize - (pitch*tImg->getWidth()/2), i*pitch+posY + ofRandomuf()*posRandomize - (pitch * tImg->getHeight()/2));
+                    if (partsCategoryName == "weapon") {
+//                        ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
+                        
+                        if (tChar->dir != RIGHT) {
+                            ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
                                                         //ofScale(size/256,size/256);
+                        } else {
+                            ofTranslate((j-tImg->getWidth()/2 - 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
+                        }
+                    } else {
+                        ofTranslate((j-tImg->getWidth()/2)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2)*pitch+ ofRandomuf()*posRandomize);
+                                                        //ofScale(size/256,size/256);
+                    }
                    
-                    ofRotateX(rotateX);
-                    ofRotateY(rotateY);
-                    ofRotateZ(rotateZ);
+
+                    //ofRotateX(rotateX);
+                    //ofRotateY(rotateY);
+                    //ofRotateZ(rotateZ);
                                                             //ofRotate(45,0,0,1);
            
                     //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
@@ -610,7 +672,12 @@ void ofApp::draw(){
            
                     //ofRect(0,0, pSize, pSize);
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
-                    particleImg.drawSubsection(tChar->x, tChar->y, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                    if (partsCategoryName == "weapon") {
+//                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        particleImg.drawSubsection(0*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                    } else {
+                        particleImg.drawSubsection(0, 0, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                    }
            
                     ofPopMatrix();
 
@@ -770,9 +837,9 @@ void ofApp::receiveOscMessage() {
 
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int pressedKey){
     
-    if (key == ' ') {                   // space key で GUI のOn/Off
+    if (pressedKey == ' ') {                   // space key で GUI のOn/Off
         
         if(gui->isEnabled()) {
             gui->disable();
@@ -780,10 +847,40 @@ void ofApp::keyPressed(int key){
             gui->enable();
         }
         
-    } else if (key == 's') {             // 's' key で screen shot
-        _saveScreenShot();
     }
+    if (pressedKey == 'a') {
+        key["left"] = 1;
+    } else if (pressedKey == 'd') {
+        key["right"] = 1;
+    }
+    if (pressedKey == 'w') {             // 's' key で screen shot
+        key["up"] = 1;
+        //_saveScreenShot();
+    } else if (pressedKey == 's') {             // 's' key で screen shot
+        key["down"] = 1;
+        //_saveScreenShot();
+    }
+
+
+
 }
+
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int pressedKey){
+    if (pressedKey == 'a') {
+        key["left"] = 0;
+    } else if (pressedKey == 'd') {
+        key["right"] = 0;
+    }
+    if (pressedKey == 'w') {             // 's' key で screen shot
+        key["up"] = 0;
+    } else if (pressedKey == 's') {             // 's' key で screen shot
+        key["down"] = 0;
+    }
+
+}
+
 
 
 
@@ -826,13 +923,6 @@ void ofApp::_saveScreenShot() {
     
     prevScreenShotDateTime = dateTime;
 
-}
-
-
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-    
 }
 
 

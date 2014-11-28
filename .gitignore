@@ -1,4 +1,5 @@
 *.opensdf
+*.tlog
 
 # Compiled Object files
 #*.slo

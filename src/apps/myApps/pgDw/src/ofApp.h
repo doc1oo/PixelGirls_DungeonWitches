@@ -32,7 +32,15 @@
 #define PORT 7778                       // OSCメッセージの受信に使うポート番号（送信側と揃える）
 #define NUM_BILLBOARDS 40000
 #define CS 16                       // ChipSize
-
+#define CENTER -1
+#define UP 0
+#define UP_RIGHT 1
+#define RIGHT 2
+#define DOWN_RIGHT 3
+#define DOWN 4
+#define DOWN_LEFT 5
+#define LEFT 6
+#define UP_LEFT 7
 
 
 class Parameter {
@@ -88,6 +96,9 @@ public:
     map<string, vector<vector<unsigned char>> > imgMapPalette;
     map<string, vector<vector<unsigned char>> > indexImgMap;
     int x, y, z;
+    int animCount;
+    int dir;
+    int count;
 };
 
 
@@ -127,6 +138,8 @@ public:
     map<string, vector<vector<unsigned char>> > indexImgMap;
     map<string, vector<vector<unsigned char>> > imgMapPalette;
     map<string, map<string, ofImage> > charPartsMap;
+    map<string, int> key;
+    map<string, int> keyOnce;
 
     map<string, boost::any> oscPrm;
     map<string, ofSoundPlayer> sndMap;
