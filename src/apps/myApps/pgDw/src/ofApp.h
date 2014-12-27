@@ -46,6 +46,8 @@
 #define ACT_NONE 0
 #define ACT_ATTACK 1
 
+#define BIG_MAP_SIZE_W 17
+#define BIG_MAP_SIZE_H 17
 
 class Parameter {
 
@@ -136,12 +138,13 @@ public:
     stringstream ss;
     vector<string> charPartsPathList;
     vector<string> charPartsDrawOrder;
-    int bigMap[15][15];
+    int bigMap[17][17];
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
     ofImage texture;
     ofImage imgHero;
+    ofImage imgTitleBanner;
     map<string, ofImage> imgCharPartsMap;
     map<string, vector<vector<unsigned char>> > indexImgMap;
     map<string, vector<vector<unsigned char>> > imgMapPalette;

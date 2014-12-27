@@ -50,9 +50,13 @@ void ofApp::setup(){
     pxFont.loadFont("font/misaki_gothic.ttf", 28);
     pxFontBig.loadFont("font/misaki_gothic.ttf", 64);
 
-    for(int i=0; i<15; i++) {
-        for(int j=0; j<15; j++) {
-            bigMap[i][j] = (int)ofRandom(10);
+    for(int i=0; i<BIG_MAP_SIZE_H; i++) {
+        for(int j=0; j<BIG_MAP_SIZE_W; j++) {
+            if (i == 0 || i == BIG_MAP_SIZE_W-1 || j == 0 || j == BIG_MAP_SIZE_W-1) {
+                bigMap[i][j] = 1;       // ダンジョンの外壁
+            } else {
+                bigMap[i][j] = (int)ofRandom(10);
+            }
         }
     }
 
@@ -95,6 +99,7 @@ void ofApp::setup(){
 	bgParticleImg.loadImage("particleImg/posca.tif"); //circleAlpha.tif");
 	bgImg.loadImage("img/mapchip.png");
 	tileImg.loadImage("tileImg/default.png");
+	imgTitleBanner.loadImage("img/pixelGirls10_fx_banner.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
 
     auto charPartsPathMap = getDirectoryFileListRecursive("./data/img/charParts/");
@@ -203,22 +208,26 @@ void ofApp::setup(){
 
     oscReceiver.setup( PORT );          // OSC受信用ポート設定
 
-    cam.setFov(30.0);
+    cam.setFov(80.0);
 	cam.setPosition(0, 2000, 200);
     //cam.lookAt(ofVec3f(0,0,1));
     //cam.lookAt(ofVec3f(0,-1,0));//, ofVec3f(0,0,1));     // 見てほしい方向, 頭の向き
     cam.lookAt(ofVec3f(0,-1,0));
     cam.setVFlip(true);
 
-	//cam.setNearClip(0.f);
-	//cam.setFarClip(-1000.f);
+    cam.setNearClip(10);
+    cam.setFarClip(1000);
+	cam.setNearClip(0.f);
+	cam.setFarClip(-1000.f);
 	//cam.enableOrtho();
     
     //cam.setupPerspective();
+
+    easyCam.setFov(80);
+    easyCam.setFarClip(30000);          // デフォルト設定より遠くまで見えるように
+    easyCam.setNearClip(0);         // 手前のオブジェクトが消えるように
+
     
-    //cam.setNearClip(10);
-    //cam.setFarClip(1000);
-    //cam.
     ss << "cam:" << endl;
     ss << cam.getNearClip() << endl;
     ss << cam.getFarClip() << endl;
@@ -599,8 +608,8 @@ void ofApp::draw(){
     
 
     int objSize = 128*5;
-    for(int i=0; i<15; i++) {
-        for(int j=0; j<15; j++) {
+    for(int i=0; i<17; i++) {
+        for(int j=0; j<17; j++) {
             if (bigMap[i][j] == 1) {
                 ofBoxPrimitive box; 
                 box.set(objSize);
@@ -976,6 +985,7 @@ void ofApp::draw(){
     pxFont.drawString("くぴま", 30, 550);
     pxFont.drawString("HP  70", 30, 590);
 
+    imgTitleBanner.draw(ofGetWidth()-320, 30, imgTitleBanner.width/2,imgTitleBanner.height/2);
 
     /*
     font.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 40);
