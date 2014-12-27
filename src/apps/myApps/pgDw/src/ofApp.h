@@ -26,6 +26,8 @@
 #include "zconf.h"
 #include "png.h"
 
+#include "ofxTrueTypeFontUC.h"
+
 //#pragma comment (lib, "zlib.lib")
 //#pragma comment (lib, "libpng16.lib")
 
@@ -162,6 +164,10 @@ public:
     ofVec3f billboardVels[NUM_BILLBOARDS];
     ofShader billboardShader;
     ofTrueTypeFont ttFont;
+    ofxTrueTypeFontUC font;
+    ofxTrueTypeFontUC boldFont;
+    ofxTrueTypeFontUC pxFont;
+    ofxTrueTypeFontUC prettyFont;
 
 	ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス
     ofxUICanvas *gui;

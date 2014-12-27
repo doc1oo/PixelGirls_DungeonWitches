@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="src\ofxTrueTypeFontUC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWaveform.h" />
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidget.h" />
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidgetWithLabel.h" />
+    <ClInclude Include="src\ofxTrueTypeFontUC.h" />
     <ClInclude Include="src\png.h" />
     <ClInclude Include="src\pngconf.h" />
     <ClInclude Include="src\pnglibconf.h" />

@@ -63,3 +63,7 @@ PixelGirls_DungeonWitches use following libralies. ( libraries/ )
                Copyright (C) 2012 Fontna.com
   - License  : IPA Font License Agreement v1.0 (look libraries/07Yasashisa/IPAfont00303/IPA_Font_License_Agreement_v1.0.txt )
                and M+ license (look libraries/07Yasashisa/mplus-TESTFLIGHT-043/LICENSE_E )
+
+* [ofxTrueTypeFontUC] ( https://github.com/hironishihara/ofxTrueTypeFontUC )
+  - Copyright: Copyright (c) 2011- openFrameworks Community and hironishihara
+  - License  : MIT License

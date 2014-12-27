@@ -16,7 +16,7 @@
 <Widget>
     <Kind>4</Kind>
     <Name>POS_Y</Name>
-    <Value>1000.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -31,7 +31,7 @@
 <Widget>
     <Kind>4</Kind>
     <Name>ROTATE_Y</Name>
-    <Value>6.000000000</Value>
+    <Value>186.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -46,12 +46,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>CAM_ROT_Y</Name>
-    <Value>294.000000000</Value>
+    <Value>168.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>CAM_ROT_Z</Name>
-    <Value>54.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>

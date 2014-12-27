@@ -73,6 +73,9 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
+    <ClCompile Include="src\ofxTrueTypeFontUC.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -372,6 +375,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\pnglibconf.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofxTrueTypeFontUC.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

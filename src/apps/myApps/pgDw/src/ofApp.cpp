@@ -1,7 +1,6 @@
 ﻿#include "ofApp.h"
 
 
-
 void ofApp::setup(){
 
     trace("setup() started.");
@@ -44,7 +43,11 @@ void ofApp::setup(){
     charPartsDrawOrder.push_back("hair");
     charPartsDrawOrder.push_back("hairAcce");
 
-    ttFont.loadFont("");
+    //ttFont.loadFont("font/07やさしさゴシック.ttf", 72);
+    font.loadFont("font/NotoSansCJKjp-Light.otf", 32);
+    boldFont.loadFont("font/NotoSansCJKjp-Bold.otf", 32);
+    prettyFont.loadFont("font/07やさしさゴシック.ttf", 32);
+    pxFont.loadFont("font/misaki_gothic.ttf", 32);
 
     // GUI関係の情報設定 -----------------------------------------------
     {
@@ -864,10 +867,14 @@ void ofApp::draw(){
     //ofSaveScreen(s.str());
 
     //ofDrawBitmapString("0 1 2 3 4 5 6 7 8 9", 0, 0);
-    ttFont.drawString("0 1 2 3 4 5 6 7 8 9", 0, 0, 0);
 
     cam.end();
     //easyCam.end();
+    ofSetColor(255, 255, 255);
+    font.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 40);
+    boldFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 140);
+    pxFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 240);
+    prettyFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 340);
 
     return;
 
