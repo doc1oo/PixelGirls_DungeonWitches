@@ -11,6 +11,7 @@ void ofApp::setup(){
     //cout.rdbuf(ofs.rdbuf());
 
     srand(time(NULL));
+    ofSetFrameRate(60);
     ofSetBackgroundAuto(false); 
 
     // 変数の初期値設定 -----------------------------------------------
@@ -154,7 +155,7 @@ void ofApp::setup(){
 
             tChar.x = (charCount%4)*280 + ofRandom(-40, 40);
             tChar.y = (charCount/4)*160 + ofRandom(-40, 40);
-            tChar.z = ofRandom(1, 300);
+            tChar.z = 300;//ofRandom(1, 300);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
             } else {
@@ -741,7 +742,15 @@ void ofApp::draw(){
                     if ((*indexImg)[y][x] < 16) {
                         ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
                     } else {
-                        ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , s, bri));
+                        // 色相の変更で色がどぎつい鮮やかさになる場合があるのを補正？
+                        int ts = s;
+                        //if (ts > 128) {
+                       //     ts = 0;//(s*7)/10;//*2/3;
+                       // }
+                        if (ts > 80) {
+                            ts = s/4+80;
+                        }
+                        ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , ts+100, bri));
                     }
                     //ss << " " << c.r << " " << c.g << " " << c.b << endl;
                     //ofTranslate(j, i);
@@ -776,7 +785,7 @@ void ofApp::draw(){
                         penSlashNum = tNum/2-1;
                     }
                     penSlashNum = 0;
-           
+
                     //ofRect(0,0, pSize, pSize);
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
                     if (partsCategoryName == "weapon") {
@@ -787,7 +796,8 @@ void ofApp::draw(){
                             particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         }
                     } else {
-                        particleImg.drawSubsection(0, 0, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        float destSize = pitch * dotSize;
+                        particleImg.drawSubsection(0-destSize/2, 0-destSize/2, destSize, destSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                     }
            
                     ofPopMatrix();
@@ -978,7 +988,10 @@ void ofApp::keyPressed(int pressedKey){
     }
 
 
-
+    if (pressedKey == 'f') {
+        //フルスクリーン on/off の切り替え
+        ofToggleFullscreen();
+    }
 }
 
 
