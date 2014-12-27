@@ -475,6 +475,8 @@ void ofApp::draw(){
 
     trace("draw() start");
 
+    easyCam.begin();
+
     /*
     std::mt19937 engine;
     std::vector< std::uint_least32_t > v;
@@ -852,6 +854,9 @@ void ofApp::draw(){
     stringstream s;
     s << screenShotCounter << ".png";
     //ofSaveScreen(s.str());
+
+    
+    easyCam.end();
 
     return;
 

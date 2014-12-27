@@ -155,6 +155,7 @@ public:
 	// map<string, boost::any> prmValLst;
 
     ofCamera cam;
+    ofEasyCam easyCam;
     ofFbo screenFbo;
     ofFbo maskFbo;
     ofVboMesh billboards;						//ofVbo billboards;
