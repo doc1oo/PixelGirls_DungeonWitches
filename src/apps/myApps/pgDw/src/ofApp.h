@@ -170,6 +170,7 @@ public:
     ofxTrueTypeFontUC font;
     ofxTrueTypeFontUC boldFont;
     ofxTrueTypeFontUC pxFont;
+    ofxTrueTypeFontUC pxFontBig;
     ofxTrueTypeFontUC prettyFont;
 
 	ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス

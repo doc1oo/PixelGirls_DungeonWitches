@@ -47,11 +47,12 @@ void ofApp::setup(){
     font.loadFont("font/NotoSansCJKjp-Light.otf", 32);
     boldFont.loadFont("font/NotoSansCJKjp-Bold.otf", 32);
     prettyFont.loadFont("font/07やさしさゴシック.ttf", 32);
-    pxFont.loadFont("font/misaki_gothic.ttf", 32);
+    pxFont.loadFont("font/misaki_gothic.ttf", 28);
+    pxFontBig.loadFont("font/misaki_gothic.ttf", 64);
 
     for(int i=0; i<15; i++) {
         for(int j=0; j<15; j++) {
-            bigMap[i][j] = (int)ofRandom(5);
+            bigMap[i][j] = (int)ofRandom(10);
         }
     }
 
@@ -496,7 +497,11 @@ void ofApp::draw(){
 
     trace("draw() start");
     
-
+    
+    ofClear(0,0,0,255);
+    //ofClear(255,255,255,255);
+    ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
+    
     easyCam.begin();
     //cam.begin();
 
@@ -536,11 +541,6 @@ void ofApp::draw(){
     //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
     
     //ofSetupScreenOrtho();
-    
-    ofClear(0,0,0,255);
-    //ofClear(255,255,255,255);
-	//ofClear(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal));
-    //ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
 
     if (showBgImg) {
@@ -598,14 +598,23 @@ void ofApp::draw(){
     
     
 
+    int objSize = 128*5;
     for(int i=0; i<15; i++) {
         for(int j=0; j<15; j++) {
             if (bigMap[i][j] == 1) {
                 ofBoxPrimitive box; 
-                box.set(128*5);
+                box.set(objSize);
                 ofColor(255,255,255);
-                box.setPosition(j*(128+0.5)*5, i*(128+0.5)*5, 64);
+                box.setPosition(j*objSize, i*objSize,objSize/2);
                 box.draw();
+            } else if (bigMap[i][j] == 2) {
+                ofConePrimitive cone;
+                cone.set(objSize/2, objSize, 12, 1);
+                cone.rotate(-90,1.0,0,0);
+                ofColor(255,255,255);
+                cone.setPosition(j*objSize, i*objSize,objSize/2);
+                cone.draw();
+
             }
         }
     }
@@ -826,13 +835,13 @@ void ofApp::draw(){
 //                        ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
 
                         if (tChar->action == ACT_NONE) {
-                            ofTranslate((j-tImg->getWidth()/2 - 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 )*pitch+ ofRandomuf()*posRandomize);
+                            ofTranslate((j-tImg->getWidth()/2 - 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2-8 )*pitch+ ofRandomuf()*posRandomize);
                         } else {
-                            ofTranslate((j-tImg->getWidth()/2 + 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
+                            ofTranslate((j-tImg->getWidth()/2 + 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2-8 - 4)*pitch+ ofRandomuf()*posRandomize);
                         }
                                                         //ofScale(size/256,size/256);
                     } else {
-                        ofTranslate((j-tImg->getWidth()/2)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2)*pitch+ ofRandomuf()*posRandomize);
+                        ofTranslate((j-tImg->getWidth()/2)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2-8)*pitch+ ofRandomuf()*posRandomize);
                                                         //ofScale(size/256,size/256);
                     }
                    
@@ -856,6 +865,7 @@ void ofApp::draw(){
                     //ofRect(0,0, pSize, pSize);
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
                     if (partsCategoryName == "weapon") {
+                        float destSize = pitch * dotSize;
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         if (tChar->action == ACT_ATTACK) {
                             particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, -0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
@@ -939,14 +949,34 @@ void ofApp::draw(){
     ofPopMatrix();
     ofPushMatrix();
     ofRotateZ(90);
-    prettyFont.drawString("Y 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
+    prettyFont.drawString("Z 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
     ofPopMatrix();
 
 
     //cam.lookAt();
 
     //cam.end();
+    ofColor(240,32,255);
     easyCam.end();
+
+    // ステータス表示 ------------------------------------------------------
+
+    pxFontBig.drawString("B?+ 1F", 30, 100);
+    
+    pxFont.drawString("あなた", 30, 170);
+    pxFont.drawString("HP 100", 30, 220);
+    pxFont.drawString("MP  99", 30, 260);
+    
+    pxFont.drawString("ないこ", 30, 350);
+    pxFont.drawString("HP  40", 30, 390);
+
+    pxFont.drawString("ぴよか", 30, 450);
+    pxFont.drawString("HP  30", 30, 490);
+
+    pxFont.drawString("くぴま", 30, 550);
+    pxFont.drawString("HP  70", 30, 590);
+
+
     /*
     font.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 40);
     boldFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 140);
