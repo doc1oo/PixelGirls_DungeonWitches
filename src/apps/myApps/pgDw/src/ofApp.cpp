@@ -1070,13 +1070,13 @@ void ofApp::mouseMoved(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+    /*
     if (!(x < 600 && y < 400) || gui->isEnabled() == false) {
         if (button == 0) { // left click
-            /*
-            prmMap["ROTATE_X"]->floatVal = prevRotateX + (x - prevClickPoint.x);
-            prmMap["ROTATE_Y"]->floatVal = prevRotateY + (y - prevClickPoint.y);
-             */
+           
+            // prmMap["ROTATE_X"]->floatVal = prevRotateX + (x - prevClickPoint.x);
+            // prmMap["ROTATE_Y"]->floatVal = prevRotateY + (y - prevClickPoint.y);
+            
             
             ofxUISlider* s = (ofxUISlider*)gui->getWidget("ROTATE_X");
             s->setValue(prevRotateX + (y - prevClickPoint.y));
@@ -1089,10 +1089,10 @@ void ofApp::mouseDragged(int x, int y, int button){
             s->triggerSelf();
             
         } else if (button == 2) {
-            /*
-            prmMap["ROTATE_X"] = prevRotateX + (x - prevClickPoint.x);
-            prmMap["ROTATE_Y"] = prevRotateY + (y - prevClickPoint.y);
-             */
+            
+            // prmMap["ROTATE_X"] = prevRotateX + (x - prevClickPoint.x);
+            // prmMap["ROTATE_Y"] = prevRotateY + (y - prevClickPoint.y);
+            
             
             ofxUISlider* s = (ofxUISlider*)gui->getWidget("POS_X");
             s->setValue(prevPosX + (x - prevClickPoint.x));
@@ -1105,6 +1105,7 @@ void ofApp::mouseDragged(int x, int y, int button){
             s->triggerSelf();
         }
     }
+    */
     
 }
 
