@@ -11,12 +11,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>POS_X</Name>
-    <Value>-1000.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>POS_Y</Name>
-    <Value>-1000.000000000</Value>
+    <Value>1000.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -26,12 +26,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>ROTATE_X</Name>
-    <Value>336.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>ROTATE_Y</Name>
-    <Value>-137.999969482</Value>
+    <Value>6.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -46,12 +46,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>CAM_ROT_Y</Name>
-    <Value>0.000000000</Value>
+    <Value>294.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>CAM_ROT_Z</Name>
-    <Value>0.000000000</Value>
+    <Value>54.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -71,7 +71,7 @@
 <Widget>
     <Kind>4</Kind>
     <Name>ADD_A</Name>
-    <Value>255.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>

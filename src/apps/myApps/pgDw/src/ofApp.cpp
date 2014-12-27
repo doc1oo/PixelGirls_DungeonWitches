@@ -44,6 +44,8 @@ void ofApp::setup(){
     charPartsDrawOrder.push_back("hair");
     charPartsDrawOrder.push_back("hairAcce");
 
+    ttFont.loadFont("");
+
     // GUI関係の情報設定 -----------------------------------------------
     {
         int w = 120;
@@ -155,7 +157,7 @@ void ofApp::setup(){
 
             tChar.x = (charCount%4)*280 + ofRandom(-40, 40);
             tChar.y = (charCount/4)*160 + ofRandom(-40, 40);
-            tChar.z = 300;//ofRandom(1, 300);
+            tChar.z = 0;//ofRandom(1, 300);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
             } else {
@@ -190,6 +192,11 @@ void ofApp::setup(){
 
     oscReceiver.setup( PORT );          // OSC受信用ポート設定
 
+    cam.setFov(60.0);
+	cam.setPosition(0, 2000, 200);
+    //cam.lookAt(ofVec3f(0,0,1));
+    cam.lookAt(ofVec3f(0,-1,0), ofVec3f(0,0,-1));     // 見てほしい方向, 頭の向き
+
 	//cam.setNearClip(0.f);
 	//cam.setFarClip(-1000.f);
 	//cam.enableOrtho();
@@ -199,8 +206,6 @@ void ofApp::setup(){
     //cam.setNearClip(10);
     //cam.setFarClip(1000);
     //cam.
-    //cam.setFov(10.0);
-	//cam.setPosition(0, 0, 0);
     ss << "cam:" << endl;
     ss << cam.getNearClip() << endl;
     ss << cam.getFarClip() << endl;
@@ -389,6 +394,8 @@ void ofApp::setup(){
 
     trace("setup() finished.");
 
+    //easyCam.setDistance(500);
+    //ofEnableDepthTest();            // 深度テストを有効にすると、z座標の値によって前後関係が正しく表現されるが、透過が効かずに、描画順が命令順どおりにならなくなる
 }
 
 
@@ -475,7 +482,8 @@ void ofApp::draw(){
 
     trace("draw() start");
 
-    easyCam.begin();
+    cam.begin();
+    //easyCam.begin();
 
     /*
     std::mt19937 engine;
@@ -855,8 +863,11 @@ void ofApp::draw(){
     s << screenShotCounter << ".png";
     //ofSaveScreen(s.str());
 
-    
-    easyCam.end();
+    //ofDrawBitmapString("0 1 2 3 4 5 6 7 8 9", 0, 0);
+    ttFont.drawString("0 1 2 3 4 5 6 7 8 9", 0, 0, 0);
+
+    cam.end();
+    //easyCam.end();
 
     return;
 

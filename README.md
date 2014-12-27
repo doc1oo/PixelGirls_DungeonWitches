@@ -35,3 +35,19 @@ PixelGirls_DungeonWitches use following libraries. ( libraries/ )
 * [zlib] ( http://zlib.net/ )
   - Copyright:  (C) 1995-2013 Jean-loup Gailly and Mark Adler
   - License  : zlib License
+
+* [Noto Sans CJK] ( http://www.google.com/get/noto/ )
+  - Copyright: 
+  - License  : Apache License, version 2.0 
+
+* [美咲フォント] (http://www.geocities.jp/littlimi/misaki.htm)
+  - Copyright: (C) 2002-2012 Num Kadoma
+  - License  : (look libraries/misaki_ttf_2012-06-03/misaki.txt and http://www.geocities.jp/littlimi/font.htm#license )
+
+* [07 やさしさゴシック (07 YasashisaGothic)]
+  - Copyright: Copyright (C) 2002-2012 M+ FONTS PROJECT
+               Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2012.
+               Copyright (C) 2012 Fontna.com
+  - License  : IPA Font License Agreement v1.0 (look libraries/07Yasashisa/IPAfont00303/IPA_Font_License_Agreement_v1.0.txt )
+               and M+ license (look libraries/07Yasashisa/mplus-TESTFLIGHT-043/LICENSE_E )
+

@@ -161,6 +161,7 @@ public:
     ofVboMesh billboards;						//ofVbo billboards;
     ofVec3f billboardVels[NUM_BILLBOARDS];
     ofShader billboardShader;
+    ofTrueTypeFont ttFont;
 
 	ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス
     ofxUICanvas *gui;
