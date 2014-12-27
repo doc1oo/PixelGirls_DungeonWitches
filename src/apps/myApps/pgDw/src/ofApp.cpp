@@ -49,6 +49,12 @@ void ofApp::setup(){
     prettyFont.loadFont("font/07やさしさゴシック.ttf", 32);
     pxFont.loadFont("font/misaki_gothic.ttf", 32);
 
+    for(int i=0; i<15; i++) {
+        for(int j=0; j<15; j++) {
+            bigMap[i][j] = (int)ofRandom(5);
+        }
+    }
+
     // GUI関係の情報設定 -----------------------------------------------
     {
         int w = 120;
@@ -188,6 +194,7 @@ void ofApp::setup(){
     
     screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	maskFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	tempFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
     gui = new ofxUICanvas(0,0,600,400);
     ofSetBackgroundAuto(false);
@@ -195,10 +202,12 @@ void ofApp::setup(){
 
     oscReceiver.setup( PORT );          // OSC受信用ポート設定
 
-    cam.setFov(60.0);
+    cam.setFov(30.0);
 	cam.setPosition(0, 2000, 200);
     //cam.lookAt(ofVec3f(0,0,1));
-    cam.lookAt(ofVec3f(0,-1,0), ofVec3f(0,0,-1));     // 見てほしい方向, 頭の向き
+    //cam.lookAt(ofVec3f(0,-1,0));//, ofVec3f(0,0,1));     // 見てほしい方向, 頭の向き
+    cam.lookAt(ofVec3f(0,-1,0));
+    cam.setVFlip(true);
 
 	//cam.setNearClip(0.f);
 	//cam.setFarClip(-1000.f);
@@ -396,6 +405,8 @@ void ofApp::setup(){
     _imgLoad();
 
     trace("setup() finished.");
+    
+    glDisable(GL_CULL_FACE);        // カリングしない
 
     //easyCam.setDistance(500);
     //ofEnableDepthTest();            // 深度テストを有効にすると、z座標の値によって前後関係が正しく表現されるが、透過が効かずに、描画順が命令順どおりにならなくなる
@@ -484,9 +495,25 @@ void ofApp::_imgLoad(){
 void ofApp::draw(){
 
     trace("draw() start");
+    
 
-    cam.begin();
-    //easyCam.begin();
+    easyCam.begin();
+    //cam.begin();
+
+    ofEnableDepthTest();
+
+    // ライティングを有効に
+    light.enable();
+    // スポットライトを配置
+    light.setPointLight();
+    // 照明の位置
+    light.setPosition(-100, 100, 1000);
+    // 環境反射光の色
+    light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));
+    // 拡散反射光の色
+    light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
+    // 鏡面反射光の色
+    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
 
     /*
     std::mt19937 engine;
@@ -570,7 +597,24 @@ void ofApp::draw(){
     //ofBackground(bgColor);
     
     
+
+    for(int i=0; i<15; i++) {
+        for(int j=0; j<15; j++) {
+            if (bigMap[i][j] == 1) {
+                ofBoxPrimitive box; 
+                box.set(128*5);
+                ofColor(255,255,255);
+                box.setPosition(j*(128+0.5)*5, i*(128+0.5)*5, 64);
+                box.draw();
+            }
+        }
+    }
+    
+    
     // 背景描画 ---------------------
+    glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
+
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
     ofPushMatrix();
@@ -593,7 +637,7 @@ void ofApp::draw(){
 
                     ofPushMatrix();
                     
-                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX, (y*8+i)*tpitch + ofRandom(0,8)+ posY, ofRandom(0,100)+ posZ);
+                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX, (y*8+i)*tpitch + ofRandom(0,8)+ posY, ofRandom(0,0)+ posZ);
 
                     ofRotateZ(ofRandom(-10,10));
                     ofColor c = bgImg.getColor(j+8*8, i+8);
@@ -607,7 +651,16 @@ void ofApp::draw(){
         }
     }
     ofPopMatrix();
+    glDepthMask(GL_TRUE);
+    // --------------------------------
+
+    //light.disable();
+    //ofDisableDepthTest();
     
+
+    // ----------------------------------------------------------
+
+
     if (blendMode == 0) {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     } else if (blendMode == 1) {
@@ -689,6 +742,7 @@ void ofApp::draw(){
             // キャラごとの回転
             //ofRotateX(rotateX);
             //ofRotateY(rotateY);
+            ofRotateX(-90);
 
             if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
                 ofRotateZ(faceAngle);
@@ -804,13 +858,13 @@ void ofApp::draw(){
                     if (partsCategoryName == "weapon") {
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         if (tChar->action == ACT_ATTACK) {
-                            particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                            particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, -0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         } else {
-                            particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                            particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, -0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         }
                     } else {
                         float destSize = pitch * dotSize;
-                        particleImg.drawSubsection(0-destSize/2, 0-destSize/2, destSize, destSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        particleImg.drawSubsection(0-destSize/2, 0-destSize/2, -0.01*categoryCount, destSize, destSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                     }
            
                     ofPopMatrix();
@@ -867,14 +921,37 @@ void ofApp::draw(){
     //ofSaveScreen(s.str());
 
     //ofDrawBitmapString("0 1 2 3 4 5 6 7 8 9", 0, 0);
-
-    cam.end();
+    
+    /*
     //easyCam.end();
     ofSetColor(255, 255, 255);
+    tempFbo.begin();
+    ofBackground(0,0,0,0);
+    prettyFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 340);
+    tempFbo.end();
+    tempFbo.draw(0, 0);
+    */
+
+    prettyFont.drawString("X 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
+    ofPushMatrix();
+    ofRotateY(90);
+    prettyFont.drawString("Y 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
+    ofPopMatrix();
+    ofPushMatrix();
+    ofRotateZ(90);
+    prettyFont.drawString("Y 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
+    ofPopMatrix();
+
+
+    //cam.lookAt();
+
+    //cam.end();
+    easyCam.end();
+    /*
     font.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 40);
     boldFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 140);
     pxFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 240);
-    prettyFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 340);
+    */
 
     return;
 

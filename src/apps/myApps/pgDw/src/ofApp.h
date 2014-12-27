@@ -136,6 +136,7 @@ public:
     stringstream ss;
     vector<string> charPartsPathList;
     vector<string> charPartsDrawOrder;
+    int bigMap[15][15];
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
@@ -158,8 +159,10 @@ public:
 
     ofCamera cam;
     ofEasyCam easyCam;
+    ofLight light;
     ofFbo screenFbo;
     ofFbo maskFbo;
+    ofFbo tempFbo;
     ofVboMesh billboards;						//ofVbo billboards;
     ofVec3f billboardVels[NUM_BILLBOARDS];
     ofShader billboardShader;
