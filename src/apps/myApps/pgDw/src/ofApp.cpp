@@ -143,6 +143,48 @@ void ofApp::setup(){
     
     // random charMake -------------------------------------------------
     charList.clear();
+
+    // プレイヤーキャラ生成
+    {
+        playerChar = Char();
+        
+        auto itr = charPartsMap.begin();
+        for(int i=0; i<charPartsMap.size(); i++) {
+            string index;
+            index = itr->first;
+
+            map<string,  ofImage> tMap = itr->second;
+
+            vector<string> nameList;
+            
+            for(auto t : tMap) {
+                nameList.push_back(t.first);
+            }
+            string imgFileName = nameList[rand()%tMap.size()];
+            //if (itr->first == "body") imgFileName = "blazer" ;
+            //if (itr->first == "weapon") imgFileName = "nihontou" ;
+            //if (itr->first == "backAcce") imgFileName = "none" ;
+            //if (itr->first == "hairAcce") imgFileName = "null" ;
+
+            playerChar.partsMap[index] = imgFileName;
+            playerChar.imgMap[index] = &charPartsMap[index][imgFileName];
+            playerChar.indexImgMap[index] = indexImgMap[index+imgFileName];
+            playerChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
+
+            playerChar.x = ofRandom(-40, 40);
+            playerChar.y = ofRandom(-40, 40)+2500;
+            playerChar.z = 0;//ofRandom(1, 300);
+            if (ofRandom(0, 100) >= 50) {
+                playerChar.dir = LEFT;
+            } else {
+                playerChar.dir = RIGHT;
+            }
+
+            itr++;
+        }
+        charList.push_back(playerChar);
+    }
+
     for (int charCount = 0; charCount < 16; charCount++) {
 
         Char tChar = Char();

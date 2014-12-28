@@ -93,20 +93,44 @@ public:
 };
 
 
+class VisibleObject {
+    
+public:
+    int x, y, z;
+    // 画像情報
+    bool displayFlag;
 
-class Char {
+};
+
+
+class PhysicalObject : public VisibleObject {
+    
+public:
+    // 当たり判定情報
+
+};
+
+
+class Char : public PhysicalObject {
 
 public:
     map<string, ofImage*> imgMap;
     map<string, string> partsMap;
     map<string, vector<vector<unsigned char>> > imgMapPalette;
     map<string, vector<vector<unsigned char>> > indexImgMap;
-    int x, y, z;
     int animCount;
     int dir;
     int count;
     int action;
     int actCount, actTime;
+};
+
+
+class Shot : public PhysicalObject {
+};
+
+
+class Particle : public VisibleObject {
 };
 
 
@@ -139,6 +163,9 @@ public:
     vector<string> charPartsPathList;
     vector<string> charPartsDrawOrder;
     int bigMap[17][17];
+
+    int playerFloor;
+    Char playerChar;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
