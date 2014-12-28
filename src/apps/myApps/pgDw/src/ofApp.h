@@ -260,6 +260,9 @@ public:
     void _drawTransparentTile();
     void _saveScreenShot();
 
+    void _drawBgFloor();
+    void _drawPolygonObject();
+
 };
 
 

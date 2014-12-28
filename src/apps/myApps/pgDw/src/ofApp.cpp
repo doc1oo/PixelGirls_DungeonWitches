@@ -87,7 +87,7 @@ void ofApp::setup(){
 
 	img.loadImage("pixelArt/default.png");
 	particleImg.loadImage("particleImg/default.tif");
-	bgParticleImg.loadImage("particleImg/posca.tif"); //circleAlpha.tif");
+	bgParticleImg.loadImage("particleImg/circleAlpha.tif"); //circleAlpha.tif");
 	bgImg.loadImage("img/mapchip.png");
 	tileImg.loadImage("tileImg/default.png");
 	imgTitleBanner.loadImage("img/pixelGirlsBannerMini.png");
@@ -551,27 +551,15 @@ void ofApp::draw(){
 
     // ライティングほかGL設定 --------------------------------------------------------------
 
-    // ライティングを有効に
-    light.enable();
-    // スポットライトを配置
-    light.setPointLight();
-    //light.setDirectional();
-    // 照明の位置
+    light.enable();    // ライティングを有効に
+    light.setPointLight();    // スポットライトを配置
+    //light.setDirectional();    // 照明の位置
+    //light.setPointLight();
     light.setPosition(640*17/2, 10000, 10000);
     light.setOrientation(ofVec3f(0, 0, -1));
-    //light.setPointLight();
-    // 環境反射光の色
-    light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));
-    // 拡散反射光の色
-    light.setDiffuseColor(ofFloatColor(0.5, 0.5, 0.5));
-    // 鏡面反射光の色
-    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
-    /*
-    // 拡散反射光の色
-    light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
-    // 鏡面反射光の色
-    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
-    */
+    light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));    // 環境反射光の色
+    light.setDiffuseColor(ofFloatColor(0.5, 0.5, 0.5));    // 拡散反射光の色
+    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));     // 鏡面反射光の色
 
     glReadBuffer(GL_FRONT);         // ofSaveScreenで画像が保存されない問題への対処
     
@@ -588,84 +576,17 @@ void ofApp::draw(){
         bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
     }
 
-    //screenFbo.begin();
     
-    
-    // ポリゴン壁描画 ---------------------------------------------------------------------
-
-    int objSize = 128*5;
-    for(int i=0; i<17; i++) {
-        for(int j=0; j<17; j++) {
-            if (bigMap[i][j] == 1) {
-                ofBoxPrimitive box;
-                ofTexture tex;
-
-                box.set(objSize);
-                ofColor(255,255,255);
-                box.setPosition(j*objSize, i*objSize,objSize/2);
-                box.draw();
-            } else if (bigMap[i][j] == 2) {
-                ofConePrimitive cone;
-                cone.set(objSize/2, objSize, 12, 1);
-                cone.rotate(-90,1.0,0,0);
-                ofColor(255,255,255);
-                cone.setPosition(j*objSize, i*objSize,objSize/2);
-                cone.draw();
-
-            }
-        }
-    }
-    
-    
-    // 背景（床）描画 --------------------------------------------------------------------
-
-    glDepthMask(GL_FALSE);
-    glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    _drawPolygonObject();
 
     {
         ofPushMatrix();
-    
         ofRotateX(camRotX);
         ofRotateY(camRotY);
         ofRotateZ(camRotZ);
-
-        for(int y=0; y<4; y++) {
-            for(int x=0; x<6; x++) {
-
-                for(int i=0; i<8; i++) {
-                    for(int j=0; j<8; j++) {
-
-                    
-
-                        int tSize = bgParticleImg.getHeight();
-                        int tpitch = 28;
-                        int tdotSize = 2;
-
-                        ofPushMatrix();
-                    
-                        ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX+640, (y*8+i)*tpitch + ofRandom(0,8)+ posY+640, ofRandom(0,0)+ posZ);
-
-                        ofRotateZ(ofRandom(-10,10));
-                        ofColor c = bgImg.getColor(j+10*8, i+8);
-                        ofSetColor(c);
-
-                        bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
-                        ofPopMatrix();
-                    }
-                }
-
-            }
-        }
+        _drawBgFloor();
         ofPopMatrix();
     }
-
-    glDepthMask(GL_TRUE);
-    // --------------------------------
-
-    //light.disable();
-    //ofDisableDepthTest();
     
 
     // レイヤー合成モード?切替 ----------------------------------------------------------
@@ -689,33 +610,18 @@ void ofApp::draw(){
     for(int charCount=0; charCount<charList.size(); charCount++){
 
         Char *tChar = &charList[charCount];
-        
-        //ss << "char draw" << endl;
-        //auto imgItr = tChar.imgMap.begin();
-
-        //ss << "char parts num: " << tChar.imgMap.size() << endl;
-        
-
         int faceAngle = ofRandom(-16,16);
 
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
 
             string partsCategoryName = charPartsDrawOrder[categoryCount];
             //ss << "partsCategoryName: " << partsCategoryName << endl;
-            
 
             ofImage *tImg = tChar->imgMap[partsCategoryName];
-            //imgItr++;
-
-            //ss << "parts load start: " <<partsCategoryName << " " << tChar.partsMap[partsCategoryName]<< endl;
 
             vector<vector<unsigned char>> *indexImg = &(tChar->indexImgMap.at(partsCategoryName ));
-            //ss << "access: " << indexImg << "partsCategoryName" << endl;
             
             vector<vector<unsigned char>> *palette = &(tChar->imgMapPalette.at(partsCategoryName ));
-            //ss << "access: " << palette << "partsCategoryName" << endl;
-            
-            //ss << "parts loaded: " << endl;
 
             // パーツごと色相変化
             int partsH = (int)ofRandom(0, 255);
@@ -728,16 +634,12 @@ void ofApp::draw(){
             ofRotateY(camRotY);
             ofRotateZ(camRotZ);
 
-            //ofTranslate(-img.getWidth()/2*size,-img.getHeight()/2*size);
-	        //		ofRotate(180,rotateX,rotateY,rotateZ);
-            
             int dirFlag = 0;
             if (tChar->dir != RIGHT) {
                 dirFlag = -1;
             } else {
                 dirFlag = 1;
             }
-
 
             ofTranslate(tChar->x+posX , tChar->y+posY , tChar->z+posZ);
 
@@ -766,7 +668,6 @@ void ofApp::draw(){
                 }
 
             }
-
 
             ofColor c;
             float h, s, bri;
@@ -903,6 +804,83 @@ void ofApp::draw(){
 
 }
 
+
+// 背景（床）描画 --------------------------------------------------------------------
+void ofApp::_drawBgFloor() {
+
+    glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+
+    {
+
+        for(int y=0; y<4; y++) {
+            for(int x=0; x<6; x++) {
+
+                for(int i=0; i<8; i++) {
+                    for(int j=0; j<8; j++) {
+
+                        int tSize = bgParticleImg.getHeight();
+                        int tpitch = 28;
+                        int tdotSize = 2;
+
+                        ofPushMatrix();
+                    
+                        ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + 640, (y*8+i)*tpitch + ofRandom(0,8) + 640, ofRandom(0,0));
+
+                        ofRotateZ(ofRandom(-10,10));
+                        ofColor c = bgImg.getColor(j+10*8, i+8);
+                        ofSetColor(c);
+
+                        bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
+                        ofPopMatrix();
+                    }
+                }
+
+            }
+        }
+    }
+
+    glDepthMask(GL_TRUE);
+    // --------------------------------
+
+    //light.disable();
+    //ofDisableDepthTest();
+}
+
+
+
+
+// ポリゴン壁描画 ---------------------------------------------------------------------
+void ofApp::_drawPolygonObject() {
+    
+
+    int objSize = 128*5;
+
+    for(int i=0; i<17; i++) {
+        for(int j=0; j<17; j++) {
+            if (bigMap[i][j] == 1) {
+                ofBoxPrimitive box;
+                ofTexture tex;
+
+                box.set(objSize);
+                ofColor(255,255,255);
+                box.setPosition(j*objSize, i*objSize,objSize/2);
+                box.draw();
+            } else if (bigMap[i][j] == 2) {
+                ofConePrimitive cone;
+                cone.set(objSize/2, objSize, 12, 1);
+                cone.rotate(-90,1.0,0,0);
+                ofColor(255,255,255);
+                cone.setPosition(j*objSize, i*objSize,objSize/2);
+                cone.draw();
+
+            }
+        }
+    }
+    
+}
 
 
 //--------------------------------------------------------------
