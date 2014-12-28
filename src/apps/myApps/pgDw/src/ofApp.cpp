@@ -99,7 +99,7 @@ void ofApp::setup(){
 	bgParticleImg.loadImage("particleImg/posca.tif"); //circleAlpha.tif");
 	bgImg.loadImage("img/mapchip.png");
 	tileImg.loadImage("tileImg/default.png");
-	imgTitleBanner.loadImage("img/pixelGirls10_fx_banner.png");
+	imgTitleBanner.loadImage("img/pixelGirlsBannerMini.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
 
     auto charPartsPathMap = getDirectoryFileListRecursive("./data/img/charParts/");
@@ -611,7 +611,9 @@ void ofApp::draw(){
     for(int i=0; i<17; i++) {
         for(int j=0; j<17; j++) {
             if (bigMap[i][j] == 1) {
-                ofBoxPrimitive box; 
+                ofBoxPrimitive box;
+                ofTexture tex;
+
                 box.set(objSize);
                 ofColor(255,255,255);
                 box.setPosition(j*objSize, i*objSize,objSize/2);
@@ -965,10 +967,12 @@ void ofApp::draw(){
     //cam.lookAt();
 
     //cam.end();
-    ofColor(240,32,255);
     easyCam.end();
 
     // ステータス表示 ------------------------------------------------------
+
+    //light.disable();
+    ofSetColor(255,255,255);
 
     pxFontBig.drawString("B?+ 1F", 30, 100);
     
@@ -985,7 +989,7 @@ void ofApp::draw(){
     pxFont.drawString("くぴま", 30, 550);
     pxFont.drawString("HP  70", 30, 590);
 
-    imgTitleBanner.draw(ofGetWidth()-320, 30, imgTitleBanner.width/2,imgTitleBanner.height/2);
+    imgTitleBanner.draw(ofGetWidth()-360, ofGetHeight()-160, imgTitleBanner.width*7,imgTitleBanner.height*7);
 
     /*
     font.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 40);
