@@ -14,7 +14,8 @@ void ofApp::setup(){
     ofSetBackgroundAuto(false); 
 
     // 変数の初期値設定 -----------------------------------------------
-
+    
+    camMode = 0;
     bgImgPath = "";
     showBgImg = false;
     rightClick = false;
@@ -271,6 +272,7 @@ void ofApp::setup(){
     easyCam.setFov(80);
     easyCam.setFarClip(30000);          // デフォルト設定より遠くまで見えるように
     easyCam.setNearClip(0);         // 手前のオブジェクトが消えるように
+    easyCam.setVFlip(true);
 
     
     ss << "cam:" << endl;
@@ -496,22 +498,31 @@ void ofApp::update(){
         playerChar->x -= 50;
         playerChar->dir = LEFT;
 
-    } else if (key["right"] == 1) {
+    } 
+    if (key["right"] == 1) {
 
         playerChar->x += 50;
         playerChar->dir = RIGHT;
 
-    } else if (key["up"] == 1) {
+    }
+    if (key["up"] == 1) {
 
         playerChar->y -= 50;
         playerChar->dir = LEFT;
 
-    } else if (key["down"] == 1) {
+    }
+    if (key["down"] == 1) {
 
         playerChar->y += 50;
         playerChar->dir = LEFT;
 
     }
+    
+    if (playerChar->actCount >= playerChar->actTime) {
+        playerChar->action = ACT_NONE;
+        playerChar->actCount = 0;
+    }
+
 
 
     for(auto &tChar : charList) {
@@ -567,8 +578,11 @@ void ofApp::draw(){
     //ofClear(255,255,255,255);
     ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
-    easyCam.begin();
-    //cam.begin();
+    if(camMode == 0) {
+        easyCam.begin();
+    } else {
+        cam.begin();
+    }
 
     ofEnableDepthTest();
 
@@ -1023,7 +1037,12 @@ void ofApp::draw(){
     //cam.lookAt();
 
     //cam.end();
-    easyCam.end();
+    
+    if(camMode == 0) {
+        easyCam.end();
+    } else {
+        cam.end();
+    }
 
     // ステータス表示 ------------------------------------------------------
 
@@ -1187,7 +1206,26 @@ void ofApp::keyPressed(int pressedKey){
         key["down"] = 1;
         //_saveScreenShot();
     }
+    
+    if (pressedKey == '1') {
+        if (camMode == 0) {
+            camMode = 1;
+        } else {
+            camMode = 0;
+        }
+    }
+    
+    if (pressedKey == 'j') {
 
+        if (playerChar->action == ACT_NONE) {
+
+            playerChar->action = ACT_ATTACK;
+            playerChar->actCount = 0;
+            playerChar->actTime = 10;
+
+        }
+
+    }
 
     if (pressedKey == 'f') {
         //フルスクリーン on/off の切り替え
@@ -1208,6 +1246,7 @@ void ofApp::keyReleased(int pressedKey){
     } else if (pressedKey == 's') {             // 's' key で screen shot
         key["down"] = 0;
     }
+    
 
 }
 

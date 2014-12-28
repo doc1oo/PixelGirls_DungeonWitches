@@ -187,6 +187,7 @@ public:
     vector<string> charPartsPathList;
     vector<string> charPartsDrawOrder;
     int bigMap[17][17];
+    int camMode;
 
     int playerFloor;
     Char *playerChar;
