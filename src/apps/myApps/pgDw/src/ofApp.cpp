@@ -685,7 +685,7 @@ void ofApp::draw(){
 			        //c = img.getColor(j, i);
                     unsigned char index = (*indexImg)[y][x];
                     vector<unsigned char> *t = &(*palette).at(index);
-                    ofColor c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
+                    ofColor &c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
 
 			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする
                         continue;
@@ -812,33 +812,31 @@ void ofApp::_drawBgFloor() {
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    
+    int tSize = bgParticleImg.getHeight();
+    int tpitch = 28;
+    int tdotSize = 2;
 
-    {
+    for(int y=0; y<4; y++) {
+        for(int x=0; x<6; x++) {
 
-        for(int y=0; y<4; y++) {
-            for(int x=0; x<6; x++) {
+            for(int i=0; i<8; i++) {
+                for(int j=0; j<8; j++) {
 
-                for(int i=0; i<8; i++) {
-                    for(int j=0; j<8; j++) {
-
-                        int tSize = bgParticleImg.getHeight();
-                        int tpitch = 28;
-                        int tdotSize = 2;
-
-                        ofPushMatrix();
+                    ofPushMatrix();
                     
-                        ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + 640, (y*8+i)*tpitch + ofRandom(0,8) + 640, ofRandom(0,0));
+                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + 640, (y*8+i)*tpitch + ofRandom(0,8) + 640, ofRandom(0,0));
 
-                        ofRotateZ(ofRandom(-10,10));
-                        ofColor c = bgImg.getColor(j+10*8, i+8);
-                        ofSetColor(c);
+                    ofRotateZ(ofRandom(-10, 10));
 
-                        bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
-                        ofPopMatrix();
-                    }
+                    ofColor &c = bgImg.getColor(j + 10*8, i+8);
+                    ofSetColor(c);
+
+                    bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
+                    ofPopMatrix();
                 }
-
             }
+
         }
     }
 
@@ -866,17 +864,20 @@ void ofApp::_drawPolygonObject() {
 
     for(int i=0; i<17; i++) {
         for(int j=0; j<17; j++) {
+
             if (bigMap[i][j] == 1) {
 
                 ofColor(255,255,255);
                 box.setPosition(j*objSize, i*objSize,objSize/2);
                 box.draw();
+
             } else if (bigMap[i][j] == 2) {
                 ofColor(255,255,255);
                 cone.setPosition(j*objSize, i*objSize,objSize/2);
                 cone.draw();
 
             }
+
         }
     }
     
