@@ -93,8 +93,8 @@ void ofApp::setup(){
 	imgTitleBanner.loadImage("img/pixelGirlsBannerMini.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
 
+    // キャラパーツ画像素材
     auto charPartsPathMap = getDirectoryFileListRecursive("./data/img/charParts/");
-
     for (auto path : charPartsPathMap) {
 
         ss << "vec-output: " << path.first << " " << path.second << endl;
@@ -144,7 +144,7 @@ void ofApp::setup(){
         }
     }
 
-    // ランダムキャラメイク -------------------------------------------------
+    // ランダムキャラメイク処理 -------------------------------------------------
     charList.clear();
 
     for (int charCount = 0; charCount < 16; charCount++) {
@@ -419,10 +419,6 @@ void ofApp::update(){
 
     ofSeedRandom(time(NULL));
 
-    //cam.setFov(prmMap["CAM_FOV"]->floatVal);
-    //cam.setNearClip(prmMap["CAM_NEAR"]->floatVal);
-    //cam.setFarClip(prmMap["CAM_FAR"]->floatVal);
-
     rightClick = false;
 
     // カメラの更新 -------------------------------
@@ -442,28 +438,20 @@ void ofApp::update(){
     // キーボード操作 -------------------------------
 
     if (key["left"] == 1) {
-
         pChar->x -= 50;
         pChar->dir = LEFT;
-
     } 
     if (key["right"] == 1) {
-
         pChar->x += 50;
         pChar->dir = RIGHT;
-
     }
     if (key["up"] == 1) {
-
         pChar->y -= 50;
         pChar->dir = LEFT;
-
     }
     if (key["down"] == 1) {
-
         pChar->y += 50;
         pChar->dir = LEFT;
-
     }
     
     // 攻撃ボタン
@@ -1711,6 +1699,7 @@ void trace(string s) {
 }
 
 
+// 武器攻撃アニメ用の回転角度を返す
 int weaponAttackDeg(int count) {
     
     //int deg[10] = {0,-120, 30, 90, -60, 30, 75, -90, 15, 75};
