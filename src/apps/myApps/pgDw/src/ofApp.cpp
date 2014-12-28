@@ -579,85 +579,17 @@ void ofApp::draw(){
 
     trace("draw() start");
     
-    
+    // 背景の消去、描画 -----------------------------------------
     ofClear(0,0,0,255);
     //ofClear(255,255,255,255);
     ofBackgroundGradient(ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal, prmMap["BG_A"]->floatVal), ofColor::fromHsb(prmMap["BG_H"]->floatVal, prmMap["BG_S"]->floatVal, prmMap["BG_B"]->floatVal/3, prmMap["BG_A"]->floatVal), OF_GRADIENT_CIRCULAR);
     
-    if(camMode == 0) {
-        easyCam.begin();
-    } else {
-        cam.begin();
-    }
+    ofSetColor(255);
 
-    ofEnableDepthTest();
-
-    // ライティングを有効に
-    light.enable();
-    // スポットライトを配置
-    light.setPointLight();
-    //light.setDirectional();
-    // 照明の位置
-    light.setPosition(640*17/2, 10000, 10000);
-    light.setOrientation(ofVec3f(0, 0, -1));
-    //light.setPointLight();
-    // 環境反射光の色
-    light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));
-    // 拡散反射光の色
-    light.setDiffuseColor(ofFloatColor(0.5, 0.5, 0.5));
-    // 鏡面反射光の色
-    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
-    /*
-    // 拡散反射光の色
-    light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
-    // 鏡面反射光の色
-    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
-    */
-
-    /*
-    std::mt19937 engine;
-    std::vector< std::uint_least32_t > v;
-    v.push_back( prmMap["randomize"]);
-    std::seed_seq seed( v.begin(), v.end() ) ;
-    std::mt19937 engine( seed ) ;
-    */
+    // 擬似乱数の設定（固定パターン） ------------------------------------------------
     ofSeedRandom(prmMap["RANDOMSEED"]->intVal);
 
-    ofSetColor(255);
-    glReadBuffer(GL_FRONT);         // ofSaveScreenで画像が保存されない問題への対処
-    //screenFbo.begin();
-    //cam.begin();
-    
-	//ofEnableAlphaBlending();
-	//ofEnableAntiAliasing();
-    //ofEnableSmoothing();
-    //glEnable(GL_MULTISAMPLE);
-    //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
-    
-    //ofSetupScreenOrtho();
-    
-
-    if (showBgImg) {
-        float imgAspect = img.getWidth() / img.getHeight();
-        bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
-    }
-    
-
-
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); ニアレストネイバー拡大
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    
-    
-	//maskFbo.begin();
-	//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-    
-    
-	//ofEnableAlphaBlending();
-	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-    
+    // GUI設定パラメータの反映 -------------------------------------------------------------------------
     
     int imgWidth = img.getWidth();
     int imgHeight = img.getHeight();
@@ -686,12 +618,60 @@ void ofApp::draw(){
     int pWidth = particleImg.getWidth();
     pitch = _size;
 
-	//ofBackground(192,128,160);
-    //int bgColor = 224;
-    //ofBackground(bgColor);
+    // カメラ設定 ---------------------------------------------------------------
+
+    if(camMode == 0) {
+        easyCam.begin();
+    } else {
+        cam.begin();
+    }
+
+    ofEnableDepthTest();
+
+    // ライティングほかGL設定 --------------------------------------------------------------
+
+    // ライティングを有効に
+    light.enable();
+    // スポットライトを配置
+    light.setPointLight();
+    //light.setDirectional();
+    // 照明の位置
+    light.setPosition(640*17/2, 10000, 10000);
+    light.setOrientation(ofVec3f(0, 0, -1));
+    //light.setPointLight();
+    // 環境反射光の色
+    light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));
+    // 拡散反射光の色
+    light.setDiffuseColor(ofFloatColor(0.5, 0.5, 0.5));
+    // 鏡面反射光の色
+    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
+    /*
+    // 拡散反射光の色
+    light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
+    // 鏡面反射光の色
+    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
+    */
+
+    glReadBuffer(GL_FRONT);         // ofSaveScreenで画像が保存されない問題への対処
+    
+	//ofEnableAlphaBlending();
+	//ofEnableAntiAliasing();
+    //ofEnableSmoothing();
+    //glEnable(GL_MULTISAMPLE);
+    //glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
+    //ofSetupScreenOrtho();
+
+    // 単なる背景画像の表示 -----------------------------------------------------------------------
+    if (showBgImg) {
+        float imgAspect = img.getWidth() / img.getHeight();
+        bgImg.draw(0,0,ofGetWidth(), ofGetWidth() / imgAspect);
+    }
+
+    //screenFbo.begin();
     
     
-    // ポリゴン壁描画
+    // ポリゴン壁描画 ---------------------------------------------------------------------
+
     int objSize = 128*5;
     for(int i=0; i<17; i++) {
         for(int j=0; j<17; j++) {
@@ -716,46 +696,50 @@ void ofApp::draw(){
     }
     
     
-    // 背景描画 ---------------------
+    // 背景（床）描画 --------------------------------------------------------------------
+
     glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
-
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-    ofPushMatrix();
+
+    {
+        ofPushMatrix();
     
-    ofRotateX(camRotX);
-    ofRotateY(camRotY);
-    ofRotateZ(camRotZ);
+        ofRotateX(camRotX);
+        ofRotateY(camRotY);
+        ofRotateZ(camRotZ);
 
-    for(int y=0; y<4; y++) {
-        for(int x=0; x<6; x++) {
+        for(int y=0; y<4; y++) {
+            for(int x=0; x<6; x++) {
 
-            for(int i=0; i<8; i++) {
-                for(int j=0; j<8; j++) {
+                for(int i=0; i<8; i++) {
+                    for(int j=0; j<8; j++) {
 
                     
 
-                    int tSize = bgParticleImg.getHeight();
-                    int tpitch = 28;
-                    int tdotSize = 2;
+                        int tSize = bgParticleImg.getHeight();
+                        int tpitch = 28;
+                        int tdotSize = 2;
 
-                    ofPushMatrix();
+                        ofPushMatrix();
                     
-                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX+640, (y*8+i)*tpitch + ofRandom(0,8)+ posY+640, ofRandom(0,0)+ posZ);
+                        ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX+640, (y*8+i)*tpitch + ofRandom(0,8)+ posY+640, ofRandom(0,0)+ posZ);
 
-                    ofRotateZ(ofRandom(-10,10));
-                    ofColor c = bgImg.getColor(j+10*8, i+8);
-                    ofSetColor(c);
+                        ofRotateZ(ofRandom(-10,10));
+                        ofColor c = bgImg.getColor(j+10*8, i+8);
+                        ofSetColor(c);
 
-                    bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
-                    ofPopMatrix();
+                        bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
+                        ofPopMatrix();
+                    }
                 }
-            }
 
+            }
         }
+        ofPopMatrix();
     }
-    ofPopMatrix();
+
     glDepthMask(GL_TRUE);
     // --------------------------------
 
@@ -763,8 +747,7 @@ void ofApp::draw(){
     //ofDisableDepthTest();
     
 
-    // ----------------------------------------------------------
-
+    // レイヤー合成モード?切替 ----------------------------------------------------------
 
     if (blendMode == 0) {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -780,7 +763,8 @@ void ofApp::draw(){
         ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     }
 
-    // キャラクター描画 ---------------------
+    // キャラクター描画 --------------------------------------------------------
+
     for(int charCount=0; charCount<charList.size(); charCount++){
 
         Char *tChar = &charList[charCount];
@@ -876,13 +860,12 @@ void ofApp::draw(){
                     }
                     y = i;
             
-                    //ss << "x:" << j << " y:" << i << " - "   << endl; 
 			        //c = img.getColor(j, i);
                     unsigned char index = (*indexImg)[y][x];
                     vector<unsigned char> *t = &(*palette).at(index);
                     ofColor c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
 
-			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする（高速化のため。（if文とどちらが重いのかは？
+			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする
                         continue;
 			        } 
                     ofPushMatrix();
@@ -892,42 +875,20 @@ void ofApp::draw(){
 
                     c.getHsb(h, s, bri);
            
-                    /*
-                    c.r += addR;
-                    c.g += addG;
-                    c.b += addB;
-                    if (c.r > 255) {
-                        c.r = 255;
-                    }*/
-
-                    //c.setHue(c.getHue() + partsH); // 色相変換
-                    //ofSetColor(c);
-
-
-                /*
-                    float b2 = (((int)b)/3)*3;
-                    if (b2 > 255) {
-                        b2 = 255;
-                    }
-                    if(h>=256) {
-                        ss << h << endl;
-                    }*/
-                    if ((*indexImg)[y][x] < 16) {
+                    if ((*indexImg)[y][x] < 16) {         //  パレットカラー0-15番までは色相等に変化を加えない （キャラ肌色の維持などのため）
                         ofSetColor(ofColor::fromHsb((( int)h)%256 , s, bri));
                     } else {
-                        // 色相の変更で色がどぎつい鮮やかさになる場合があるのを補正？
+                        // 色相の変更で色がどぎつい鮮やかさになる場合があるのを補正
                         int ts = s;
                         //if (ts > 128) {
-                       //     ts = 0;//(s*7)/10;//*2/3;
-                       // }
+                        //     ts = 0;//(s*7)/10;//*2/3;
+                        // }
                         if (ts > 80) {
                             ts = s/4+80;
                         }
                         ofSetColor(ofColor::fromHsb((( int)h+partsH)%256 , ts+100, bri));
                     }
-                    //ss << " " << c.r << " " << c.g << " " << c.b << endl;
-                    //ofTranslate(j, i);
-                                                        //ofTranslate(j*pitch+posX + ofRandomuf()*posRandomize, i*pitch+posY + ofRandomuf()*posRandomize);
+
                     if (partsCategoryName == "weapon") {
 //                        ofTranslate((j-tImg->getWidth()/2 + 4)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2 - 4)*pitch+ ofRandomuf()*posRandomize);
 
@@ -936,19 +897,12 @@ void ofApp::draw(){
                         } else {
                             ofTranslate((j-tImg->getWidth()/2 + 4*dirFlag)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2-8 - 4)*pitch+ ofRandomuf()*posRandomize);
                         }
-                                                        //ofScale(size/256,size/256);
+
                     } else {
                         ofTranslate((j-tImg->getWidth()/2)*pitch + ofRandomuf()*posRandomize, (i-tImg->getHeight()/2-8)*pitch+ ofRandomuf()*posRandomize);
-                                                        //ofScale(size/256,size/256);
+
                     }
                    
-                    /*
-                    ofRotateX(rotateX);
-                    ofRotateY(rotateY);
-                    ofRotateZ(rotateZ);
-                    */
-                                                            //ofRotate(45,0,0,1);
-           
                     //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
                     int tNum = (int )pWidth/(int)pSize;
            
@@ -961,6 +915,7 @@ void ofApp::draw(){
 
                     //ofRect(0,0, pSize, pSize);
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
+
                     if (partsCategoryName == "weapon") {
                         float destSize = pitch * dotSize;
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
@@ -976,49 +931,11 @@ void ofApp::draw(){
            
                     ofPopMatrix();
 
-                    //stringstream ss;
-                    //ss << "x:" << j << "y:" << i << " - " << c.r << "," << c.g << "," << c.b << endl;
-                    //ss << ss.str();
-
-                    //ss << pSize;
 		        }
 	        }
             ofPopMatrix();
         }
     }
-	
-	//maskFbo.end();
-
-	//ofSetColor( ofColor::fromHsb(compH, compS, compB) );
-
-	
-	//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	//maskFbo.draw(0,0);
-
-	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    
-    {
-        stringstream s;
-        s << "ofScr_" << ofGetFrameNum() << ".png";
-        trace(&s);
-        //ofSaveScreen(ss.str());
-        //ofSaveFrame();
-    }
-	
-	//particleImg.draw(0, 0);
-     
-    
-    //cam.end();
-    //screenFbo.end();
-
-    //ofEnableAlphaBlending();
-	//ofEnableAntiAliasing();
-
-    //ofBackground(0);
-    
-    //_drawTransparentTile();
-
-    //screenFbo.draw(0, 0);
 
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
@@ -1026,33 +943,6 @@ void ofApp::draw(){
     stringstream s;
     s << screenShotCounter << ".png";
     //ofSaveScreen(s.str());
-
-    //ofDrawBitmapString("0 1 2 3 4 5 6 7 8 9", 0, 0);
-    
-    /*
-    //easyCam.end();
-    ofSetColor(255, 255, 255);
-    tempFbo.begin();
-    ofBackground(0,0,0,0);
-    prettyFont.drawString("0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 40, 340);
-    tempFbo.end();
-    tempFbo.draw(0, 0);
-    */
-
-    prettyFont.drawString("X 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
-    ofPushMatrix();
-    ofRotateY(90);
-    prettyFont.drawString("Y 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
-    ofPopMatrix();
-    ofPushMatrix();
-    ofRotateZ(90);
-    prettyFont.drawString("Z 0 1 2 3 4 5 6 7 8 9 かわいい子猫Mewmewにゃーにゃー", 0, 0);
-    ofPopMatrix();
-
-
-    //cam.lookAt();
-
-    //cam.end();
     
     if(camMode == 0) {
         easyCam.end();
@@ -1067,7 +957,7 @@ void ofApp::draw(){
 
     pxFontBig.drawString("B?+ 1F", 30, 100);
     
-    pxFont.drawString("あなた", 30, 170);
+    prettyFont.drawString("あなた", 30, 170);
     pxFont.drawString("HP 100", 30, 220);
     pxFont.drawString("MP  99", 30, 260);
     

@@ -132,20 +132,21 @@ public:
     int count;
     int action;
     int actCount, actTime;
+    int hp;
 
     Char() {
     }
 };
 
 
-class Shot : public PhysicalObject {
+class Bullet : public PhysicalObject {
 
 public:
     int power;
     int dir;
     int speed;
     
-    Shot() {
+    Bullet() {
     }
 };
 
@@ -156,6 +157,7 @@ public:
     Particle() {
     }
 };
+
 
 
 
