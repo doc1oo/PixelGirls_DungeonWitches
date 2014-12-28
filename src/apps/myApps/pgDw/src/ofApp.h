@@ -191,7 +191,23 @@ public:
     int camMode;
 
     int playerFloor;
+
+    map<string, vector<vector<unsigned char>> > indexImgMap;
+    map<string, vector<vector<unsigned char>> > imgMapPalette;
+    map<string, int> key;
+    map<string, int> keyOnce;
+
+	// map<string, boost::any> prmValLst;
+
+    
+	// my class ---------------------------------------
+
     Char *pChar;
+    vector <Char> charList;
+    map<string, AppParameter *> prmMap;
+    vector<AppParameter> prmLst;
+    
+	// oF ---------------------------------------------
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
@@ -199,19 +215,9 @@ public:
     ofImage imgHero;
     ofImage imgTitleBanner;
     map<string, ofImage> imgCharPartsMap;
-    map<string, vector<vector<unsigned char>> > indexImgMap;
-    map<string, vector<vector<unsigned char>> > imgMapPalette;
-    map<string, map<string, ofImage> > charPartsMap;
-    map<string, int> key;
-    map<string, int> keyOnce;
-
-    map<string, ofSoundPlayer> sndMap;
-    map<string, AppParameter *> prmMap;
-    vector<AppParameter> prmLst;
     vector <ofColor> imgColorLst;
-    vector <Char> charList;
-   // vector <Char > &charList2;
-	// map<string, boost::any> prmValLst;
+    map<string, ofSoundPlayer> sndMap;
+    map<string, map<string, ofImage> > charPartsMap;
 
     ofCamera cam;
     ofEasyCam easyCam;
@@ -231,14 +237,11 @@ public:
 
     ofxUICanvas *gui;
 
-	// ---------------------------------------------
+	// default func ---------------------------------------------
 
     void setup();
     void update();
     void draw();
-	
-    void exit();
-    void guiEvent(ofxUIEventArgs &e);
     
     void keyPressed(int key);
     void keyReleased(int key);
@@ -249,7 +252,11 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    void exit();
 
+    // add func -------
+
+    void guiEvent(ofxUIEventArgs &e);
     void _drawTransparentTile();
     void _saveScreenShot();
 
@@ -257,10 +264,12 @@ public:
 
 
 
+// generic function --------------------------
+
+void trace(stringstream *ss);
+void trace(string s);
 map<string, string> getDirectoryFileListRecursive(string targetDir);
 vector<vector<unsigned char>> getPaletteFromPNG(string filePath);
 vector<vector<unsigned char>> getPngIndexImage(string filePath);
 void pngReadFunction(png_struct *png,png_bytep buf,png_size_t size);
-void trace(stringstream *ss);
-void trace(string s);
 int weaponAttackDeg(int count);
