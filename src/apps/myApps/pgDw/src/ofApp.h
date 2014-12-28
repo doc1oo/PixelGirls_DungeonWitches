@@ -20,7 +20,6 @@
 #include "ofVbo.h"
 
 #include "ofxUI.h"
-#include "ofxOsc.h"
 
 #include "zlib.h"
 #include "zconf.h"
@@ -206,7 +205,6 @@ public:
     map<string, int> key;
     map<string, int> keyOnce;
 
-    map<string, boost::any> oscPrm;
     map<string, ofSoundPlayer> sndMap;
     map<string, AppParameter *> prmMap;
     vector<AppParameter> prmLst;
@@ -231,7 +229,6 @@ public:
     ofxTrueTypeFontUC pxFontBig;
     ofxTrueTypeFontUC prettyFont;
 
-	ofxOscReceiver oscReceiver;       //OSCメッセージを受信するインスタンス
     ofxUICanvas *gui;
 
 	// ---------------------------------------------
@@ -242,7 +239,6 @@ public:
 	
     void exit();
     void guiEvent(ofxUIEventArgs &e);
-    void receiveOscMessage();
     
     void keyPressed(int key);
     void keyReleased(int key);

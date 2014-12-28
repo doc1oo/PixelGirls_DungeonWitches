@@ -252,7 +252,6 @@ void ofApp::setup(){
     ofSetBackgroundAuto(false);
     ofDisableArbTex();
 
-    oscReceiver.setup( PORT );          // OSC受信用ポート設定
 
     cam.setFov(80.0);
 	cam.setPosition(0, 2000, 200);
@@ -488,7 +487,6 @@ void ofApp::update(){
     cam.lookAt(ofVec3f(camX,camY-1,camZ-1));
 //    cam.setVFlip(true);
 
-    //receiveOscMessage();
 
     {
     	stringstream s;
@@ -980,109 +978,6 @@ void ofApp::draw(){
 
     return;
 
-}
-
-
-
-// 半透明を表す市松模様を描く
-void ofApp::_drawTransparentTile() {
-
-    int size = 25;
-    for(int i=0; i<=ofGetHeight()/size; i++) {
-        for(int j=0; j<=ofGetWidth()/size; j++) {
-            if ((i+j)%2 == 0) {
-                ofSetColor(255,255,255,255);
-            } else {
-                ofSetColor(255,255,255,192);
-            }
-            ofRect(j*size, i*size, size, size);
-        }
-    }
-
-}
-
-
-
-void ofApp::receiveOscMessage() {
-    
-    //現在順番待ちのOSCメッセージがあるか確認
-    while( oscReceiver.hasWaitingMessages() ) {
-        
-        ofxOscMessage m;
-        oscReceiver.getNextMessage( &m );   //次のメッセージを取得
-
-        string appId = "/pixelFx/";
-        string objId = "main/";
-        
-        string header = appId + objId;
-        
-        for(int i=0; i<prmLst.size(); i++) {
-            if ( m.getAddress() == header+prmLst[i].name ){
-                
-                ss << "OSC mes: " << m.getAddress() << endl;
-                trace(&ss);
-
-                if (prmLst[i].uiType == "slider") {
-                
-                    ofxUISlider *w = (ofxUISlider *)gui->getWidget(prmLst[i].name);
-
-                    float n = 0;
-                    if (w->getMin()>=0) {
-                    
-                        if (m.getArgAsFloat(0) >= 0) {
-                            n =(m.getArgAsFloat(0) * (w->getMax() - w->getMin())) + w->getMin();
-                        } else {
-                            n = 0;
-                        }
-                        
-                    } else {
-                        if (m.getArgAsFloat(0) >= 0) {
-                            n = abs(m.getArgAsFloat(0) * w->getMax());
-                        } else {
-                            n = -1 * abs(m.getArgAsFloat(0) * w->getMin());
-                        }
-                    }
-                    oscPrm[prmLst[i].name] = n;
-
-                    w->setValue(n);
-                    //w->update();
-                    w->triggerSelf();       // 変数に反映
-                    //ss << "OSC / " << prmLst[i] << ":" << n << endl;
-
-                } else if (prmLst[i].uiType == "dropdownList") {
-                    
-                    ofxUIDropDownList *w = (ofxUIDropDownList *)gui->getWidget(prmLst[i].name);
-                    int n = m.getArgAsInt32(0);    // ドロップダウンリストの何番目かを指定
-                    
-                    oscPrm[prmLst[i].name] = n;
-                    //w->clearToggles();
-                    //w->activateToggle("char.tif");
-                    //w->setState(n);
-                    //w->stateChange();
-                    //w->update();
-                    vector<ofxUILabelToggle *> toggles = w->getToggles();
-                    for(int i=0; i<toggles.size(); i++) {
-                        ss << "t:" << toggles[i]->getName() << endl;
-                        trace(&ss);
-                    }
-                    if (n < 0) {
-                        n = 0;
-                    }
-                    if (n >= toggles.size()) {
-                        n = toggles.size() - 1;
-                    }
-                    w->triggerEvent(toggles[n]);
-                    //w->triggerSelf();
-                    //w->setValue(n);                    
-                    
-                }
-                
-            }
-        }
-        
-        //dumpOsc(m);   // OSCメッセージをそのままコンソールに出力 (本番では重いのでコメントアウト
-    }
-    
 }
 
 
