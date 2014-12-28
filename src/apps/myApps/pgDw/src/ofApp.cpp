@@ -607,12 +607,12 @@ void ofApp::draw(){
 
     // キャラクター描画 --------------------------------------------------------
 
-    for(int charCount=0; charCount<charList.size(); charCount++){
+    for(int charCount=0; charCount<charList.size(); charCount++){             // キャラ単位ループ
 
         Char *tChar = &charList[charCount];
         int faceAngle = ofRandom(-16,16);
 
-        for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {
+        for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {             // キャラパーツ単位ループ
 
             string partsCategoryName = charPartsDrawOrder[categoryCount];
             //ss << "partsCategoryName: " << partsCategoryName << endl;
@@ -672,7 +672,7 @@ void ofApp::draw(){
             ofColor c;
             float h, s, bri;
 	        for(int i=0; i<tImg->getHeight(); i++) {
-		        for(int j=0; j<tImg->getWidth(); j++) {
+		        for(int j=0; j<tImg->getWidth(); j++) {                  // パーツのピクセル単位ループ
 
                     int x, y, z;
                     if (tChar->dir != RIGHT) {
@@ -855,23 +855,23 @@ void ofApp::_drawBgFloor() {
 // ポリゴン壁描画 ---------------------------------------------------------------------
 void ofApp::_drawPolygonObject() {
     
-
     int objSize = 128*5;
+
+    ofBoxPrimitive box;
+    ofConePrimitive cone;
+    box.set(objSize);
+    cone.set(objSize/2, objSize, 12, 1);
+    cone.rotate(-90,1.0,0,0);
+    //ofTexture tex;
 
     for(int i=0; i<17; i++) {
         for(int j=0; j<17; j++) {
             if (bigMap[i][j] == 1) {
-                ofBoxPrimitive box;
-                ofTexture tex;
 
-                box.set(objSize);
                 ofColor(255,255,255);
                 box.setPosition(j*objSize, i*objSize,objSize/2);
                 box.draw();
             } else if (bigMap[i][j] == 2) {
-                ofConePrimitive cone;
-                cone.set(objSize/2, objSize, 12, 1);
-                cone.rotate(-90,1.0,0,0);
                 ofColor(255,255,255);
                 cone.setPosition(j*objSize, i*objSize,objSize/2);
                 cone.draw();
