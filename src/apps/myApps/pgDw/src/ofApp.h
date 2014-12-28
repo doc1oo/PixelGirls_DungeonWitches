@@ -100,13 +100,22 @@ public:
     // 画像情報
     bool displayFlag;
 
+    VisibleObject() {
+    }
+
 };
 
 
 class PhysicalObject : public VisibleObject {
     
 public:
-    // 当たり判定情報
+    // 当たり判定情報　サイズ、形状、位置など
+    int cdType;       // 立方体、球など
+    int cdWidth;
+    int cdHeight;
+
+    PhysicalObject() {
+    }
 
 };
 
@@ -123,14 +132,29 @@ public:
     int count;
     int action;
     int actCount, actTime;
+
+    Char() {
+    }
 };
 
 
 class Shot : public PhysicalObject {
+
+public:
+    int power;
+    int dir;
+    int speed;
+    
+    Shot() {
+    }
 };
 
 
 class Particle : public VisibleObject {
+    
+public:
+    Particle() {
+    }
 };
 
 
@@ -165,7 +189,7 @@ public:
     int bigMap[17][17];
 
     int playerFloor;
-    Char playerChar;
+    Char *playerChar;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
@@ -185,6 +209,7 @@ public:
     vector<AppParameter> prmLst;
     vector <ofColor> imgColorLst;
     vector <Char> charList;
+   // vector <Char > &charList2;
 	// map<string, boost::any> prmValLst;
 
     ofCamera cam;

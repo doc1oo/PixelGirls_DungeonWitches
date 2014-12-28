@@ -57,7 +57,7 @@ PixelGirls_DungeonWitches use following libralies. ( libraries/ )
   - Copyright: (C) 2002-2012 Num Kadoma
   - License  : (look libraries/misaki_ttf_2012-06-03/misaki.txt and http://www.geocities.jp/littlimi/font.htm#license )
 
-* [07 やさしさゴシック (07 YasashisaGothic)]
+* [07 やさしさゴシック (07 YasashisaGothic)] (http://www.fontna.com/blog/379/)
   - Copyright: Copyright (C) 2002-2012 M+ FONTS PROJECT
                Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2012.
                Copyright (C) 2012 Fontna.com

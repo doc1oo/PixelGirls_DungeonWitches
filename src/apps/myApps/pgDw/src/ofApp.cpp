@@ -143,6 +143,7 @@ void ofApp::setup(){
     
     // random charMake -------------------------------------------------
     charList.clear();
+    /*
 
     // プレイヤーキャラ生成
     {
@@ -183,11 +184,11 @@ void ofApp::setup(){
             itr++;
         }
         charList.push_back(playerChar);
-    }
+    }*/
 
     for (int charCount = 0; charCount < 16; charCount++) {
 
-        Char tChar = Char();
+        Char tChar;
 
         auto itr = charPartsMap.begin();
         for(int i=0; i<charPartsMap.size(); i++) {
@@ -213,7 +214,7 @@ void ofApp::setup(){
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
             tChar.x = (charCount%4)*280 + ofRandom(-40, 40);
-            tChar.y = (charCount/4)*160 + ofRandom(-40, 40);
+            tChar.y = (charCount/4)*160 + ofRandom(-40, 40)-1000;
             tChar.z = 0;//ofRandom(1, 300);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
@@ -227,6 +228,8 @@ void ofApp::setup(){
         charList.push_back(tChar);
     }
 
+    playerChar = &charList[0];
+    
     /* ランダム選択処理
     for(int i=0; i<(int)ofRandom(charPartsPathMap.size()); i++) {
         sel = itr->first;
@@ -487,24 +490,35 @@ void ofApp::update(){
     
     ofSeedRandom(time(NULL));
     
+    // キーボード操作
+    if (key["left"] == 1) {
+
+        playerChar->x -= 50;
+        playerChar->dir = LEFT;
+
+    } else if (key["right"] == 1) {
+
+        playerChar->x += 50;
+        playerChar->dir = RIGHT;
+
+    } else if (key["up"] == 1) {
+
+        playerChar->y -= 50;
+        playerChar->dir = LEFT;
+
+    } else if (key["down"] == 1) {
+
+        playerChar->y += 50;
+        playerChar->dir = LEFT;
+
+    }
+
+
     for(auto &tChar : charList) {
 
         cout << tChar.x << endl;
 
         //Char *tChar = &charList[0];
-        if (key["left"] == 1) {
-            tChar.x -= 5;
-            tChar.dir = LEFT;
-        } else if (key["right"] == 1) {
-            tChar.x += 5;
-            tChar.dir = RIGHT;
-        } else if (key["up"] == 1) {
-            tChar.y -= 5;
-            tChar.dir = LEFT;
-        } else if (key["down"] == 1) {
-            tChar.y += 5;
-            tChar.dir = LEFT;
-        }
         
 
         if (tChar.action == ACT_NONE) {
@@ -702,7 +716,7 @@ void ofApp::draw(){
                     ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX, (y*8+i)*tpitch + ofRandom(0,8)+ posY, ofRandom(0,0)+ posZ);
 
                     ofRotateZ(ofRandom(-10,10));
-                    ofColor c = bgImg.getColor(j+8*8, i+8);
+                    ofColor c = bgImg.getColor(j+10*8, i+8);
                     ofSetColor(c);
 
                     bgParticleImg.drawSubsection(0, 0, tpitch*tdotSize, tpitch*tdotSize, 0, 0, tSize, tSize);
@@ -1150,7 +1164,8 @@ void ofApp::receiveOscMessage() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int pressedKey){
-    
+    trace("keyPressed");
+
     if (pressedKey == ' ') {                   // space key で GUI のOn/Off
         
         if(gui->isEnabled()) {
