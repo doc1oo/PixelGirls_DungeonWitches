@@ -595,16 +595,24 @@ void ofApp::draw(){
     // ライティングを有効に
     light.enable();
     // スポットライトを配置
-    //light.setPointLight();
-    light.setDirectionalLight();
+    light.setPointLight();
+    //light.setDirectional();
     // 照明の位置
-    light.setPosition(-100, 100, 1000);
+    light.setPosition(640*17/2, 10000, 10000);
+    light.setOrientation(ofVec3f(0, 0, -1));
+    //light.setPointLight();
     // 環境反射光の色
     light.setAmbientColor(ofFloatColor(0.5, 0.5, 0.5));
+    // 拡散反射光の色
+    light.setDiffuseColor(ofFloatColor(0.5, 0.5, 0.5));
+    // 鏡面反射光の色
+    light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
+    /*
     // 拡散反射光の色
     light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
     // 鏡面反射光の色
     light.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0)); 
+    */
 
     /*
     std::mt19937 engine;
@@ -736,7 +744,7 @@ void ofApp::draw(){
                     
                     ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX+640, (y*8+i)*tpitch + ofRandom(0,8)+ posY+640, ofRandom(0,0)+ posZ);
 
-                    ofRotateZ(ofRandom(-10,10));ligh
+                    ofRotateZ(ofRandom(-10,10));
                     ofColor c = bgImg.getColor(j+10*8, i+8);
                     ofSetColor(c);
 
@@ -840,7 +848,7 @@ void ofApp::draw(){
             //ofRotateX(rotateX);
             //ofRotateY(rotateY);
             //ofRotateX(-90);
-            ofRotateX(-45);     //カメラの角度に合わせてキャラが基本、真正面を向くように変える
+            ofRotateX(-67.5);     //カメラの角度に合わせてキャラが基本、真正面を向くように変える
 
             if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
                 ofRotateZ(faceAngle);
