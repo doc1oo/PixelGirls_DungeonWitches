@@ -15,7 +15,7 @@ void ofApp::setup(){
 
     // 変数の初期値設定 -----------------------------------------------
     
-    camMode = 0;
+    camMode = 1;
     bgImgPath = "";
     showBgImg = false;
     rightClick = false;
@@ -214,8 +214,8 @@ void ofApp::setup(){
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
 
-            tChar.x = (charCount%4)*280 + ofRandom(-40, 40);
-            tChar.y = (charCount/4)*160 + ofRandom(-40, 40)-1000;
+            tChar.x = (charCount%4)*280 + ofRandom(-40, 40)+1000;
+            tChar.y = (charCount/4)*160 + ofRandom(-40, 40)+1000;
             tChar.z = 0;//ofRandom(1, 300);
             if (ofRandom(0, 100) >= 50) {
                 tChar.dir = LEFT;
@@ -481,6 +481,12 @@ void ofApp::update(){
     //cam.setFarClip(prmMap["CAM_FAR"]->floatVal);
 
     rightClick = false;
+    float camX =playerChar->x;
+    float camY = playerChar->y+300;
+    float camZ = playerChar->z+300;
+	cam.setPosition(camX, camY, camZ);
+    cam.lookAt(ofVec3f(camX,camY-1,camZ-1));
+//    cam.setVFlip(true);
 
     //receiveOscMessage();
 
@@ -522,7 +528,7 @@ void ofApp::update(){
         playerChar->action = ACT_NONE;
         playerChar->actCount = 0;
     }
-
+    
 
 
     for(auto &tChar : charList) {
@@ -589,7 +595,8 @@ void ofApp::draw(){
     // ライティングを有効に
     light.enable();
     // スポットライトを配置
-    light.setPointLight();
+    //light.setPointLight();
+    light.setDirectionalLight();
     // 照明の位置
     light.setPosition(-100, 100, 1000);
     // 環境反射光の色
@@ -676,7 +683,7 @@ void ofApp::draw(){
     //ofBackground(bgColor);
     
     
-
+    // ポリゴン壁描画
     int objSize = 128*5;
     for(int i=0; i<17; i++) {
         for(int j=0; j<17; j++) {
@@ -727,9 +734,9 @@ void ofApp::draw(){
 
                     ofPushMatrix();
                     
-                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX, (y*8+i)*tpitch + ofRandom(0,8)+ posY, ofRandom(0,0)+ posZ);
+                    ofTranslate((x*8+j)*tpitch + ofRandom(0,8) + posX+640, (y*8+i)*tpitch + ofRandom(0,8)+ posY+640, ofRandom(0,0)+ posZ);
 
-                    ofRotateZ(ofRandom(-10,10));
+                    ofRotateZ(ofRandom(-10,10));ligh
                     ofColor c = bgImg.getColor(j+10*8, i+8);
                     ofSetColor(c);
 
@@ -832,7 +839,8 @@ void ofApp::draw(){
             // キャラごとの回転
             //ofRotateX(rotateX);
             //ofRotateY(rotateY);
-            ofRotateX(-90);
+            //ofRotateX(-90);
+            ofRotateX(-45);     //カメラの角度に合わせてキャラが基本、真正面を向くように変える
 
             if (partsCategoryName == "hair" || partsCategoryName == "hairAcce" || partsCategoryName == "face" || partsCategoryName == "eye") {
                 ofRotateZ(faceAngle);
@@ -949,13 +957,13 @@ void ofApp::draw(){
                         float destSize = pitch * dotSize;
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         if (tChar->action == ACT_ATTACK) {
-                            particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, -0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                            particleImg.drawSubsection(-0*pitch*dirFlag, 0*pitch, 0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         } else {
-                            particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, -0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                            particleImg.drawSubsection(0*pitch*dirFlag, 0*pitch, 0.01*categoryCount, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                         }
                     } else {
                         float destSize = pitch * dotSize;
-                        particleImg.drawSubsection(0-destSize/2, 0-destSize/2, -0.01*categoryCount, destSize, destSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
+                        particleImg.drawSubsection(0-destSize/2, 0-destSize/2, 0.01*categoryCount, destSize, destSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
                     }
            
                     ofPopMatrix();
