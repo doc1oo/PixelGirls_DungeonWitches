@@ -9,9 +9,9 @@ void ofApp::setup(){
     //ofstream ofs("debug.log");
     //cout.rdbuf(ofs.rdbuf());
 
-    srand(time(NULL));
     ofSetFrameRate(60);
     ofSetBackgroundAuto(false); 
+    srand(time(NULL));
 
     // 変数の初期値設定 -----------------------------------------------
     
@@ -50,16 +50,6 @@ void ofApp::setup(){
     prettyFont.loadFont("font/07やさしさゴシック.ttf", 32);
     pxFont.loadFont("font/misaki_gothic.ttf", 28);
     pxFontBig.loadFont("font/misaki_gothic.ttf", 64);
-
-    for(int i=0; i<BIG_MAP_SIZE_H; i++) {
-        for(int j=0; j<BIG_MAP_SIZE_W; j++) {
-            if (i == 0 || i == BIG_MAP_SIZE_W-1 || j == 0 || j == BIG_MAP_SIZE_W-1) {
-                bigMap[i][j] = 1;       // ダンジョンの外壁
-            } else {
-                bigMap[i][j] = (int)ofRandom(10);
-            }
-        }
-    }
 
     // GUI関係の情報設定 -----------------------------------------------
     {
@@ -142,50 +132,20 @@ void ofApp::setup(){
 
     }
     
-    // random charMake -------------------------------------------------
-    charList.clear();
-    /*
 
-    // プレイヤーキャラ生成
-    {
-        playerChar = Char();
-        
-        auto itr = charPartsMap.begin();
-        for(int i=0; i<charPartsMap.size(); i++) {
-            string index;
-            index = itr->first;
-
-            map<string,  ofImage> tMap = itr->second;
-
-            vector<string> nameList;
-            
-            for(auto t : tMap) {
-                nameList.push_back(t.first);
-            }
-            string imgFileName = nameList[rand()%tMap.size()];
-            //if (itr->first == "body") imgFileName = "blazer" ;
-            //if (itr->first == "weapon") imgFileName = "nihontou" ;
-            //if (itr->first == "backAcce") imgFileName = "none" ;
-            //if (itr->first == "hairAcce") imgFileName = "null" ;
-
-            playerChar.partsMap[index] = imgFileName;
-            playerChar.imgMap[index] = &charPartsMap[index][imgFileName];
-            playerChar.indexImgMap[index] = indexImgMap[index+imgFileName];
-            playerChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
-
-            playerChar.x = ofRandom(-40, 40);
-            playerChar.y = ofRandom(-40, 40)+2500;
-            playerChar.z = 0;//ofRandom(1, 300);
-            if (ofRandom(0, 100) >= 50) {
-                playerChar.dir = LEFT;
+    // 大マップの設定 --------------------------------------------------------
+    for(int i=0; i<BIG_MAP_SIZE_H; i++) {
+        for(int j=0; j<BIG_MAP_SIZE_W; j++) {
+            if (i == 0 || i == BIG_MAP_SIZE_W-1 || j == 0 || j == BIG_MAP_SIZE_W-1) {
+                bigMap[i][j] = 1;       // ダンジョンの外壁
             } else {
-                playerChar.dir = RIGHT;
+                bigMap[i][j] = (int)ofRandom(10);
             }
-
-            itr++;
         }
-        charList.push_back(playerChar);
-    }*/
+    }
+
+    // ランダムキャラメイク -------------------------------------------------
+    charList.clear();
 
     for (int charCount = 0; charCount < 16; charCount++) {
 
@@ -229,19 +189,9 @@ void ofApp::setup(){
         charList.push_back(tChar);
     }
 
-    playerChar = &charList[0];
+    pChar = &charList[0];          // 0番をプレイヤーキャラとして使う
     
-    /* ランダム選択処理
-    for(int i=0; i<(int)ofRandom(charPartsPathMap.size()); i++) {
-        sel = itr->first;
-        ss << sel << endl;
-        itr++;
-    }*/
-    /*
-    ss << "random image: " << sel << endl;
-    img = imgCharPartsMap[sel];
-    */
-    
+
     // システム初期化 -----------------------------------------------------------------
     
     screenFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -251,7 +201,6 @@ void ofApp::setup(){
     gui = new ofxUICanvas(0,0,600,400);
     ofSetBackgroundAuto(false);
     ofDisableArbTex();
-
 
     cam.setFov(80.0);
 	cam.setPosition(0, 2000, 200);
@@ -272,7 +221,6 @@ void ofApp::setup(){
     easyCam.setFarClip(30000);          // デフォルト設定より遠くまで見えるように
     easyCam.setNearClip(0);         // 手前のオブジェクトが消えるように
     easyCam.setVFlip(true);
-
     
     ss << "cam:" << endl;
     ss << cam.getNearClip() << endl;
@@ -281,11 +229,9 @@ void ofApp::setup(){
     ss << cam.getAspectRatio() << endl;
     ss << cam.getForceAspectRatio() << endl;
     trace(&ss);
-    //cam.setNearClip(0.8505);
-    //cam.setFarClip(1578.5);
     
 
-    // UI部品を追加 ----------------------------------------------------------
+    // UI部品を追加 -------------------------------------------------------------------------
 
     //gui->setFont("GUI/NewMedia Fett.ttf");
     gui->setFontSize(OFX_UI_FONT_MEDIUM, 7);
@@ -458,14 +404,10 @@ void ofApp::setup(){
 
     // --------------------------------------------------------------------------
     
-    _imgLoad();
-
     trace("setup() finished.");
     
-    glDisable(GL_CULL_FACE);        // カリングしない
-
+    //glDisable(GL_CULL_FACE);        // カリングしない
     //easyCam.setDistance(500);
-    //ofEnableDepthTest();            // 深度テストを有効にすると、z座標の値によって前後関係が正しく表現されるが、透過が効かずに、描画順が命令順どおりにならなくなる
 }
 
 
@@ -475,17 +417,20 @@ void ofApp::update(){
     
     trace("update() start");
 
+    ofSeedRandom(time(NULL));
+
     //cam.setFov(prmMap["CAM_FOV"]->floatVal);
     //cam.setNearClip(prmMap["CAM_NEAR"]->floatVal);
     //cam.setFarClip(prmMap["CAM_FAR"]->floatVal);
 
     rightClick = false;
-    float camX =playerChar->x;
-    float camY = playerChar->y+300;
-    float camZ = playerChar->z+300;
+
+    // カメラの更新 -------------------------------
+    float camX =pChar->x;
+    float camY = pChar->y + 300;
+    float camZ = pChar->z + 300;
 	cam.setPosition(camX, camY, camZ);
     cam.lookAt(ofVec3f(camX,camY-1,camZ-1));
-//    cam.setVFlip(true);
 
 
     {
@@ -494,48 +439,45 @@ void ofApp::update(){
 	    ofSetWindowTitle(s.str());
     }
     
-    ofSeedRandom(time(NULL));
-    
-    // キーボード操作
+    // キーボード操作 -------------------------------
+
     if (key["left"] == 1) {
 
-        playerChar->x -= 50;
-        playerChar->dir = LEFT;
+        pChar->x -= 50;
+        pChar->dir = LEFT;
 
     } 
     if (key["right"] == 1) {
 
-        playerChar->x += 50;
-        playerChar->dir = RIGHT;
+        pChar->x += 50;
+        pChar->dir = RIGHT;
 
     }
     if (key["up"] == 1) {
 
-        playerChar->y -= 50;
-        playerChar->dir = LEFT;
+        pChar->y -= 50;
+        pChar->dir = LEFT;
 
     }
     if (key["down"] == 1) {
 
-        playerChar->y += 50;
-        playerChar->dir = LEFT;
+        pChar->y += 50;
+        pChar->dir = LEFT;
 
     }
     
-    if (playerChar->actCount >= playerChar->actTime) {
-        playerChar->action = ACT_NONE;
-        playerChar->actCount = 0;
+    // 攻撃ボタン
+    if (pChar->actCount >= pChar->actTime) {
+        pChar->action = ACT_NONE;
+        pChar->actCount = 0;
     }
     
 
+    // 敵キャラクターの更新 -----------------------------------
 
     for(auto &tChar : charList) {
 
-        cout << tChar.x << endl;
-
-        //Char *tChar = &charList[0];
-        
-
+        // 攻撃
         if (tChar.action == ACT_NONE) {
             if ((int)ofRandom(0, 20) == 0) {
                 tChar.action = ACT_ATTACK;
@@ -544,6 +486,7 @@ void ofApp::update(){
             }
         }
 
+        // 行動終了
         if (tChar.action != ACT_NONE) {
 
             if (tChar.actCount >= tChar.actTime) {
@@ -553,22 +496,14 @@ void ofApp::update(){
             }
 
             tChar.actCount++;
-
         }
 
-    
         tChar.count++;
     }
 
 }
 
 
-
-void ofApp::_imgLoad(){
-    
-    //particleImgNum = particleImg.getWidth() / particleImg.getHeight();
-    
-}
 
 
 
@@ -1018,11 +953,11 @@ void ofApp::keyPressed(int pressedKey){
     
     if (pressedKey == 'j') {
 
-        if (playerChar->action == ACT_NONE) {
+        if (pChar->action == ACT_NONE) {
 
-            playerChar->action = ACT_ATTACK;
-            playerChar->actCount = 0;
-            playerChar->actTime = 10;
+            pChar->action = ACT_ATTACK;
+            pChar->actCount = 0;
+            pChar->actTime = 10;
 
         }
 
@@ -1234,7 +1169,6 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
             if (t.getPath() != "") {
                 string imgPath = t.getPath();
                 img.loadImage(imgPath);
-                _imgLoad();
             }
         }
         
@@ -1351,8 +1285,6 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
             
             particleImg.loadImage(s.str());
             
-            //_imgLoad();
-            
             
             //ofColor centerColor = particleImg.getColor(particleImg.getWidth()/2, particleImg.getWidth()/2);
             
@@ -1383,7 +1315,6 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
             s << "pixelArt/" << selected[i]->getName();
             
             img.loadImage(s.str());
-            _imgLoad();
         }
     }
 

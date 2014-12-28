@@ -191,7 +191,7 @@ public:
     int camMode;
 
     int playerFloor;
-    Char *playerChar;
+    Char *pChar;
 
     ofPoint prevClickPoint;
     ofImage img, particleImg, tileImg, bgImg, bgParticleImg;
@@ -250,7 +250,6 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-	void _imgLoad();
     void _drawTransparentTile();
     void _saveScreenShot();
 
