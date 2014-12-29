@@ -203,6 +203,8 @@ void ofApp::setup(){
     }
 
     pChar = &charList[0];          // 0番をプレイヤーキャラとして使う
+    pChar->hp = 100;
+    pChar->mp = 100;
     
 
     // システム初期化 -----------------------------------------------------------------
@@ -791,6 +793,7 @@ void ofApp::draw(){
         stringstream tmpSs;
         tmpSs << "gameObjLst.size: " << gameObjLst.size() << endl;
         trace(tmpSs.str());
+        
     }
     for(auto obj : gameObjLst) {
         obj->draw();
@@ -823,12 +826,24 @@ void ofApp::draw(){
 
     //light.disable();
     ofSetColor(255,255,255);
-
-    pxFontBig.drawString("B?+ 1F", 30, 100);
+    {
+        stringstream st;
+        st << "B?+ " << playerFloor << "F";
+        pxFontBig.drawString(st.str(), 30, 100);
+    }
     
     prettyFont.drawString("あなた", 30, 170);
-    pxFont.drawString("HP 100", 30, 220);
-    pxFont.drawString("MP  99", 30, 260);
+
+    {
+        stringstream st;
+        st << "HP " << pChar->hp;
+        pxFont.drawString(st.str(), 30, 220);
+    }
+    {
+        stringstream st;
+        st << "MP " << pChar->mp;
+        pxFont.drawString(st.str(), 30, 260);
+    }
     
     pxFont.drawString("ないこ", 30, 350);
     pxFont.drawString("HP  40", 30, 390);
@@ -967,8 +982,9 @@ void ofApp::keyPressed(int pressedKey){
     
     if (pressedKey == 'j') {
 
-        if (pChar->action == ACT_NONE) {
+        if (pChar->action == ACT_NONE || pChar->action == ACT_ATTACK) {
 
+            pChar->mp--;
             pChar->action = ACT_ATTACK;
             pChar->actCount = 0;
             pChar->actTime = 10;
@@ -990,6 +1006,7 @@ void ofApp::keyPressed(int pressedKey){
             b->animFrame = 4;
             b->animWaitFrame = 2;
             b->life = 100;
+
 
             gameObjLst.push_back(b);
             

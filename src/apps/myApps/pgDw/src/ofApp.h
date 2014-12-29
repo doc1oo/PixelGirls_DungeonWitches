@@ -144,6 +144,9 @@ public:
     int action;
     int actCount, actTime;
     int hp;
+    int hpMax;
+    int mp;
+    int mpMax;
 
     Char() {
     }
