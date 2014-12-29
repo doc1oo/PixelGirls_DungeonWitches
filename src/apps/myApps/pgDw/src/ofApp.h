@@ -103,6 +103,7 @@ public:
     int life;
     // 画像情報
     bool displayFlag;
+    int power;
 
     VisibleObject() {
     }
@@ -162,7 +163,6 @@ public:
 class Bullet : public PhysicalObject {
 
 public:
-    int power;
     int dir;
     int speed;
     int animFrame;
@@ -250,7 +250,7 @@ public:
 	// my class ---------------------------------------
 
     Char *pChar;
-    vector <Char> charList;
+    vector <Char> charLst;
     map<string, AppParameter *> prmMap;
     vector<AppParameter> prmLst;
     vector<VisibleObject *> gameObjLst;

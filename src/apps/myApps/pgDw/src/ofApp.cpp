@@ -23,6 +23,7 @@ void ofApp::setup(){
     size = 10;
     prevClickPoint = ofPoint(0,0);
     screenShotCounter = 0;
+    playerFloor = -1;
     key["up"] = 0;
     key["down"] = 0;
     key["left"] = 0;
@@ -157,7 +158,7 @@ void ofApp::setup(){
     bigMap[2][2] = 0;
 
     // ランダムキャラメイク処理 -------------------------------------------------
-    charList.clear();
+    charLst.clear();
 
     for (int charCount = 0; charCount < 16; charCount++) {
 
@@ -196,13 +197,15 @@ void ofApp::setup(){
                 tChar.dir = RIGHT;
             }
 
+            tChar.hp = ofRandom(0, 50);
+
             itr++;
         }
 
-        charList.push_back(tChar);
+        charLst.push_back(tChar);
     }
 
-    pChar = &charList[0];          // 0番をプレイヤーキャラとして使う
+    pChar = &charLst[0];          // 0番をプレイヤーキャラとして使う
     pChar->hp = 100;
     pChar->mp = 100;
     
@@ -461,13 +464,48 @@ void ofApp::update(){
                 break;
             }
         }
+    }
 
+    // 寿命がきたキャラをリストから削除
+    for(auto itr=charLst.begin(); itr<charLst.end(); itr++) {
+
+        if ((*itr).hp < 0) {
+            if (gameObjLst.size() >= 2) {
+                itr = charLst.erase(itr);
+            } else {
+                charLst.clear();
+                break;
+            }
+        }
     }
 
     for(auto obj : gameObjLst) {
         obj->update();
     }
 
+    // 衝突判定
+
+    //for(int i=0; i<gameObjLst.size(); i++) {
+    //    for(int j=i; j<gameObjLst.size(); j++) {
+    for(int i=0; i<charLst.size(); i++) {
+
+        for(int j=0; j<gameObjLst.size(); j++) {
+
+            double dx = charLst[i].x - gameObjLst[j]->x;
+            double dy = charLst[i].y - gameObjLst[j]->y;
+
+            double distance = sqrt(pow(dx, 2) + pow(dy, 2));
+
+            if (distance < 32) {
+                charLst[i].hp -= gameObjLst[j]->power;
+            }
+
+
+        }
+    }
+
+
+    // HP/MP自動回復
     if ((ofGetFrameNum() % 30) == 0) {
         pChar->mp++;
     }
@@ -513,7 +551,7 @@ void ofApp::update(){
 
     // 敵キャラクターの更新 -----------------------------------
 
-    for(auto &tChar : charList) {
+    for(auto &tChar : charLst) {
 
         // 攻撃
         if (tChar.action == ACT_NONE) {
@@ -657,9 +695,9 @@ void ofApp::draw(){
 
     // キャラクター描画 --------------------------------------------------------
 
-    for(int charCount=0; charCount<charList.size(); charCount++){             // キャラ単位ループ
+    for(int charCount=0; charCount<charLst.size(); charCount++){             // キャラ単位ループ
 
-        Char *tChar = &charList[charCount];
+        Char *tChar = &charLst[charCount];
         int faceAngle = ofRandom(-16,16);
 
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {             // キャラパーツ単位ループ
@@ -820,18 +858,21 @@ void ofApp::draw(){
         }
     }
     
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+
     {
         stringstream tmpSs;
         tmpSs << "gameObjLst.size: " << gameObjLst.size() << endl;
         trace(tmpSs.str());
         
     }
+
+    ofSetColor(255);
     for(auto obj : gameObjLst) {
         obj->draw();
 
     }
 
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
 
 
@@ -1011,6 +1052,18 @@ void ofApp::keyPressed(int pressedKey){
         }
     }
     
+
+    if (pressedKey == 'f') {
+        //フルスクリーン on/off の切り替え
+        ofToggleFullscreen();
+    }
+}
+
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int pressedKey){
+
+    
     if (pressedKey == 'j') {
 
         if ((pChar->action == ACT_NONE || pChar->action == ACT_ATTACK) && pChar->mp > 0) {
@@ -1039,22 +1092,11 @@ void ofApp::keyPressed(int pressedKey){
             b->life = 40;
             b->count = 0;
 
-
             gameObjLst.push_back(b);
             
         }
-
     }
 
-    if (pressedKey == 'f') {
-        //フルスクリーン on/off の切り替え
-        ofToggleFullscreen();
-    }
-}
-
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int pressedKey){
     if (pressedKey == 'a') {
         key["left"] = 0;
     } else if (pressedKey == 'd') {
