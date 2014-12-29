@@ -9,7 +9,8 @@ void ofApp::setup(){
     //ofstream ofs("debug.log");
     //cout.rdbuf(ofs.rdbuf());
 
-    ofSetFrameRate(60);
+    gameFrameRate = 30;
+    ofSetFrameRate(gameFrameRate);
     ofSetBackgroundAuto(false); 
     srand(time(NULL));
 
@@ -454,6 +455,8 @@ void ofApp::update(){
     }
     
     // 寿命がきたオブジェクトをリストから削除
+    boost::remove_erase_if(gameObjLst, [](VisibleObject *x) { return x->count >= x->life; });
+    /*
     for(auto itr=gameObjLst.begin(); itr<gameObjLst.end(); itr++) {
 
         if ((*itr)->count >= (*itr)->life) {
@@ -465,8 +468,11 @@ void ofApp::update(){
             }
         }
     }
+    */
 
     // 寿命がきたキャラをリストから削除
+    boost::remove_erase_if(charLst, [](Char &x) { return x.hp < 0; });
+    /*
     for(auto itr=charLst.begin(); itr<charLst.end(); itr++) {
 
         if ((*itr).hp < 0) {
@@ -477,7 +483,7 @@ void ofApp::update(){
                 break;
             }
         }
-    }
+    }*/
 
     for(auto obj : gameObjLst) {
         obj->update();

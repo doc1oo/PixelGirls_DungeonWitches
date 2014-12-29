@@ -14,6 +14,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/array.hpp>
+#include <boost/range/algorithm_ext/erase.hpp>
 
 #include "ofMain.h"
 #include "ofUtils.h"
@@ -217,6 +218,7 @@ public:
     int compH, compS, compB, compA;
     int pImgPattern;
     int prevClickButton;
+    int gameFrameRate;
     float size, pitch;
     float posX, posY, posZ;
     float rotateX, rotateY, rotateZ;
