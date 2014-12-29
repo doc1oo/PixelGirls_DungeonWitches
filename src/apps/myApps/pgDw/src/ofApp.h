@@ -124,6 +124,7 @@ class Char : public PhysicalObject {
 public:
     map<string, ofImage*> imgMap;
     map<string, string> partsMap;
+    map<string, vector<ofColor>> imgMapPaletteOfColor;
     map<string, vector<vector<unsigned char>> > imgMapPalette;
     map<string, vector<vector<unsigned char>> > indexImgMap;
     int animCount;
@@ -218,6 +219,7 @@ public:
     vector <ofColor> imgColorLst;
     map<string, ofSoundPlayer> sndMap;
     map<string, map<string, ofImage> > charPartsMap;
+    map<string, vector<ofColor>> imgMapPaletteOfColor;
 
     ofCamera cam;
     ofEasyCam easyCam;

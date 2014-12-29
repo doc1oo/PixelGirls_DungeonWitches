@@ -122,6 +122,12 @@ void ofApp::setup(){
 
             imgMapPalette[parentDirName + fileName] = getPaletteFromPNG(path.second);
 
+            for(int i=0; i<imgMapPalette[parentDirName + fileName].size(); i++) {
+                auto &t = imgMapPalette[parentDirName + fileName][i];
+                imgMapPaletteOfColor[parentDirName + fileName].push_back( ofColor( t[0], t[1], t[2], t[3]) );
+            }
+
+
             ss << endl;
             trace(&ss);
 
@@ -173,6 +179,7 @@ void ofApp::setup(){
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
+            tChar.imgMapPaletteOfColor[index] = imgMapPaletteOfColor[index+imgFileName];
 
             tChar.x = (charCount%4)*280 + ofRandom(-40, 40)+1000;
             tChar.y = (charCount/4)*160 + ofRandom(-40, 40)+1000;
@@ -438,20 +445,18 @@ void ofApp::update(){
     // キーボード操作 -------------------------------
 
     if (key["left"] == 1) {
-        pChar->x -= 50;
+        pChar->x -= 20;
         pChar->dir = LEFT;
     } 
     if (key["right"] == 1) {
-        pChar->x += 50;
+        pChar->x += 20;
         pChar->dir = RIGHT;
     }
     if (key["up"] == 1) {
-        pChar->y -= 50;
-        pChar->dir = LEFT;
+        pChar->y -= 20;
     }
     if (key["down"] == 1) {
-        pChar->y += 50;
-        pChar->dir = LEFT;
+        pChar->y += 20;
     }
     
     // 攻撃ボタン
@@ -621,7 +626,9 @@ void ofApp::draw(){
 
             vector<vector<unsigned char>> *indexImg = &(tChar->indexImgMap.at(partsCategoryName ));
             
+            //auto &palette = (tChar->imgMapPaletteOfColor.at(partsCategoryName ));
             vector<vector<unsigned char>> *palette = &(tChar->imgMapPalette.at(partsCategoryName ));
+
 
             // パーツごと色相変化
             int partsH = (int)ofRandom(0, 255);
@@ -669,12 +676,14 @@ void ofApp::draw(){
 
             }
 
-            ofColor c;
+            ofColor &c = ofColor(0,0,0,0);
+            vector<unsigned char> *t;
+            int x, y, z;
             float h, s, bri;
+
 	        for(int i=0; i<tImg->getHeight(); i++) {
 		        for(int j=0; j<tImg->getWidth(); j++) {                  // パーツのピクセル単位ループ
 
-                    int x, y, z;
                     if (tChar->dir != RIGHT) {
                         x = j;
                     } else {
@@ -687,13 +696,19 @@ void ofApp::draw(){
                     vector<unsigned char> *t = &(*palette).at(index);
                     ofColor &c = ofColor( (*t)[0], (*t)[1], (*t)[2], (*t)[3] );
 
+                    //ofColor &c = partsPal[i];
+
 			        if (c.a == 0) {       // ピクセルが透過色の場合、描画処理をスキップする
                         continue;
 			        } 
+
+                    //-------------
+
                     ofPushMatrix();
                     
                     ofRotateX(-rotateX);
                     ofRotateY(-rotateY);
+                    //ofRotate(-rotateX, -rotateY, 0);
 
                     c.getHsb(h, s, bri);
            
@@ -738,6 +753,7 @@ void ofApp::draw(){
                     //ofRect(0,0, pSize, pSize);
                     //ofRect(-particleImg.getWidth()/2,-particleImg.getHeight()/2, pSize, pSize);
 
+                    // ピクセルごとにパーティクル画像を描画
                     if (partsCategoryName == "weapon") {
                         float destSize = pitch * dotSize;
 //                        particleImg.drawSubsection(4*pitch, 0*pitch, pitch*dotSize, pitch*dotSize, (penSlashNum * 2 + (int)ofRandom(tNum)) * pSize, 0, pSize, pSize);
