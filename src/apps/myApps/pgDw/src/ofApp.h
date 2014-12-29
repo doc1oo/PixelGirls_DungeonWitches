@@ -44,6 +44,9 @@
 #define UP_LEFT 7
 #define ACT_NONE 0
 #define ACT_ATTACK 1
+#define PLAYER 0
+#define ENEMY 1
+
 
 #define BIG_MAP_SIZE_W 17
 #define BIG_MAP_SIZE_H 17
@@ -102,9 +105,9 @@ public:
     VisibleObject() {
     }
 
-    void update() {
+    virtual void update() {
     }
-    void draw() {
+    virtual void draw() {
     }
 };
 
@@ -157,12 +160,29 @@ public:
     int power;
     int dir;
     int speed;
+    int animFrame;
+    int animCount;
+    int animWaitFrame;
+    int life;
+    int owner;      // 敵味方フラグ
+    ofImage *img;
     
     Bullet() {
     }
     void update() {
+        x += cos(dir) * speed;
+        y += sin(dir) * speed;
+        animCount++;
     }
     void draw() {
+        int h = 8;//img->getHeight();
+        int anim = (animCount / animWaitFrame) % animFrame;
+        ofPushMatrix();
+        ofTranslate(x, y, z+h*10);
+        ofRotateX(-67.5);
+        img->drawSubsection(0, 0, 0, h*10, h*10, anim*h, 0, h, h);
+        ofPopMatrix();    
+        //particleImg.drawSubsection(0, 0, pSize, pSize, pSize*(int)ofRandom(pWidth/pSize), 0, pSize, pSize);
     }
 };
 
@@ -236,6 +256,7 @@ public:
     ofImage texture;
     ofImage imgHero;
     ofImage imgTitleBanner;
+    ofImage imgBullet;
     map<string, ofImage> imgCharPartsMap;
     vector <ofColor> imgColorLst;
     map<string, ofSoundPlayer> sndMap;

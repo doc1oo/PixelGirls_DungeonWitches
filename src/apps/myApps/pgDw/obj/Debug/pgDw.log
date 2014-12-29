@@ -1,4 +1,32 @@
 ﻿cl : コマンド ライン warning D9002: 不明なオプション '/lz' を無視します
+  main.cpp
+e:\works\project\pixelgirls_dungeonwitches\src\apps\myapps\pgdw\src\ofApp.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\istream(74) : 'std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(144): warning C4250: 'Poco::OutputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_ostream<_Elem,_Traits>::std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' から継承します。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\ostream(90) : 'std::basic_ostream<_Elem,_Traits>::_Add_vtordisp2' の宣言を確認してください。
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>
+          ]
+  コードを生成中...
+  コンパイル中...
   ofApp.cpp
 e:\works\project\pixelgirls_dungeonwitches\src\apps\myapps\pgdw\src\ofApp.h : warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
 E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConverter.h(126): warning C4250: 'Poco::InputStreamConverter' : 2 つ以上のメンバーが同じ名前を持っています。'std::basic_istream<_Elem,_Traits>::std::basic_istream<_Elem,_Traits>::_Add_vtordisp1' から継承します。
@@ -25,6 +53,7 @@ E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConv
               _Elem=char,
               _Traits=std::char_traits<char>
           ]
+  コードを生成中...
   pgDw.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\bin\pgDw_debug.exe
   E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\Assimp32.dll
   E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\fmodex.dll

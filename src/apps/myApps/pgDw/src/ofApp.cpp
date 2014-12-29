@@ -89,6 +89,7 @@ void ofApp::setup(){
 	particleImg.loadImage("particleImg/default.tif");
 	bgParticleImg.loadImage("particleImg/circleAlpha.tif"); //circleAlpha.tif");
 	bgImg.loadImage("img/mapchip.png");
+	imgBullet.loadImage("img/shot.png");
 	tileImg.loadImage("tileImg/default.png");
 	imgTitleBanner.loadImage("img/pixelGirlsBannerMini.png");
     sndMap["se_screen_shot"].loadSound("se_screen_shot.wav");
@@ -785,19 +786,27 @@ void ofApp::draw(){
             ofPopMatrix();
         }
     }
+    
+    {
+        stringstream tmpSs;
+        tmpSs << "gameObjLst.size: " << gameObjLst.size() << endl;
+        trace(tmpSs.str());
+    }
+    for(auto obj : gameObjLst) {
+        obj->draw();
+
+    }
 
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    
+
+
 
     screenShotCounter++;
     stringstream s;
     s << screenShotCounter << ".png";
     //ofSaveScreen(s.str());
     
-
-    for(auto obj : gameObjLst) {
-        obj->draw();
-
-    }
 
 
 
@@ -964,6 +973,26 @@ void ofApp::keyPressed(int pressedKey){
             pChar->actCount = 0;
             pChar->actTime = 10;
 
+            Bullet *b = new Bullet();
+            b->img = &imgBullet;
+            b->x = pChar->x;
+            b->y = pChar->y;
+            b->z = pChar->z;
+            b->owner = PLAYER;
+            b->power = 1;
+            if (pChar->dir == RIGHT) {
+                b->dir = 0;//pi
+            } else {
+                b->dir = -3.14;
+            }
+            b->speed = 30.0;
+            b->animCount = 0;
+            b->animFrame = 4;
+            b->animWaitFrame = 2;
+            b->life = 100;
+
+            gameObjLst.push_back(b);
+            
         }
 
     }
