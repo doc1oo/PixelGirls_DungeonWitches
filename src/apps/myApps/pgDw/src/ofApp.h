@@ -102,6 +102,10 @@ public:
     VisibleObject() {
     }
 
+    void update() {
+    }
+    void draw() {
+    }
 };
 
 
@@ -116,6 +120,10 @@ public:
     PhysicalObject() {
     }
 
+    void update() {
+    }
+    void draw() {
+    }
 };
 
 
@@ -136,6 +144,10 @@ public:
 
     Char() {
     }
+    void update() {
+    }
+    void draw() {
+    }
 };
 
 
@@ -148,6 +160,10 @@ public:
     
     Bullet() {
     }
+    void update() {
+    }
+    void draw() {
+    }
 };
 
 
@@ -155,6 +171,10 @@ class Particle : public VisibleObject {
     
 public:
     Particle() {
+    }
+    void update() {
+    }
+    void draw() {
     }
 };
 
@@ -207,6 +227,7 @@ public:
     vector <Char> charList;
     map<string, AppParameter *> prmMap;
     vector<AppParameter> prmLst;
+    vector<VisibleObject *> gameObjLst;
     
 	// oF ---------------------------------------------
 

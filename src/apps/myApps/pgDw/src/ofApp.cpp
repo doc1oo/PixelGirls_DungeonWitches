@@ -149,6 +149,11 @@ void ofApp::setup(){
             }
         }
     }
+    // 特定の場所は常に壁なしにする（主人公の初期位置など）
+    bigMap[1][1] = 0;
+    bigMap[1][2] = 0;
+    bigMap[2][1] = 0;
+    bigMap[2][2] = 0;
 
     // ランダムキャラメイク処理 -------------------------------------------------
     charList.clear();
@@ -442,6 +447,12 @@ void ofApp::update(){
 	    ofSetWindowTitle(s.str());
     }
     
+    
+    for(auto obj : gameObjLst) {
+        obj->update();
+    }
+
+
     // キーボード操作 -------------------------------
 
     if (key["left"] == 1) {
@@ -782,11 +793,22 @@ void ofApp::draw(){
     s << screenShotCounter << ".png";
     //ofSaveScreen(s.str());
     
+
+    for(auto obj : gameObjLst) {
+        obj->draw();
+
+    }
+
+
+
     if(camMode == 0) {
         easyCam.end();
     } else {
         cam.end();
     }
+
+
+
 
     // ステータス表示 ------------------------------------------------------
 
