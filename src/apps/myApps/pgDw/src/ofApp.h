@@ -99,6 +99,8 @@ class VisibleObject {
     
 public:
     int x, y, z;
+    int count;
+    int life;
     // 画像情報
     bool displayFlag;
 
@@ -166,7 +168,7 @@ public:
     int animFrame;
     int animCount;
     int animWaitFrame;
-    int life;
+    int lifeCount;
     int owner;      // 敵味方フラグ
     ofImage *img;
     
@@ -176,6 +178,7 @@ public:
         x += cos(dir) * speed;
         y += sin(dir) * speed;
         animCount++;
+        count++;
     }
     void draw() {
         int h = 8;//img->getHeight();

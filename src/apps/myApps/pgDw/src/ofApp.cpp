@@ -450,11 +450,42 @@ void ofApp::update(){
 	    ofSetWindowTitle(s.str());
     }
     
-    
+    // 寿命がきたオブジェクトをリストから削除
+    for(auto itr=gameObjLst.begin(); itr<gameObjLst.end(); itr++) {
+
+        if ((*itr)->count >= (*itr)->life) {
+            if (gameObjLst.size() >= 2) {
+                itr = gameObjLst.erase(itr);
+            } else {
+                gameObjLst.clear();
+                break;
+            }
+        }
+
+    }
+
     for(auto obj : gameObjLst) {
         obj->update();
     }
 
+    if ((ofGetFrameNum() % 30) == 0) {
+        pChar->mp++;
+    }
+    if ((ofGetFrameNum() % 90) == 0) {
+        pChar->hp++;
+    }
+    if (pChar->hp > 100) {
+        pChar->hp = 100;
+    }
+    if (pChar->mp > 100) {
+        pChar->mp = 100;
+    }
+    if (pChar->hp < 0) {             // die...
+
+    }
+    if (pChar->mp < 0) {             // dead...
+        pChar->mp = 0;
+    }
 
     // キーボード操作 -------------------------------
 
@@ -982,7 +1013,7 @@ void ofApp::keyPressed(int pressedKey){
     
     if (pressedKey == 'j') {
 
-        if (pChar->action == ACT_NONE || pChar->action == ACT_ATTACK) {
+        if ((pChar->action == ACT_NONE || pChar->action == ACT_ATTACK) && pChar->mp > 0) {
 
             pChar->mp--;
             pChar->action = ACT_ATTACK;
@@ -1005,7 +1036,8 @@ void ofApp::keyPressed(int pressedKey){
             b->animCount = 0;
             b->animFrame = 4;
             b->animWaitFrame = 2;
-            b->life = 100;
+            b->life = 40;
+            b->count = 0;
 
 
             gameObjLst.push_back(b);
