@@ -10,6 +10,19 @@ PixelGirls_DungeonWitches
 
 ---
 
+How to Play
+
+- download zip
+- run pgDw_debug.exe
+- w,a,s,d key ... move / j key ... attack / space ... GUI display OnOff / 1 key ... Change camera mode / mouse ... control camera
+
+遊びかた
+- ページ右側の "Download ZIP" ボタンを押してダウンロードします
+- pgDw_debug.exe を実行します。
+- w,a,s,dキーで移動、jキーで攻撃、スペースキーでGUIの表示/非表示、1キーがカメラモード変更。マウス操作でカメラ操作
+
+---
+
 This program is open source under an MIT License. see LICENSE.md.
 
 ---
@@ -40,11 +53,11 @@ PixelGirls_DungeonWitches use following libraries. ( libraries/ )
   - Copyright: 
   - License  : Apache License, version 2.0 
 
-* [����t�H���g] (http://www.geocities.jp/littlimi/misaki.htm)
+* [美咲フォント] (http://www.geocities.jp/littlimi/misaki.htm)
   - Copyright: (C) 2002-2012 Num Kadoma
   - License  : (look libraries/misaki_ttf_2012-06-03/misaki.txt and http://www.geocities.jp/littlimi/font.htm#license )
 
-* [07 �₳�����S�V�b�N (07 YasashisaGothic)] (http://www.fontna.com/blog/379/)
+* [07 やさしさゴシック (07 YasashisaGothic)] (http://www.fontna.com/blog/379/)
   - Copyright: Copyright (C) 2002-2012 M+ FONTS PROJECT
                Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2012.
                Copyright (C) 2012 Fontna.com
