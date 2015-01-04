@@ -23,11 +23,12 @@ How to Play
 
 ---
 
-This program is open source under an MIT License. see LICENSE.md.
+- This program is open source under an MIT License. see LICENSE.md.
+- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+- 本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。   
+- 本ソフトウェアの使用によって生じるいかなる損害についても、作者は一切の責任を負わないものとします。
 
-本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。 本ソフトウェアの使用によって生じるいかなる損害についても、作者は一切の責任を負わないものとします。
 ---
 
 PixelGirls_DungeonWitches use following libraries. ( libraries/ )
