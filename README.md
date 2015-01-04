@@ -23,6 +23,8 @@ How to Play
 
 ---
 
+License
+
 - This program is open source under an MIT License. see LICENSE.md.
 - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 
