@@ -25,6 +25,9 @@ E:\Works\Project\PixelGirls_DungeonWitches\src\libs\poco\include\Poco/StreamConv
               _Elem=char,
               _Traits=std::char_traits<char>
           ]
+  コードを生成中...
+  スキップ中... (関連する変更は検出されませんでした)
+  main.cpp
   pgDw.vcxproj -> E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\bin\pgDw_debug.exe
   E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\Assimp32.dll
   E:\Works\Project\PixelGirls_DungeonWitches\src\apps\myApps\pgDw\..\..\..\export\vs\fmodex.dll

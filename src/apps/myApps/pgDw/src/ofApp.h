@@ -137,7 +137,7 @@ public:
 class Char : public PhysicalObject {
 
 public:
-    map<string, ofImage*> imgMap;
+    map<string, ofImage *> imgMap;
     map<string, string> partsMap;
     map<string, vector<ofColor>> imgMapPaletteOfColor;
     map<string, vector<vector<unsigned char>> > imgMapPalette;
@@ -252,7 +252,7 @@ public:
 	// my class ---------------------------------------
 
     Char *pChar;
-    vector <Char> charLst;
+    vector <Char *> charLst;
     map<string, AppParameter *> prmMap;
     vector<AppParameter> prmLst;
     vector<VisibleObject *> gameObjLst;

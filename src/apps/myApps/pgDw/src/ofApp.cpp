@@ -116,7 +116,7 @@ void ofApp::setup(){
             ss << " - OK" << endl;
             trace(&ss);
 
-            charPartsMap[parentDirName][fileName] = tImg;
+            charPartsMap[parentDirName][fileName].loadImage("../" + path.second);
 
             ss << parentDirName << fileName << endl;
             trace(&ss);
@@ -170,7 +170,7 @@ void ofApp::setup(){
             string index;
             index = itr->first;
 
-            map<string,  ofImage> tMap = itr->second;
+            map<string,  ofImage> &tMap = itr->second;
 
             vector<string> nameList;
             
@@ -187,7 +187,7 @@ void ofApp::setup(){
             tChar.imgMap[index] = &charPartsMap[index][imgFileName];
             tChar.indexImgMap[index] = indexImgMap[index+imgFileName];
             tChar.imgMapPalette[index] = imgMapPalette[index+imgFileName];
-            tChar.imgMapPaletteOfColor[index] = imgMapPaletteOfColor[index+imgFileName];
+            //tChar.imgMapPaletteOfColor[index] = imgMapPaletteOfColor[index+imgFileName];
 
             tChar.x = (charCount%4)*280 + ofRandom(-40, 40)+1000;
             tChar.y = (charCount/4)*160 + ofRandom(-40, 40)+1000;
@@ -203,10 +203,10 @@ void ofApp::setup(){
             itr++;
         }
 
-        charLst.push_back(tChar);
+        charLst.push_back(&tChar);
     }
 
-    pChar = &charLst[0];          // 0番をプレイヤーキャラとして使う
+    pChar = charLst[0];          // 0番をプレイヤーキャラとして使う
     pChar->hp = 100;
     pChar->mp = 100;
     
@@ -471,7 +471,7 @@ void ofApp::update(){
     */
 
     // 寿命がきたキャラをリストから削除
-    boost::remove_erase_if(charLst, [](Char &x) { return x.hp < 0; });
+    //boost::remove_erase_if(charLst, [](Char *x) { return x->hp < 0; });
     /*
     for(auto itr=charLst.begin(); itr<charLst.end(); itr++) {
 
@@ -497,13 +497,13 @@ void ofApp::update(){
 
         for(int j=0; j<gameObjLst.size(); j++) {
 
-            double dx = charLst[i].x - gameObjLst[j]->x;
-            double dy = charLst[i].y - gameObjLst[j]->y;
+            double dx = charLst[i]->x - gameObjLst[j]->x;
+            double dy = charLst[i]->y - gameObjLst[j]->y;
 
             double distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
             if (distance < 32) {
-                charLst[i].hp -= gameObjLst[j]->power;
+                charLst[i]->hp -= gameObjLst[j]->power;
             }
 
 
@@ -557,30 +557,30 @@ void ofApp::update(){
 
     // 敵キャラクターの更新 -----------------------------------
 
-    for(auto &tChar : charLst) {
+    for(auto tChar : charLst) {
 
         // 攻撃
-        if (tChar.action == ACT_NONE) {
+        if (tChar->action == ACT_NONE) {
             if ((int)ofRandom(0, 20) == 0) {
-                tChar.action = ACT_ATTACK;
-                tChar.actCount = 0;
-                tChar.actTime = 10;
+                tChar->action = ACT_ATTACK;
+                tChar->actCount = 0;
+                tChar->actTime = 10;
             }
         }
 
         // 行動終了
-        if (tChar.action != ACT_NONE) {
+        if (tChar->action != ACT_NONE) {
 
-            if (tChar.actCount >= tChar.actTime) {
-                tChar.action = ACT_NONE;
-                tChar.actCount = 0;
+            if (tChar->actCount >= tChar->actTime) {
+                tChar->action = ACT_NONE;
+                tChar->actCount = 0;
             } else {
             }
 
-            tChar.actCount++;
+            tChar->actCount++;
         }
 
-        tChar.count++;
+        tChar->count++;
     }
 
 }
@@ -703,7 +703,7 @@ void ofApp::draw(){
 
     for(int charCount=0; charCount<charLst.size(); charCount++){             // キャラ単位ループ
 
-        Char *tChar = &charLst[charCount];
+        Char *tChar = charLst[charCount];
         int faceAngle = ofRandom(-16,16);
 
         for(int categoryCount=0; categoryCount < charPartsDrawOrder.size(); categoryCount++) {             // キャラパーツ単位ループ
